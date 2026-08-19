@@ -1,304 +1,602 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XeeRe — Enterprise Intelligence & Community</title>
-    
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>XeeRe — Intelligence & Community</title>
 
-    <style>
-        :root {
-            --bg-primary: #0f172a;
-            --bg-card: #1e1b4b;
-            --bg-sidebar: #111827;
-            --accent: #4f46e5;
-            --accent-hover: #4338ca;
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.1);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--bg-primary); color: var(--text-main); height: 100vh; overflow: hidden; }
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-        /* AUTH SCREEN */
-        #auth-screen {
-            display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw;
-            background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
-        }
-        .login-card {
-            background: var(--bg-card); border: 1px solid var(--border); padding: 35px; border-radius: 20px;
-            width: 100%; max-width: 420px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); text-align: center;
-        }
-        .logo-box {
-            width: 65px; height: 65px; background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 16px; margin: 0 auto 15px auto; display: flex; align-items: center;
-            justify-content: center; font-size: 28px; font-weight: bold; color: white;
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-        }
-        .login-card h2 { font-size: 24px; font-weight: 600; margin-bottom: 5px; }
-        .login-card .subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 25px; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; letter-spacing: 0.5px; }
-        .input-group input, .input-group textarea, .input-group select {
-            width: 100%; padding: 12px 15px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 14px; outline: none;
-        }
-        .input-group input:focus, .input-group textarea:focus { border-color: #6366f1; }
-        .action-btn {
-            width: 100%; padding: 12px; background: var(--accent); color: white; border: none;
-            border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 5px;
-            transition: background 0.2s;
-        }
-        .action-btn:hover { background: var(--accent-hover); }
-        .google-btn {
-            width: 100%; padding: 12px; background: white; color: #1e293b; border: none; border-radius: 8px;
-            font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; gap: 10px; margin-top: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
-        .google-btn:hover { background: #f1f5f9; }
+<style>
+:root{
+ --bg:#080d1c;--panel:#11182b;--panel2:#151d34;--blue:#4f46e5;
+ --blue2:#6366f1;--text:#f8fafc;--muted:#94a3b8;
+ --border:rgba(255,255,255,.09);--green:#22c55e;--red:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);
+ color:var(--text);height:100vh;overflow:hidden
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
 
-        /* MAIN APP LAYOUT */
-        #app-screen { display: none; height: 100vh; width: 100vw; display: flex; }
-        .sidebar {
-            width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; justify-content: space-between; padding: 20px;
-        }
-        .sidebar-brand { font-size: 20px; font-weight: bold; color: white; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
-        .sidebar-brand span { font-size: 11px; color: var(--text-muted); display: block; font-weight: normal; }
-        .nav-menu { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; max-height: calc(100vh - 150px); }
-        .nav-item {
-            padding: 10px 14px; border-radius: 8px; color: var(--text-muted); cursor: pointer;
-            font-size: 13px; font-weight: 500; transition: all 0.2s; display: flex; align-items: center; gap: 10px;
-        }
-        .nav-item:hover, .nav-item.active { background: var(--accent); color: white; }
-        
-        .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-primary); overflow: hidden; }
-        .topbar {
-            height: 65px; border-bottom: 1px solid var(--border); display: flex; align-items: center;
-            justify-content: space-between; padding: 0 30px; background: rgba(17, 24, 39, 0.5);
-        }
-        .topbar h3 { font-size: 18px; font-weight: 600; }
-        .user-info { display: flex; align-items: center; gap: 15px; font-size: 13px; color: var(--text-muted); }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 7px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+/* AUTH */
+#authScreen{
+ height:100vh;display:flex;align-items:center;justify-content:center;
+ padding:20px;background:radial-gradient(circle at 50% 30%,#20215a,#080d1c 65%)
+}
+.auth-card{
+ width:100%;max-width:420px;background:rgba(17,24,43,.95);
+ border:1px solid var(--border);border-radius:24px;padding:32px;
+ box-shadow:0 25px 70px rgba(0,0,0,.45)
+}
+.logo{
+ width:72px;height:72px;margin:0 auto 16px;border-radius:22px;
+ display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(135deg,#38bdf8,#4f46e5 55%,#7c3aed);
+ font-size:31px;font-weight:900;
+ box-shadow:0 10px 35px rgba(79,70,229,.4);
+ position:relative
+}
+.logo:after{
+ content:"";position:absolute;width:28px;height:28px;
+ border:2px solid rgba(255,255,255,.35);border-radius:50%
+}
+.auth-card h1{text-align:center;font-size:27px}
+.sub{text-align:center;color:var(--muted);font-size:13px;margin:7px 0 25px}
+.field{margin-bottom:14px}
+.field label{
+ display:block;color:var(--muted);font-size:11px;font-weight:700;
+ margin-bottom:6px;text-transform:uppercase
+}
+.field input,.field textarea,.field select{
+ width:100%;background:#0b1223;border:1px solid var(--border);
+ color:white;border-radius:10px;padding:12px;outline:none
+}
+.field input:focus,.field textarea:focus{border-color:var(--blue2)}
+.btn{
+ border:0;border-radius:10px;padding:12px 16px;font-weight:700;
+ color:white;background:var(--blue);transition:.2s
+}
+.btn:hover{background:#4338ca}
+.btn.full{width:100%}
+.google{
+ width:100%;margin-top:10px;background:#fff;color:#111827
+}
+.google:hover{background:#e5e7eb}
+.msg{font-size:12px;margin-top:12px;text-align:center}
+.error{color:#f87171}.success{color:#4ade80}
+.switch{text-align:center;margin-top:16px;color:var(--muted);font-size:12px}
+.switch span{color:#818cf8;cursor:pointer;font-weight:700}
 
-        .content-area { flex: 1; padding: 30px; overflow-y: auto; display: none; }
-        .content-area.active { display: block; }
+/* APP */
+#app{height:100vh;display:flex}
+.sidebar{
+ width:260px;flex-shrink:0;background:#0b1120;
+ border-right:1px solid var(--border);padding:18px;
+ display:flex;flex-direction:column
+}
+.brand{
+ display:flex;align-items:center;gap:10px;padding:5px 5px 20px
+}
+.brand-logo{
+ width:40px;height:40px;border-radius:12px;
+ background:linear-gradient(135deg,#38bdf8,#4f46e5,#7c3aed);
+ display:flex;align-items:center;justify-content:center;font-weight:900
+}
+.brand-name{font-size:20px;font-weight:900}
+.brand-by{font-size:10px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:5px;overflow:auto}
+.nav button{
+ border:0;background:transparent;color:var(--muted);
+ text-align:left;padding:11px 12px;border-radius:9px;font-size:13px
+}
+.nav button:hover,.nav button.active{background:var(--blue);color:#fff}
+.sidebar-bottom{margin-top:auto}
+.user-mini{
+ border-top:1px solid var(--border);padding-top:14px;margin-bottom:10px;
+ font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis
+}
+.logout{width:100%;background:#991b1b}
 
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .card h4 { font-size: 16px; margin-bottom: 10px; color: #818cf8; }
-        .card p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; }
-        .link-btn { display: inline-block; padding: 8px 14px; background: var(--accent); color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; }
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{
+ height:65px;flex-shrink:0;border-bottom:1px solid var(--border);
+ display:flex;align-items:center;justify-content:space-between;padding:0 25px;
+ background:#0c1325
+}
+.topbar h2{font-size:18px}
+.top-user{font-size:12px;color:var(--muted)}
+.content{flex:1;overflow:auto;padding:25px}
+.page{display:none;max-width:1200px;margin:auto}
+.page.active{display:block}
+.page-title{font-size:24px;margin-bottom:7px}
+.page-desc{color:var(--muted);font-size:13px;margin-bottom:20px}
 
-        /* FACEBOOK STYLE POSTS & COMMENTS */
-        .fb-post { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .fb-post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .fb-avatar { width: 40px; height: 40px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .fb-actions { display: flex; gap: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 8px 0; margin: 12px 0; font-size: 13px; color: var(--text-muted); cursor: pointer; }
-        .fb-actions span:hover { color: #818cf8; }
-        .comment-box { display: flex; gap: 10px; margin-top: 10px; }
-        .comment-box input { flex: 1; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 20px; color: white; font-size: 12px; outline: none; }
-        .comments-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .comment-item { background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; font-size: 12px; }
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{
+ background:var(--panel);border:1px solid var(--border);
+ border-radius:14px;padding:20px;margin-bottom:16px
+}
+.card h3{font-size:16px;margin-bottom:8px}
+.card h4{color:#818cf8;margin-bottom:8px}
+.card p{color:var(--muted);font-size:13px;line-height:1.5}
+.stat{font-size:30px;font-weight:900;margin-top:10px}
 
-        /* INBOX CHAT SYSTEM */
-        .chat-container { display: flex; height: calc(100vh - 150px); background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-        .chat-sidebar { width: 300px; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        .chat-search { padding: 15px; border-bottom: 1px solid var(--border); }
-        .chat-search input { width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: white; }
-        .chat-list { flex: 1; overflow-y: auto; }
-        .chat-user-item { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        .chat-user-item:hover { background: rgba(255,255,255,0.02); }
-        
-        .chat-main { flex: 1; display: flex; flex-direction: column; background: #0b1329; }
-        .chat-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); }
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .message { max-width: 60%; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.4; }
-        .message.incoming { background: #1e293b; align-self: flex-start; }
-        .message.outgoing { background: var(--accent); align-self: flex-end; }
-        
-        .chat-input-bar { padding: 15px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--bg-card); }
-        .chat-input-bar input { flex: 1; padding: 10px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: white; outline: none; }
-        .chat-icon-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; padding: 5px; }
-        .chat-icon-btn:hover { color: white; }
+/* POSTS */
+.post{
+ background:var(--panel);border:1px solid var(--border);
+ border-radius:14px;padding:18px;margin-bottom:15px
+}
+.post-head{display:flex;align-items:center;gap:10px}
+.avatar{
+ width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#06b6d4);
+ display:flex;align-items:center;justify-content:center;font-weight:800
+}
+.post-name{font-size:13px;font-weight:700}
+.post-time{font-size:10px;color:var(--muted)}
+.post-body{font-size:14px;line-height:1.5;margin:15px 0}
+.post-actions{
+ display:flex;gap:20px;border-top:1px solid var(--border);
+ border-bottom:1px solid var(--border);padding:9px 0;color:var(--muted);font-size:12px
+}
+.post-actions span{cursor:pointer}.post-actions span:hover{color:white}
+.comment{background:#0b1223;border-radius:8px;padding:8px 10px;font-size:12px;margin-top:7px}
+.comment-box{display:flex;gap:7px;margin-top:10px}
+.comment-box input{
+ flex:1;background:#0b1223;border:1px solid var(--border);
+ color:white;border-radius:20px;padding:9px 13px;outline:0
+}
+.small-btn{padding:8px 12px;border:0;border-radius:8px;background:var(--blue);color:white;font-size:12px}
 
-        .error-msg { color: #ef4444; font-size: 12px; margin-top: 10px; }
-        .success-msg { color: #22c55e; font-size: 12px; margin-top: 10px; }
-    </style>
+/* TABLE/LINKS */
+.platform{
+ display:flex;align-items:center;justify-content:space-between;gap:15px
+}
+.platform-info h3{margin-bottom:4px}
+.platform-info p{margin:0}
+.link{
+ display:inline-block;background:var(--blue);color:white;text-decoration:none;
+ padding:9px 12px;border-radius:8px;font-size:11px;font-weight:700;white-space:nowrap
+}
+
+/* CHAT */
+.chat{
+ height:calc(100vh - 155px);min-height:450px;
+ display:flex;background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden
+}
+.chat-list{width:280px;border-right:1px solid var(--border);overflow:auto}
+.chat-search{padding:12px;border-bottom:1px solid var(--border)}
+.chat-search input{
+ width:100%;padding:9px;background:#0b1223;border:1px solid var(--border);
+ border-radius:8px;color:white
+}
+.chat-person{padding:13px;border-bottom:1px solid var(--border);cursor:pointer}
+.chat-person:hover{background:#18213a}
+.chat-window{flex:1;display:flex;flex-direction:column;min-width:0}
+.chat-head{padding:13px 17px;border-bottom:1px solid var(--border);font-weight:700}
+.messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:9px}
+.bubble{max-width:70%;padding:9px 12px;border-radius:12px;font-size:13px}
+.in{background:#1e293b;align-self:flex-start}
+.out{background:var(--blue);align-self:flex-end}
+.chat-send{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
+.chat-send input{
+ flex:1;background:#0b1223;border:1px solid var(--border);
+ color:white;padding:10px;border-radius:9px
+}
+
+/* MOBILE */
+.menu-btn{display:none;background:transparent;border:0;color:white;font-size:22px}
+@media(max-width:760px){
+ .sidebar{
+  position:fixed;left:-270px;top:0;bottom:0;z-index:20;
+  transition:.25s
+ }
+ .sidebar.open{left:0}
+ .menu-btn{display:block}
+ .topbar{padding:0 15px}
+ .content{padding:15px}
+ .chat-list{width:110px}
+ .chat-person{font-size:11px}
+ .platform{align-items:flex-start;flex-direction:column}
+ .link{width:100%;text-align:center}
+}
+</style>
 </head>
+
 <body>
 
-    <!-- AUTH SCREEN -->
-    <div id="auth-screen">
-        <div class="login-card">
-            <div class="logo-box">X</div>
-            <h2>Welcome to XeeRe</h2>
-            <div class="subtitle">Enterprise Intelligence & Community</div>
+<!-- AUTH -->
+<section id="authScreen">
+<div class="auth-card">
+ <div class="logo">XR</div>
+ <h1>XeeRe</h1>
+ <div class="sub">Enterprise Intelligence & Community<br>By EryX Zee</div>
 
-            <div class="input-group">
-                <label>EMAIL ADDRESS</label>
-                <input type="email" id="auth-email" placeholder="name@example.com">
-            </div>
-            <div class="input-group">
-                <label>PASSWORD</label>
-                <input type="password" id="auth-password" placeholder="At least 6 characters">
-            </div>
-            <button class="action-btn" onclick="handleEmailAuth()">Continue / Sign In</button>
-            
-            <button class="google-btn" onclick="handleGoogleLogin()">
-                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.19-1.84H9v3.48h4.84c-.21 1.12-.84 2.07-1.78 2.71v2.25h2.87c1.68-1.55 2.81-3.83 2.81-6.6z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.87-2.25c-.81.54-1.85.86-3.09.86-2.37 0-4.38-1.6-5.1-3.76H.9v2.33C2.42 15.86 5.45 18 9 18z"/><path fill="#FBBC05" d="M3.9 10.67c-.19-.54-.3-1.12-.3-1.72s.11-1.18.3-1.72V4.9H.9C.33 6.05 0 7.36 0 8.95s.33 2.9.9 4.05l3-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.47.89 11.43 0 9 0 5.45 0 2.42 2.14.9 5.3l3 2.33c.72-2.16 2.73-3.76 5.1-3.76z"/></svg>
-                Sign in with Google
-            </button>
-            <div id="auth-error" class="error-msg"></div>
-            <div id="auth-success" class="success-msg"></div>
-        </div>
-    </div>
+ <div class="field">
+  <label>Email</label>
+  <input id="email" type="email" placeholder="name@example.com">
+ </div>
 
-    <!-- MAIN APP SCREEN -->
-    <div id="app-screen">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div>
-                <div class="sidebar-brand">
-                    XeeRe 
-                    <span>By EryX Zee</span>
-                </div>
-                <ul class="nav-menu">
-                    <li class="nav-item active" onclick="switchTab('dashboard', this)">📊 Dashboard</li>
-                    <li class="nav-item" onclick="switchTab('autodetect', this)">🤖 Auto Review Removal & Report</li>
-                    <li class="nav-item" onclick="switchTab('reports', this)">🛡️ Platform Links</li>
-                    <li class="nav-item" onclick="switchTab('community', this)">🌐 Community Feed</li>
-                    <li class="nav-item" onclick="switchTab('inbox', this)">💬 Messenger Inbox</li>
-                    <li class="nav-item" onclick="switchTab('ai', this)">⚡ AI Assistant</li>
-                    <li class="nav-item" onclick="switchTab('profile', this)">👤 Profile & Settings</li>
-                    <li class="nav-item" onclick="switchTab('policies', this)">📜 Website Policies</li>
-                    <li class="nav-item" onclick="switchTab('feedback', this)">📝 Feedback & Support</li>
-                </ul>
-            </div>
-            <div>
-                <button class="logout-btn" style="width: 100%;" onclick="handleLogout()">Sign Out</button>
-            </div>
-        </div>
+ <div class="field">
+  <label>Password</label>
+  <input id="password" type="password" placeholder="Minimum 6 characters">
+ </div>
 
-        <!-- Content Area -->
-        <div class="main-content">
-            <div class="topbar">
-                <h3 id="current-title">Dashboard Overview</h3>
-                <div class="user-info">
-                    <span id="user-display-email">user@xeere.app</span>
-                </div>
-            </div>
+ <button class="btn full" onclick="emailLogin()">Continue / Sign In</button>
+ <button class="btn google" onclick="googleLogin()">🔵 Sign in with Google</button>
 
-            <!-- Tab 1: Dashboard -->
-            <div id="tab-dashboard" class="content-area active">
-                <h2 style="margin-bottom: 20px;">Welcome back to XeeRe Intelligence!</h2>
-                <div class="grid-cards">
-                    <div class="card">
-                        <h4>Auto Policy Scanner</h4>
-                        <p>Automatically detect platform, categorize violations (Spam, Hate Speech, Harassment), and generate report links.</p>
-                        <a href="#" class="link-btn" onclick="switchTab('autodetect', document.querySelectorAll('.nav-item')[1])">Launch Scanner</a>
-                    </div>
-                    <div class="card">
-                        <h4>Community & Comments</h4>
-                        <p>Post updates, comment like Facebook, and engage with community members.</p>
-                        <a href="#" class="link-btn" onclick="switchTab('community', document.querySelectorAll('.nav-item')[3])">Open Feed</a>
-                    </div>
-                    <div class="card">
-                        <h4>Messenger Inbox</h4>
-                        <p>Real-time chat with file attachments, calls, stickers, and emojis.</p>
-                        <a href="#" class="link-btn" onclick="switchTab('inbox', document.querySelectorAll('.nav-item')[4])">Open Inbox</a>
-                    </div>
-                </div>
-            </div>
+ <div id="authMsg" class="msg"></div>
+ <div class="switch">
+  New to XeeRe? <span onclick="emailSignup()">Create account</span>
+ </div>
+</div>
+</section>
 
-            <!-- Tab 2: Auto Review Removal & Report Tool -->
-            <div id="tab-autodetect" class="content-area">
-                <h2 style="margin-bottom: 10px;">Automated Review & Violation Analyzer</h2>
-                <p style="color:var(--text-muted); margin-bottom: 20px; font-size:13px;">Paste any review or platform link below. System will automatically detect the platform, categorize the violation type, and provide direct reporting links.</p>
-                
-                <div class="card">
-                    <div class="input-group">
-                        <label>PASTE REVIEW TEXT OR PLATFORM URL</label>
-                        <textarea id="target-review-input" placeholder="e.g., https://maps.google.com/... or paste abusive/spam review text here..." style="height: 90px;"></textarea>
-                    </div>
-                    <button class="action-btn" style="width:auto; padding: 10px 25px;" onclick="runAutoAnalysis()">Analyze & Generate Report Link</button>
-                </div>
+<!-- APP -->
+<section id="app" class="hidden">
 
-                <div id="analysis-result-box" class="card" style="display:none; border-color: #4f46e5;">
-                    <h4 style="color: #22c55e;">✨ Analysis Result & Action Plan</h4>
-                    <div id="analysis-output-content" style="font-size: 13px; line-height: 1.6; margin-top: 10px;"></div>
-                </div>
-            </div>
+<aside id="sidebar" class="sidebar">
+ <div>
+  <div class="brand">
+   <div class="brand-logo">XR</div>
+   <div>
+    <div class="brand-name">XeeRe</div>
+    <div class="brand-by">By EryX Zee</div>
+   </div>
+  </div>
 
-            <!-- Tab 3: Platform Direct Links -->
-            <div id="tab-reports" class="content-area">
-                <h2 style="margin-bottom: 20px;">Multi-Platform Direct Reporting Links</h2>
-                <div class="grid-cards">
-                    <div class="card">
-                        <h4>Google Maps</h4>
-                        <p>Report fake reviews, spam pins, and policy-violating local business content.</p>
-                        <a href="https://support.google.com/business/answer/4596773" target="_blank" class="link-btn">Google Business Support</a>
-                    </div>
-                    <div class="card">
-                        <h4>Reddit</h4>
-                        <p>Report harassment, copyright infringement, or abusive subreddit threads.</p>
-                        <a href="https://www.reddit.com/report" target="_blank" class="link-btn">Reddit Report Portal</a>
-                    </div>
-                    <div class="card">
-                        <h4>Trustpilot</h4>
-                        <p>Flag fake experiences, defamation, and malicious customer reviews.</p>
-                        <a href="https://support.trustpilot.com/hc/en-us" target="_blank" class="link-btn">Trustpilot Support</a>
-                    </div>
-                    <div class="card">
-                        <h4>Facebook</h4>
-                        <p>Report scam posts, hate speech comments, and fake community groups.</p>
-                        <a href="https://www.facebook.com/help" target="_blank" class="link-btn">Facebook Help Center</a>
-                    </div>
-                    <div class="card">
-                        <h4>Instagram</h4>
-                        <p>Report inappropriate direct messages, bullying comments, or impersonation.</p>
-                        <a href="https://help.instagram.com" target="_blank" class="link-btn">Instagram Help Center</a>
-                    </div>
-                    <div class="card">
-                        <h4>TikTok</h4>
-                        <p>Report harmful video challenges, copyright breaches, and harassment.</p>
-                        <a href="https://www.tiktok.com/legal/report/feedback" target="_blank" class="link-btn">TikTok Report Portal</a>
-                    </div>
-                </div>
-            </div>
+  <nav class="nav">
+   <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+   <button onclick="showPage('scanner',this)">🤖 Review Analyzer</button>
+   <button onclick="showPage('platforms',this)">🛡️ Platform Reports</button>
+   <button onclick="showPage('community',this)">🌐 Community</button>
+   <button onclick="showPage('friends',this)">👥 Friends</button>
+   <button onclick="showPage('messenger',this)">💬 Messenger</button>
+   <button onclick="showPage('ai',this)">⚡ AI Assistant</button>
+   <button onclick="showPage('profile',this)">👤 Profile</button>
+   <button onclick="showPage('policies',this)">📜 Policies</button>
+   <button onclick="showPage('feedback',this)">📝 Feedback</button>
+  </nav>
+ </div>
 
-            <!-- Tab 4: Community Feed with Facebook-Style Comments -->
-            <div id="tab-community" class="content-area">
-                <h2 style="margin-bottom: 20px;">Community Feed & Discussions</h2>
-                <div class="card" style="margin-bottom: 20px;">
-                    <h4>Create New Post</h4>
-                    <textarea id="post-text" placeholder="What's on your mind?" style="width:100%; height:80px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; color:white; padding:10px; margin-top:10px; outline:none;"></textarea>
-                    <button class="action-btn" style="width: auto; padding: 8px 20px; margin-top: 10px;" onclick="createPost()">Publish Post</button>
-                </div>
+ <div class="sidebar-bottom">
+  <div class="user-mini" id="sideEmail">Loading...</div>
+  <button class="btn logout" onclick="logout()">Sign Out</button>
+ </div>
+</aside>
 
-                <div id="feed-container">
-                    <!-- Sample Facebook-style post -->
-                    <div class="fb-post">
-                        <div class="fb-post-header">
-                            <div class="fb-avatar">E</div>
-                            <div>
-                                <div style="font-weight:600; font-size:14px;">EryX Zee</div>
-                                <div style="font-size:11px; color:var(--text-muted);">Just now</div>
-                            </div>
-                        </div>
-                        <p style="font-size: 13px; line-height: 1.4;">XeeRe automated violation detection and multi-platform intelligence system is now live! 🚀</p>
-                        <div class="fb-actions">
-                            <span onclick="likePost(this)">👍 Like (<span class="like-count">12</span>)</span>
-                            <span>💬 Comment</span>
-                            <span>↗ Share</span>
-                        </div>
-                        <div class="comments-list">
-                            <div class="comment-item"><strong>Zeeshan:</strong> Awesome update! Loving the auto-detection feature.</div>
-                        </div>
-                        <div class="comment-box">
-                            <input type="text" placeholder="Write a comment..." onkeypress="if(event.key === 'Enter') addComment(event)">
-                        </div>
-                    
+<main class="main">
+ <header class="topbar">
+  <div style="display:flex;align-items:center;gap:12px">
+   <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+   <h2 id="pageTitle">Dashboard</h2>
+  </div>
+  <div class="top-user" id="topEmail"></div>
+ </header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="page active">
+ <h1 class="page-title">Welcome to XeeRe</h1>
+ <p class="page-desc">Your intelligence, reporting and community workspace.</p>
+
+ <div class="grid">
+  <div class="card"><h4>👤 Account</h4><p>Authenticated Firebase account.</p><div class="stat" id="userStatus">✓</div></div>
+  <div class="card"><h4>📝 Posts</h4><p>Community posts created by users.</p><div class="stat" id="postCount">0</div></div>
+  <div class="card"><h4>👥 Friends</h4><p>Manage your community connections.</p><div class="stat" id="friendCount">0</div></div>
+  <div class="card"><h4>💬 Messenger</h4><p>Real-time Firestore messaging.</p><div class="stat">LIVE</div></div>
+ </div>
+
+ <div class="card">
+  <h3>🚀 XeeRe Intelligence</h3>
+  <p>Analyze submitted content for potential policy issues and use the appropriate platform's official reporting channel. Removal is always determined by the platform.</p>
+ </div>
+</div>
+
+<!-- SCANNER -->
+<div id="scanner" class="page">
+ <h1 class="page-title">🤖 Review & Violation Analyzer</h1>
+ <p class="page-desc">Analyze text or URLs for possible policy categories.</p>
+
+ <div class="card">
+  <div class="field">
+   <label>Review text / platform URL</label>
+   <textarea id="reviewInput" rows="6" placeholder="Paste review text or a platform URL..."></textarea>
+  </div>
+  <button class="btn" onclick="analyzeReview()">Analyze</button>
+ </div>
+
+ <div id="analysis" class="card hidden"></div>
+</div>
+
+<!-- PLATFORMS -->
+<div id="platforms" class="page">
+ <h1 class="page-title">🛡️ Platform Reporting</h1>
+ <p class="page-desc">Official reporting/support destinations.</p>
+
+ <div class="grid">
+
+  <div class="card platform">
+   <div class="platform-info"><h3>Google Maps</h3><p>Business profile and review support.</p></div>
+   <a class="link" target="_blank" href="https://support.google.com/business/answer/4596773">Open</a>
+  </div>
+
+  <div class="card platform">
+   <div class="platform-info"><h3>Reddit</h3><p>Report content and policy violations.</p></div>
+   <a class="link" target="_blank" href="https://www.reddit.com/report">Open</a>
+  </div>
+
+  <div class="card platform">
+   <div class="platform-info"><h3>Trustpilot</h3><p>Review reporting and support.</p></div>
+   <a class="link" target="_blank" href="https://support.trustpilot.com/">Open</a>
+  </div>
+
+  <div class="card platform">
+   <div class="platform-info"><h3>Facebook</h3><p>Report content through Help Center.</p></div>
+   <a class="link" target="_blank" href="https://www.facebook.com/help/">Open</a>
+  </div>
+
+  <div class="card platform">
+   <div class="platform-info"><h3>Instagram</h3><p>Safety and reporting support.</p></div>
+   <a class="link" target="_blank" href="https://help.instagram.com/">Open</a>
+  </div>
+
+  <div class="card platform">
+   <div class="platform-info"><h3>TikTok</h3><p>Official feedback/reporting portal.</p></div>
+   <a class="link" target="_blank" href="https://www.tiktok.com/legal/report/feedback">Open</a>
+  </div>
+
+ </div>
+</div>
+
+<!-- COMMUNITY -->
+<div id="community" class="page">
+ <h1 class="page-title">🌐 Community Feed</h1>
+ <p class="page-desc">Share updates and interact with the XeeRe community.</p>
+
+ <div class="card">
+  <div class="field">
+   <textarea id="postInput" rows="3" placeholder="What's on your mind?"></textarea>
+  </div>
+  <button class="btn" onclick="createPost()">Publish Post</button>
+ </div>
+
+ <div id="feed"></div>
+</div>
+
+<!-- FRIENDS -->
+<div id="friends" class="page">
+ <h1 class="page-title">👥 Friends</h1>
+ <p class="page-desc">Find XeeRe users and send friend requests.</p>
+
+ <div class="card">
+  <div style="display:flex;gap:8px">
+   <input id="userSearch" placeholder="Search by exact email..."
+    style="flex:1;background:#0b1223;border:1px solid var(--border);padding:11px;color:white;border-radius:9px">
+   <button class="btn" onclick="searchUser()">Search</button>
+  </div>
+ </div>
+
+ <div id="userResults"></div>
+ <div id="requests"></div>
+</div>
+
+<!-- MESSENGER -->
+<div id="messenger" class="page">
+ <h1 class="page-title">💬 Messenger</h1>
+ <p class="page-desc">Real-time user-to-user messaging.</p>
+
+ <div class="chat">
+  <div class="chat-list">
+   <div class="chat-search">
+    <input placeholder="Friends" oninput="filterFriends(this.value)">
+   </div>
+   <div id="chatPeople"></div>
+  </div>
+
+  <div class="chat-window">
+   <div class="chat-head" id="chatHeader">Select a friend</div>
+   <div class="messages" id="messages"></div>
+   <div class="chat-send">
+    <input id="messageInput" placeholder="Write a message..." onkeypress="if(event.key==='Enter')sendMessage()">
+    <button class="btn" onclick="sendMessage()">Send</button>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- AI -->
+<div id="ai" class="page">
+ <h1 class="page-title">⚡ AI Assistant</h1>
+ <p class="page-desc">Helpful guidance for policy analysis and XeeRe workflows.</p>
+
+ <div class="card">
+  <div class="field">
+   <label>Ask XeeRe</label>
+   <textarea id="aiInput" rows="5" placeholder="Example: What information should I collect before reporting a suspicious review?"></textarea>
+  </div>
+  <button class="btn" onclick="askAI()">Ask Assistant</button>
+ </div>
+ <div id="aiOutput" class="card hidden"></div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="page">
+ <h1 class="page-title">👤 Profile & Settings</h1>
+
+ <div class="card">
+  <h3>Account</h3>
+  <p id="profileEmail" style="margin-top:10px"></p>
+  <p id="profileUid" style="margin-top:6px;font-size:11px"></p>
+ </div>
+
+ <div class="card">
+  <h3>Display name</h3>
+  <div class="field" style="margin-top:12px">
+   <input id="displayName" placeholder="Your display name">
+  </div>
+  <button class="btn" onclick="saveProfile()">Save Profile</button>
+  <div id="profileMsg" class="msg"></div>
+ </div>
+</div>
+
+<!-- POLICIES -->
+<div id="policies" class="page">
+ <h1 class="page-title">📜 Website Policies</h1>
+
+ <div class="card">
+  <h3>Responsible Reporting</h3>
+  <p>XeeRe helps users identify possible policy concerns and navigate official reporting channels. Users should submit only truthful information and genuine evidence.</p>
+ </div>
+
+ <div class="card">
+  <h3>Privacy</h3>
+  <p>Do not upload passwords, payment information, private documents or unnecessary personal information into community posts or messages.</p>
+ </div>
+
+ <div class="card">
+  <h3>Community Rules</h3>
+  <p>No harassment, threats, spam, impersonation, fabricated evidence or malicious reporting.</p>
+ </div>
+</div>
+
+<!-- FEEDBACK -->
+<div id="feedback" class="page">
+ <h1 class="page-title">📝 Feedback & Support</h1>
+
+ <div class="card">
+  <div class="field">
+   <label>Subject</label>
+   <input id="feedbackSubject" placeholder="Subject">
+  </div>
+
+  <div class="field">
+   <label>Message</label>
+   <textarea id="feedbackText" rows="6" placeholder="Tell us what happened..."></textarea>
+  </div>
+
+  <button class="btn" onclick="sendFeedback()">Send Feedback</button>
+  <div id="feedbackMsg" class="msg"></div>
+ </div>
+</div>
+
+</div>
+</main>
+</section>
+
+<script>
+/* =========================
+   FIREBASE
+========================= */
+
+const firebaseConfig = {
+ apiKey:"AIzaSyCsXHd2NtxunSfbqhiSbN2xrxhG6NQsTgw",
+ authDomain:"xeera-7b670.firebaseapp.com",
+ projectId:"xeera-7b670",
+ storageBucket:"xeera-7b670.firebasestorage.app",
+ messagingSenderId:"259340449627",
+ appId:"1:259340449627:web:bf148c1a133795e8208c7e",
+ measurementId:"G-3K3257YCWV"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth=firebase.auth();
+const db=firebase.firestore();
+
+let currentUser=null;
+let selectedFriend=null;
+let messageUnsubscribe=null;
+let allFriends=[];
+
+/* =========================
+   AUTH
+========================= */
+
+function authMessage(text,type="error"){
+ const el=document.getElementById("authMsg");
+ el.className="msg "+type;
+ el.textContent=text;
+}
+
+function emailSignup(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+
+ if(!email||password.length<6){
+  authMessage("Enter a valid email and password of at least 6 characters.");
+  return;
+ }
+
+ auth.createUserWithEmailAndPassword(email,password)
+ .then(cred=>{
+  return db.collection("users").doc(cred.user.uid).set({
+   uid:cred.user.uid,
+   email:cred.user.email,
+   displayName:cred.user.email.split("@")[0],
+   createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  },{merge:true});
+ })
+ .then(()=>authMessage("Account created successfully!","success"))
+ .catch(e=>authMessage(e.message));
+}
+
+function emailLogin(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+
+ if(!email||!password){
+  authMessage("Please enter email and password.");
+  return;
+ }
+
+ auth.signInWithEmailAndPassword(email,password)
+ .catch(e=>authMessage(e.message));
+}
+
+function googleLogin(){
+ const provider=new firebase.auth.GoogleAuthProvider();
+
+ auth.signInWithPopup(provider)
+ .then(cred=>{
+  return db.collection("users").doc(cred.user.uid).set({
+   uid:cred.user.uid,
+   email:cred.user.email,
+   displayName:cred.user.displayName||cred.user.email.split("@")[0],
+   photoURL:cred.user.photoURL||"",
+   lastLogin:firebase.firestore.FieldValue.serverTimestamp()
+  },{merge:true});
+ })
+ .catch(e=>authMessage(e.message));
+}
+
+function logout(){
+ auth.signOut();
+}
+
+auth.onAuthStateChanged(async user=>{
+ if(user){
+  currentUser=user;
+
+  document.getElementById("authScreen").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  document.getElementById("sideEmail").textContent=user.email;
+  document.getElementById("topEmail").textContent=user.email;
+  document.getElementById("profileEmail").textContent="Email: "+user.email;
+  document.getElementById("profileUid").textContent="UID: "+user.uid;
+
+  await db.collection("users").doc(user.uid).set({
+   uid:user.uid,
+   email:user.email,
+   lastLogin:firebase.firestore.FieldValue.serverTimestamp()
+  },{merge:true});
+
+  loadPosts(
