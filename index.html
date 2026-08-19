@@ -1,160 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#6366f1">
-<title>XeeRe — Enterprise Intelligence & Community</title>
-<style>
-:root{--p:#6366f1;--ph:#4f46e5;--bg:#f6f8fc;--card:#fff;--text:#101828;--muted:#667085;--line:#e4e7ec;--danger:#ef4444;--success:#16a34a;--r:14px}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}button,input,textarea,select{font:inherit}button{cursor:pointer}
-.hidden{display:none!important}.app{min-height:100vh}.sidebar{position:fixed;z-index:50;left:0;top:0;bottom:0;width:260px;background:#fff;border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px;padding:4px 10px 25px}.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#06b6d4);color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px}.brand b{font-size:17px}.brand small{display:block;color:var(--p);font-weight:700;margin-top:2px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;text-align:left;padding:12px 13px;border-radius:11px;color:var(--muted);font-weight:650;font-size:13px}.nav button:hover,.nav button.active{background:#eef2ff;color:#4338ca}.logout{border:0;background:#fff1f2;color:#dc2626;padding:12px;border-radius:11px;font-weight:700;width:100%}
-.main{margin-left:260px;padding:28px;max-width:1500px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:15px}.topbar h1{margin:0;font-size:25px}.topbar p{margin:5px 0 0;color:var(--muted);font-size:13px}.user-chip{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:30px}.avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#e0e7ff;display:grid;place-items:center;font-weight:800;color:#4338ca}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:0 4px 18px rgba(16,24,40,.04);margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.stat{padding:18px;border-radius:14px;background:#fff;border:1px solid var(--line)}.stat b{font-size:25px}.muted{color:var(--muted)}.label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:750;color:var(--muted);display:block;margin-bottom:6px}.input,.select,.textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fbfcfe;outline:none}.input:focus,.select:focus,.textarea:focus{border-color:var(--p);background:#fff}.textarea{resize:vertical;min-height:110px}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700}.primary{background:var(--p);color:#fff}.primary:hover{background:var(--ph)}.secondary{background:#eef2ff;color:#4338ca}.dark{background:#101828;color:#fff}.danger{background:#fee2e2;color:#b91c1c}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.between{display:flex;justify-content:space-between;align-items:center;gap:10px}.section{display:none}.section.active{display:block}.notice{padding:12px 14px;border-radius:10px;background:#fffbeb;color:#92400e;border:1px solid #fde68a;font-size:12px}
-.case{border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:12px}.badge{display:inline-block;border-radius:30px;padding:4px 9px;background:#eef2ff;color:#4338ca;font-size:10px;font-weight:800}.case h3{margin:8px 0 5px;font-size:15px}.report{white-space:pre-wrap;background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:11px;font-size:12px;line-height:1.55;margin-top:10px}
-.post{border:1px solid var(--line);padding:15px;border-radius:12px;margin-top:12px}.post p{font-size:13px;line-height:1.55}.post-actions{display:flex;gap:7px;margin-top:10px}.post-actions button{border:0;background:#f2f4f7;border-radius:8px;padding:7px 10px;font-size:11px}
-.chat{height:70vh;min-height:500px;background:#fff;border:1px solid var(--line);border-radius:14px;display:grid;grid-template-columns:260px 1fr;overflow:hidden}.chat-list{border-right:1px solid var(--line);overflow:auto;background:#fafbfc}.contact{padding:13px 15px;border-bottom:1px solid var(--line);cursor:pointer}.contact.active,.contact:hover{background:#eef2ff}.chat-main{display:flex;flex-direction:column;min-width:0}.chat-head{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:9px;background:#fbfcfe}.bubble{max-width:75%;padding:9px 12px;border-radius:13px;font-size:13px;line-height:1.45}.in{background:#eef2f6;align-self:flex-start}.out{background:var(--p);color:#fff;align-self:flex-end}.bubble img{max-width:240px;border-radius:9px;display:block;margin-top:6px}.file{padding:9px;background:rgba(0,0,0,.06);border-radius:8px;margin-top:5px}.composer{border-top:1px solid var(--line);padding:10px}.composer textarea{min-height:44px;max-height:100px;resize:none}.tools{display:flex;gap:6px;overflow:auto;padding-top:7px}.tool{border:0;background:#f2f4f7;border-radius:9px;padding:7px 10px}.stickers{display:none;gap:8px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:7px}.stickers button{border:0;background:transparent;font-size:23px}.profile-grid{display:grid;grid-template-columns:240px 1fr;gap:20px}.profile-avatar{width:150px;height:150px;border-radius:50%;object-fit:cover;background:#e0e7ff;border:3px solid var(--p)}.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
-.login{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:radial-gradient(circle at top right,#312e81,#0f172a);padding:20px}.login-card{width:min(440px,100%);background:rgba(255,255,255,.06);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.12);padding:32px;border-radius:24px;color:#fff}.login-card .input{color:#fff;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}.login-card .input::placeholder{color:#94a3b8}.login-logo{margin:auto auto 12px;width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#6366f1,#06b6d4);display:grid;place-items:center;font-size:25px;font-weight:800}.auth-tabs{display:flex;gap:5px;background:rgba(255,255,255,.06);padding:4px;border-radius:10px;margin:18px 0}.auth-tabs button{flex:1;border:0;background:transparent;color:#94a3b8;padding:8px;border-radius:8px}.auth-tabs button.active{background:var(--p);color:#fff}.error{color:#fca5a5;font-size:12px;margin-top:9px}.toast{position:fixed;right:20px;bottom:20px;background:#101828;color:#fff;padding:12px 16px;border-radius:10px;z-index:5000;font-size:12px;box-shadow:0 10px 30px #0003}
-.mobile-menu{display:none}.modal{position:fixed;inset:0;background:#0008;z-index:3000;display:grid;place-items:center;padding:20px}.modal-box{width:min(500px,100%);background:#fff;border-radius:16px;padding:22px}.call-screen{position:fixed;inset:0;z-index:4000;background:#101828;color:#fff;display:grid;place-items:center;text-align:center}.call-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#06b6d4);display:grid;place-items:center;font-size:35px;margin:auto;animation:pulse 1.5s infinite}@keyframes pulse{50%{transform:scale(1.06)}}
-@media(max-width:900px){.sidebar{width:220px}.main{margin-left:220px;padding:20px}.grid{grid-template-columns:1fr 1fr}}
-@media(max-width:680px){.sidebar{display:none}.sidebar.mobile-open{display:flex;width:82%;box-shadow:10px 0 40px #0002}.main{margin-left:0;padding:15px;padding-top:72px}.mobile-menu{display:block;position:fixed;z-index:100;top:12px;left:12px;border:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px}.topbar{align-items:flex-start}.topbar h1{font-size:20px}.grid{grid-template-columns:1fr}.chat{grid-template-columns:1fr;height:75vh}.chat-list{height:125px;border-right:0;border-bottom:1px solid var(--line);display:flex;overflow-x:auto}.contact{min-width:170px}.profile-grid{grid-template-columns:1fr}.gallery{grid-template-columns:repeat(3,1fr)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XeeRe — Enterprise Intelligence & Community</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e1b4b;
+            --bg-sidebar: #111827;
+            --accent: #4f46e5;
+            --accent-hover: #4338ca;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg-primary); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+        /* AUTH SCREEN */
+        #auth-screen {
+            display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw;
+            background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+        }
+        .login-card {
+            background: var(--bg-card); border: 1px solid var(--border); padding: 35px; border-radius: 20px;
+            width: 100%; max-width: 420px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); text-align: center;
+        }
+        .logo-box {
+            width: 65px; height: 65px; background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 16px; margin: 0 auto 15px auto; display: flex; align-items: center;
+            justify-content: center; font-size: 28px; font-weight: bold; color: white;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+        .login-card h2 { font-size: 24px; font-weight: 600; margin-bottom: 5px; }
+        .login-card .subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 25px; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; letter-spacing: 0.5px; }
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%; padding: 12px 15px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 14px; outline: none;
+        }
+        .input-group input:focus, .input-group textarea:focus { border-color: #6366f1; }
+        .action-btn {
+            width: 100%; padding: 12px; background: var(--accent); color: white; border: none;
+            border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 5px;
+            transition: background 0.2s;
+        }
+        .action-btn:hover { background: var(--accent-hover); }
+        .google-btn {
+            width: 100%; padding: 12px; background: white; color: #1e293b; border: none; border-radius: 8px;
+            font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 10px; margin-top: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .google-btn:hover { background: #f1f5f9; }
+
+        /* MAIN APP LAYOUT */
+        #app-screen { display: none; height: 100vh; width: 100vw; display: flex; }
+        .sidebar {
+            width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; justify-content: space-between; padding: 20px;
+        }
+        .sidebar-brand { font-size: 20px; font-weight: bold; color: white; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-brand span { font-size: 11px; color: var(--text-muted); display: block; font-weight: normal; }
+        .nav-menu { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; max-height: calc(100vh - 150px); }
+        .nav-item {
+            padding: 10px 14px; border-radius: 8px; color: var(--text-muted); cursor: pointer;
+            font-size: 13px; font-weight: 500; transition: all 0.2s; display: flex; align-items: center; gap: 10px;
+        }
+        .nav-item:hover, .nav-item.active { background: var(--accent); color: white; }
+        
+        .main-content { flex: 1; display: flex; flex-direction: column; background: var(--bg-primary); overflow: hidden; }
+        .topbar {
+            height: 65px; border-bottom: 1px solid var(--border); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 30px; background: rgba(17, 24, 39, 0.5);
+        }
+        .topbar h3 { font-size: 18px; font-weight: 600; }
+        .user-info { display: flex; align-items: center; gap: 15px; font-size: 13px; color: var(--text-muted); }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 7px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+
+        .content-area { flex: 1; padding: 30px; overflow-y: auto; display: none; }
+        .content-area.active { display: block; }
+
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .card h4 { font-size: 16px; margin-bottom: 10px; color: #818cf8; }
+        .card p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; }
+        .link-btn { display: inline-block; padding: 8px 14px; background: var(--accent); color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; }
+
+        /* FACEBOOK STYLE POSTS & COMMENTS */
+        .fb-post { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .fb-post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .fb-avatar { width: 40px; height: 40px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .fb-actions { display: flex; gap: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 8px 0; margin: 12px 0; font-size: 13px; color: var(--text-muted); cursor: pointer; }
+        .fb-actions span:hover { color: #818cf8; }
+        .comment-box { display: flex; gap: 10px; margin-top: 10px; }
+        .comment-box input { flex: 1; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 20px; color: white; font-size: 12px; outline: none; }
+        .comments-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .comment-item { background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; font-size: 12px; }
+
+        /* INBOX CHAT SYSTEM */
+        .chat-container { display: flex; height: calc(100vh - 150px); background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .chat-sidebar { width: 300px; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        .chat-search { padding: 15px; border-bottom: 1px solid var(--border); }
+        .chat-search input { width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: white; }
+        .chat-list { flex: 1; overflow-y: auto; }
+        .chat-user-item { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .chat-user-item:hover { background: rgba(255,255,255,0.02); }
+        
+        .chat-main { flex: 1; display: flex; flex-direction: column; background: #0b1329; }
+        .chat-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .message { max-width: 60%; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.4; }
+        .message.incoming { background: #1e293b; align-self: flex-start; }
+        .message.outgoing { background: var(--accent); align-self: flex-end; }
+        
+        .chat-input-bar { padding: 15px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--bg-card); }
+        .chat-input-bar input { flex: 1; padding: 10px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: white; outline: none; }
+        .chat-icon-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; padding: 5px; }
+        .chat-icon-btn:hover { color: white; }
+
+        .error-msg { color: #ef4444; font-size: 12px; margin-top: 10px; }
+        .success-msg { color: #22c55e; font-size: 12px; margin-top: 10px; }
+    </style>
 </head>
 <body>
 
-<div id="login" class="login">
-  <div class="login-card">
-    <div class="login-logo">X</div>
-    <h2 style="text-align:center;margin:0">Welcome to XeeRe</h2>
-    <p style="text-align:center;color:#94a3b8;font-size:12px">By EryX Zee · Enterprise Intelligence & Community</p>
-    <div class="auth-tabs">
-      <button id="signinTab" class="active" onclick="setAuth('signin')">Sign In</button>
-      <button id="signupTab" onclick="setAuth('signup')">Create Account</button>
-    </div>
-    <div id="nameWrap" class="hidden"><label class="label" style="color:#94a3b8">Full name</label><input id="name" class="input" placeholder="Your name"></div>
-    <div style="margin-top:10px"><label class="label" style="color:#94a3b8">Email</label><input id="email" class="input" type="email" placeholder="name@example.com"></div>
-    <div style="margin-top:10px"><label class="label" style="color:#94a3b8">Password</label><input id="password" class="input" type="password" placeholder="At least 6 characters"></div>
-    <button class="btn primary" style="width:100%;margin-top:15px" onclick="auth()">Continue</button>
-    <div id="authError" class="error"></div>
-    <p style="font-size:10px;color:#94a3b8;line-height:1.5;margin-top:16px">This standalone HTML keeps the session in this browser until the user explicitly signs out. For production-grade authentication, connect the same UI to Firebase/Supabase/Auth.js on Vercel.</p>
-  </div>
-</div>
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen">
+        <div class="login-card">
+            <div class="logo-box">X</div>
+            <h2>Welcome to XeeRe</h2>
+            <div class="subtitle">Enterprise Intelligence & Community</div>
 
-<aside id="sidebar" class="sidebar">
-  <div>
-    <div class="brand"><div class="logo">X</div><div><b>XeeRe</b><small>By EryX Zee</small></div></div>
-    <nav class="nav">
-      <button class="active" onclick="show('dashboard',this)">📊 Intelligence Dashboard</button>
-      <button onclick="show('community',this)">🌐 Community Feed</button>
-      <button onclick="show('chat',this)">💬 Messenger Inbox</button>
-      <button onclick="show('profile',this)">👤 User Profile</button>
-      <button onclick="show('bot',this)">🤖 AI Assistant</button>
-      <button onclick="show('feedback',this)">💡 Feedback & Complaints</button>
-    </nav>
-  </div>
-  <button class="logout" onclick="logout()">🚪 Sign Out</button>
-</aside>
-<button class="mobile-menu" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">☰</button>
-
-<main id="app" class="main hidden">
-  <div class="topbar">
-    <div><h1 id="pageTitle">Intelligence Dashboard</h1><p id="pageSub">Policy analysis, reports and case management.</p></div>
-    <div class="user-chip"><img id="topAvatar" class="avatar" alt=""><span id="topName">User</span></div>
-  </div>
-
-  <section id="dashboard" class="section active">
-    <div class="grid">
-      <div class="stat"><span class="muted">Reports</span><br><b id="statReports">0</b></div>
-      <div class="stat"><span class="muted">Community Posts</span><br><b id="statPosts">0</b></div>
-      <div class="stat"><span class="muted">Messages</span><br><b id="statMessages">0</b></div>
-    </div>
-    <div class="card" style="margin-top:18px">
-      <div class="between"><div><h3 style="margin:0">Multi-Platform Policy Analyzer</h3><p class="muted" style="font-size:12px">Paste public URLs or case text. XeeRe drafts a neutral policy report for manual submission.</p></div></div>
-      <div class="grid" style="margin-top:16px">
-        <div><label class="label">Platform</label><select id="platform" class="select"><option>Google Maps</option><option>Reddit</option><option>Trustpilot</option><option>Facebook</option><option>Instagram</option><option>TikTok</option></select></div>
-        <div style="grid-column:span 2"><label class="label">URL(s), one per line</label><textarea id="urls" class="textarea" style="min-height:80px" placeholder="https://..."></textarea></div>
-      </div>
-      <div style="margin-top:12px"><label class="label">Optional case/content details</label><textarea id="caseText" class="textarea" placeholder="Paste the review/comment or describe the issue. Do not fabricate evidence."></textarea></div>
-      <button class="btn primary" style="margin-top:12px" onclick="analyze()">⚡ Generate Policy Reports</button>
-    </div>
-    <div id="cases"></div>
-  </section>
-
-  <section id="community" class="section">
-    <div class="card"><textarea id="postInput" class="textarea" placeholder="Share a project, link deal, question or useful update..."></textarea><button class="btn primary" style="margin-top:10px" onclick="createPost()">🚀 Publish Post</button></div>
-    <div id="feed"></div>
-  </section>
-
-  <section id="chat" class="section">
-    <div class="chat">
-      <div id="chatList" class="chat-list"></div>
-      <div class="chat-main">
-        <div class="chat-head"><b id="chatPerson">Alex Morgan</b><div class="row"><button class="btn secondary" onclick="startCall('Alex Morgan','audio')">📞</button><button class="btn secondary" onclick="startCall('Alex Morgan','video')">📹</button></div></div>
-        <div id="messages" class="messages"></div>
-        <div class="composer">
-          <div id="stickers" class="stickers"></div>
-          <textarea id="messageInput" class="input" placeholder="Type a message..."></textarea>
-          <div class="tools">
-            <button class="tool" onclick="document.getElementById('imageFile').click()">🖼️ Picture</button>
-            <button class="tool" onclick="document.getElementById('fileFile').click()">📎 File</button>
-            <button class="tool" onclick="insertLink()">🔗 Link</button>
-            <button class="tool" onclick="toggleStickers()">😊 Stickers</button>
-            <button class="tool" onclick="emoji()">😀 Emoji</button>
-            <button class="btn primary" style="margin-left:auto" onclick="sendMessage()">Send ➤</button>
-          </div>
-          <input id="imageFile" class="hidden" type="file" accept="image/*" onchange="attachImage(this)">
-          <input id="fileFile" class="hidden" type="file" onchange="attachFile(this)">
+            <div class="input-group">
+                <label>EMAIL ADDRESS</label>
+                <input type="email" id="auth-email" placeholder="name@example.com">
+            </div>
+            <div class="input-group">
+                <label>PASSWORD</label>
+                <input type="password" id="auth-password" placeholder="At least 6 characters">
+            </div>
+            <button class="action-btn" onclick="handleEmailAuth()">Continue / Sign In</button>
+            
+            <button class="google-btn" onclick="handleGoogleLogin()">
+                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.19-1.84H9v3.48h4.84c-.21 1.12-.84 2.07-1.78 2.71v2.25h2.87c1.68-1.55 2.81-3.83 2.81-6.6z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.87-2.25c-.81.54-1.85.86-3.09.86-2.37 0-4.38-1.6-5.1-3.76H.9v2.33C2.42 15.86 5.45 18 9 18z"/><path fill="#FBBC05" d="M3.9 10.67c-.19-.54-.3-1.12-.3-1.72s.11-1.18.3-1.72V4.9H.9C.33 6.05 0 7.36 0 8.95s.33 2.9.9 4.05l3-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.47.89 11.43 0 9 0 5.45 0 2.42 2.14.9 5.3l3 2.33c.72-2.16 2.73-3.76 5.1-3.76z"/></svg>
+                Sign in with Google
+            </button>
+            <div id="auth-error" class="error-msg"></div>
+            <div id="auth-success" class="success-msg"></div>
         </div>
-      </div>
     </div>
-  </section>
 
-  <section id="profile" class="section">
-    <div class="card profile-grid">
-      <div style="text-align:center"><img id="profileAvatar" class="profile-avatar" alt=""><br><input id="avatarFile" class="hidden" type="file" accept="image/*" onchange="uploadAvatar(this)"><button class="btn secondary" style="margin-top:10px" onclick="document.getElementById('avatarFile').click()">📷 Change Avatar</button></div>
-      <div>
-        <h3>Profile Details</h3>
-        <label class="label">Display Name</label><input id="profileName" class="input">
-        <label class="label" style="margin-top:10px">Bio</label><textarea id="profileBio" class="textarea"></textarea>
-        <button class="btn primary" style="margin-top:10px" onclick="saveProfile()">Save Profile</button>
-      </div>
-    </div>
-    <div class="card"><h3>Media Gallery</h3><p class="muted" style="font-size:12px">Upload pictures for this browser profile.</p><input id="galleryFile" type="file" accept="image/*" multiple onchange="uploadGallery(this)" class="input"><div id="gallery" class="gallery" style="margin-top:14px"></div></div>
-  </section>
+    <!-- MAIN APP SCREEN -->
+    <div id="app-screen">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div>
+                <div class="sidebar-brand">
+                    XeeRe 
+                    <span>By EryX Zee</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item active" onclick="switchTab('dashboard', this)">📊 Dashboard</li>
+                    <li class="nav-item" onclick="switchTab('autodetect', this)">🤖 Auto Review Removal & Report</li>
+                    <li class="nav-item" onclick="switchTab('reports', this)">🛡️ Platform Links</li>
+                    <li class="nav-item" onclick="switchTab('community', this)">🌐 Community Feed</li>
+                    <li class="nav-item" onclick="switchTab('inbox', this)">💬 Messenger Inbox</li>
+                    <li class="nav-item" onclick="switchTab('ai', this)">⚡ AI Assistant</li>
+                    <li class="nav-item" onclick="switchTab('profile', this)">👤 Profile & Settings</li>
+                    <li class="nav-item" onclick="switchTab('policies', this)">📜 Website Policies</li>
+                    <li class="nav-item" onclick="switchTab('feedback', this)">📝 Feedback & Support</li>
+                </ul>
+            </div>
+            <div>
+                <button class="logout-btn" style="width: 100%;" onclick="handleLogout()">Sign Out</button>
+            </div>
+        </div>
 
-  <section id="bot" class="section">
-    <div class="card"><h3>🤖 XeeRe AI Assistant</h3><p class="muted" style="font-size:12px">Built-in local assistant for drafting reports, explaining workflows and preparing support messages.</p><div id="botMessages" class="messages" style="height:48vh;border:1px solid var(--line);border-radius:10px;margin-top:12px"></div><div class="row" style="margin-top:10px"><input id="botInput" class="input" placeholder="Ask XeeRe something..." onkeydown="if(event.key==='Enter')askBot()"><button class="btn primary" onclick="askBot()">Ask</button></div></div>
-  </section>
+        <!-- Content Area -->
+        <div class="main-content">
+            <div class="topbar">
+                <h3 id="current-title">Dashboard Overview</h3>
+                <div class="user-info">
+                    <span id="user-display-email">user@xeere.app</span>
+                </div>
+            </div>
 
-  <section id="feedback" class="section">
-    <div class="card"><h3>💡 Feedback & Complaint Portal</h3><p class="muted" style="font-size:12px">Send feedback or report a problem with the application.</p><label class="label" style="margin-top:15px">Type</label><select id="feedbackType" class="select"><option>General Feedback</option><option>Bug Report</option><option>Complaint</option><option>Feature Request</option></select><label class="label" style="margin-top:12px">Message</label><textarea id="feedbackText" class="textarea" placeholder="Describe the issue..."></textarea><button class="btn primary" style="margin-top:10px" onclick="sendFeedback()">Submit</button></div>
-  </section>
-</main>
+            <!-- Tab 1: Dashboard -->
+            <div id="tab-dashboard" class="content-area active">
+                <h2 style="margin-bottom: 20px;">Welcome back to XeeRe Intelligence!</h2>
+                <div class="grid-cards">
+                    <div class="card">
+                        <h4>Auto Policy Scanner</h4>
+                        <p>Automatically detect platform, categorize violations (Spam, Hate Speech, Harassment), and generate report links.</p>
+                        <a href="#" class="link-btn" onclick="switchTab('autodetect', document.querySelectorAll('.nav-item')[1])">Launch Scanner</a>
+                    </div>
+                    <div class="card">
+                        <h4>Community & Comments</h4>
+                        <p>Post updates, comment like Facebook, and engage with community members.</p>
+                        <a href="#" class="link-btn" onclick="switchTab('community', document.querySelectorAll('.nav-item')[3])">Open Feed</a>
+                    </div>
+                    <div class="card">
+                        <h4>Messenger Inbox</h4>
+                        <p>Real-time chat with file attachments, calls, stickers, and emojis.</p>
+                        <a href="#" class="link-btn" onclick="switchTab('inbox', document.querySelectorAll('.nav-item')[4])">Open Inbox</a>
+                    </div>
+                </div>
+            </div>
 
-<div id="callScreen" class="call-screen hidden"><div><div class="call-avatar">📞</div><h2 id="callName">Calling...</h2><p id="callStatus" class="muted">Connecting securely...</p><button class="btn danger" onclick="endCall()" style="margin-top:20px">📴 End Call</button></div></div>
-<div id="toast" class="toast hidden"></div>
+            <!-- Tab 2: Auto Review Removal & Report Tool -->
+            <div id="tab-autodetect" class="content-area">
+                <h2 style="margin-bottom: 10px;">Automated Review & Violation Analyzer</h2>
+                <p style="color:var(--text-muted); margin-bottom: 20px; font-size:13px;">Paste any review or platform link below. System will automatically detect the platform, categorize the violation type, and provide direct reporting links.</p>
+                
+                <div class="card">
+                    <div class="input-group">
+                        <label>PASTE REVIEW TEXT OR PLATFORM URL</label>
+                        <textarea id="target-review-input" placeholder="e.g., https://maps.google.com/... or paste abusive/spam review text here..." style="height: 90px;"></textarea>
+                    </div>
+                    <button class="action-btn" style="width:auto; padding: 10px 25px;" onclick="runAutoAnalysis()">Analyze & Generate Report Link</button>
+                </div>
 
-<script>
-const KEY='xeere_state_v3', SESSION='xeere_session_v3';
-let state=JSON.parse(localStorage.getItem(KEY)||'null')||{users:{},posts:[],reports:[],messages:{'Alex Morgan':[],'Sarah Connor':[],'Jordan Lee':[]},gallery:[],feedback:[]};
-let authMode='signin', currentChat='Alex Morgan', pendingAttachment=null;
+                <div id="analysis-result-box" class="card" style="display:none; border-color: #4f46e5;">
+                    <h4 style="color: #22c55e;">✨ Analysis Result & Action Plan</h4>
+                    <div id="analysis-output-content" style="font-size: 13px; line-height: 1.6; margin-top: 10px;"></div>
+                </div>
+            </div>
 
-function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function session(){return localStorage.getItem(SESSION)}
-function currentUser(){let e=session();return e?state.users[e]:null}
-function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.remove('hidden');setTimeout(()=>x.classList.add('hidden'),2200)}
-function setAuth(m){authMode=m;signinTab.classList.toggle('active',m==='signin');signupTab.classList.toggle('active',m==='signup');nameWrap.classList.toggle('hidden',m!=='signup');authError.textContent=''}
-function auth(){
- let e=email.value.trim().toLowerCase(), p=password.value, n=name.value.trim();
- if(!e||p.length<6||(authMode==='signup'&&!n)){authError.textContent='Enter valid details. Password must contain at least 6 characters.';return}
- if(authMode==='signup'){if(state.users[e]){authError.textContent='Account already exists in this browser.';return}state.users[e]={email:e,name:n,pass:p,bio:'',avatar:''}}
- else if(!state.users[e]||state.users[e].pass!==p){authError.textContent='Incorrect email or password.';return}
- localStorage.setItem(SESSION,e);save();openApp()
-}
-function openApp(){login.classList.add('hidden');app.classList.remove('hidden');refresh();show('dashboard',document.querySelector('.nav button'))}
-function logout(){localStorage.removeItem(SESSION);location.reload()}
-function refresh(){
- let u=currentUser();if(!u){login.classList.remove('hidden');app.classList.add('hidden');return}
- topName.textContent=u.name;profileName.value=u.name;profileBio.value=u.bio||'';setAvatar(u.avatar,u.name);renderFeed();renderChats();renderMessages();renderGallery();statReports.textContent=state.reports.length;statPosts.textContent=state.posts.length;statMessages.textContent=Object.values(state.messages).flat().length
-}
-function setAvatar(src,name){let els=[topAvatar,profileAvatar];els.forEach(x=>{x.src=src||'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><rect width="100%" height="100%" fill="#e0e7ff"/><text x="50%" y="55%" text-anchor="middle" font-size="55" font-family="Arial" fill="#4338ca">${(name||'U')[0].toUpperCase()}</text></svg>`)})}
-const titles={dashboard:['Intelligence Dashboard','Policy analysis, reports and case management.'],community:['Community Feed','Connect, post and share projects.'],chat:['Messenger Inbox','WhatsApp-style messaging with media, links, emojis, stickers and calls.'],profile:['User Profile','Manage your p
+            <!-- Tab 3: Platform Direct Links -->
+            <div id="tab-reports" class="content-area">
+                <h2 style="margin-bottom: 20px;">Multi-Platform Direct Reporting Links</h2>
+                <div class="grid-cards">
+                    <div class="card">
+                        <h4>Google Maps</h4>
+                        <p>Report fake reviews, spam pins, and policy-violating local business content.</p>
+                        <a href="https://support.google.com/business/answer/4596773" target="_blank" class="link-btn">Google Business Support</a>
+                    </div>
+                    <div class="card">
+                        <h4>Reddit</h4>
+                        <p>Report harassment, copyright infringement, or abusive subreddit threads.</p>
+                        <a href="https://www.reddit.com/report" target="_blank" class="link-btn">Reddit Report Portal</a>
+                    </div>
+                    <div class="card">
+                        <h4>Trustpilot</h4>
+                        <p>Flag fake experiences, defamation, and malicious customer reviews.</p>
+                        <a href="https://support.trustpilot.com/hc/en-us" target="_blank" class="link-btn">Trustpilot Support</a>
+                    </div>
+                    <div class="card">
+                        <h4>Facebook</h4>
+                        <p>Report scam posts, hate speech comments, and fake community groups.</p>
+                        <a href="https://www.facebook.com/help" target="_blank" class="link-btn">Facebook Help Center</a>
+                    </div>
+                    <div class="card">
+                        <h4>Instagram</h4>
+                        <p>Report inappropriate direct messages, bullying comments, or impersonation.</p>
+                        <a href="https://help.instagram.com" target="_blank" class="link-btn">Instagram Help Center</a>
+                    </div>
+                    <div class="card">
+                        <h4>TikTok</h4>
+                        <p>Report harmful video challenges, copyright breaches, and harassment.</p>
+                        <a href="https://www.tiktok.com/legal/report/feedback" target="_blank" class="link-btn">TikTok Report Portal</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Community Feed with Facebook-Style Comments -->
+            <div id="tab-community" class="content-area">
+                <h2 style="margin-bottom: 20px;">Community Feed & Discussions</h2>
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4>Create New Post</h4>
+                    <textarea id="post-text" placeholder="What's on your mind?" style="width:100%; height:80px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; color:white; padding:10px; margin-top:10px; outline:none;"></textarea>
+                    <button class="action-btn" style="width: auto; padding: 8px 20px; margin-top: 10px;" onclick="createPost()">Publish Post</button>
+                </div>
+
+                <div id="feed-container">
+                    <!-- Sample Facebook-style post -->
+                    <div class="fb-post">
+                        <div class="fb-post-header">
+                            <div class="fb-avatar">E</div>
+                            <div>
+                                <div style="font-weight:600; font-size:14px;">EryX Zee</div>
+                                <div style="font-size:11px; color:var(--text-muted);">Just now</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 13px; line-height: 1.4;">XeeRe automated violation detection and multi-platform intelligence system is now live! 🚀</p>
+                        <div class="fb-actions">
+                            <span onclick="likePost(this)">👍 Like (<span class="like-count">12</span>)</span>
+                            <span>💬 Comment</span>
+                            <span>↗ Share</span>
+                        </div>
+                        <div class="comments-list">
+                            <div class="comment-item"><strong>Zeeshan:</strong> Awesome update! Loving the auto-detection feature.</div>
+                        </div>
+                        <div class="comment-box">
+                            <input type="text" placeholder="Write a comment..." onkeypress="if(event.key === 'Enter') addComment(event)">
+                        </div>
+                    
