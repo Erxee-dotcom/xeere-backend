@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XeeRe — Enterprise Intelligence Dashboard</title>
+    <title>XeeRe — Enterprise Intelligence & Community Platform</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
             position: fixed; inset: 0;
             background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
             display: flex; align-items: center; justify-content: center;
-            z-index: 1000; padding: 20px;
+            z-index: 2000; padding: 20px;
         }
         .login-card {
             background: rgba(255, 255, 255, 0.03);
@@ -42,224 +42,269 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
         .login-logo {
-            width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 24px;
+            width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px;
             background: linear-gradient(135deg, #6366f1, #06b6d4);
             color: white; display: flex; align-items: center; justify-content: center;
             font-weight: 700; font-size: 28px; box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
         }
 
-        /* DASHBOARD LAYOUT */
-        .dashboard { display: flex; min-height: 100vh; }
+        /* MAIN APP LAYOUT */
+        .app-container { display: flex; min-height: 100vh; }
+        
+        /* SIDEBAR / NAVIGATION */
         .sidebar {
-            width: 260px; background: var(--surface);
+            width: 280px; background: var(--surface);
             border-right: 1px solid var(--border);
             padding: 24px; display: flex; flex-direction: column; justify-content: space-between;
+            position: fixed; height: 100vh; z-index: 100;
         }
-        .main-content { flex: 1; padding: 40px; max-width: 1100px; margin: 0 auto; }
-
-        .brand-box { display: flex; align-items: center; gap: 14px; margin-bottom: 36px; }
+        .brand-section { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; }
         .logo-icon {
-            width: 40px; height: 40px; border-radius: 10px;
+            width: 42px; height: 42px; border-radius: 10px;
             background: linear-gradient(135deg, #6366f1, #06b6d4);
-            color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;
+            color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px;
+        }
+        .nav-menu { display: flex; flex-direction: column; gap: 6px; }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            border-radius: var(--radius); font-size: 13px; font-weight: 600; color: var(--text-muted);
+            cursor: pointer; transition: all 0.2s; border: none; background: transparent; width: 100%; text-align: left;
+        }
+        .nav-item:hover, .nav-item.active { background: #e0e7ff; color: #4338ca; }
+
+        /* MAIN CONTENT AREA */
+        .main-content {
+            flex: 1; margin-left: 280px; padding: 40px; max-width: calc(100% - 280px);
         }
 
-        /* CARDS & INPUTS */
+        /* CARDS & UI COMPONENTS */
         .card {
             background: var(--surface); border-radius: var(--radius);
             padding: 24px; border: 1px solid var(--border);
             box-shadow: var(--shadow); margin-bottom: 24px;
         }
-        .case-card {
-            border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 20px; margin-bottom: 16px; background: var(--surface);
-            transition: all 0.2s ease;
-        }
-        .case-card:hover { border-color: #cbd5e1; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); }
+        .tab-section { display: none; }
+        .tab-section.active { display: block; }
 
-        .batch-area {
-            width: 100%; height: 130px; border: 1.5px dashed #cbd5e1;
-            border-radius: var(--radius); padding: 16px; margin: 12px 0 16px 0;
-            outline: none; font-size: 13px; background: #fafafa; color: var(--text-main);
+        /* FORM CONTROLS */
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.05em; }
+        .form-select, .form-input, .batch-area {
+            width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+            border-radius: var(--radius); font-size: 13px; outline: none; background: #fafafa; color: var(--text-main);
             transition: border-color 0.2s;
         }
-        .batch-area:focus { border-color: var(--primary); background: #fff; }
+        .form-select:focus, .form-input:focus, .batch-area:focus { border-color: var(--primary); background: #fff; }
+        .batch-area { height: 120px; resize: none; }
 
         .primary-btn {
             width: 100%; padding: 14px; background: var(--primary);
             color: white; border: none; border-radius: var(--radius);
             font-weight: 600; cursor: pointer; font-size: 14px;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25); transition: background 0.2s;
         }
         .primary-btn:hover { background: var(--primary-hover); }
-        .primary-btn:active { transform: scale(0.98); }
 
-        /* BADGES & ACTIONS */
-        .category-badge {
-            display: inline-block; padding: 4px 10px; border-radius: 20px;
-            font-size: 11px; font-weight: 600; background: #e0e7ff; color: #4338ca; margin-bottom: 12px;
+        /* CASE CARDS */
+        .case-card {
+            border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 20px; margin-bottom: 16px; background: var(--surface);
         }
-        .report-textarea {
-            width: 100%; height: 80px; margin-top: 10px; padding: 12px;
-            border-radius: 8px; border: 1px solid var(--border); font-size: 12px;
-            resize: none; background: #f8fafc; color: var(--text-main); outline: none;
-        }
-        .report-textarea:focus { border-color: var(--primary); background: #fff; }
+        .platform-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; background: #f1f5f9; color: #475569; text-transform: uppercase; margin-bottom: 8px; }
+        .category-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #e0e7ff; color: #4338ca; margin-bottom: 10px; }
+        .report-textarea { width: 100%; height: 80px; margin-top: 8px; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 12px; resize: none; background: #f8fafc; outline: none; }
+        .action-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .copy-btn { background: var(--text-main); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600; }
+        .report-link-btn { background: #e0f2fe; color: #0369a1; text-decoration: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
 
-        .action-row {
-            display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap;
-        }
-        .copy-btn {
-            background: var(--text-main); color: white;
-            border: none; padding: 8px 16px; border-radius: 8px; font-size: 11px;
-            cursor: pointer; font-weight: 600; transition: background 0.2s;
-        }
-        .copy-btn:hover { background: #334155; }
+        /* COMMUNITY & CHAT STYLES */
+        .post-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+        .chat-container { display: flex; height: 72vh; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+        .chat-sidebar { width: 300px; border-right: 1px solid var(--border); overflow-y: auto; background: #fafafa; }
+        .chat-main { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; background: #fdfdfd; }
+        .chat-messages { flex: 1; overflow-y: auto; padding-right: 10px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; max-width: 75%; word-break: break-word; }
+        .msg.incoming { background: #f1f5f9; align-self: flex-start; color: var(--text-main); }
+        .msg.outgoing { background: var(--primary); color: white; align-self: flex-end; }
+        .chat-img-preview { max-width: 200px; border-radius: 8px; margin-top: 6px; display: block; }
+        .chat-file-box { background: rgba(0,0,0,0.05); padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 4px; }
 
-        .report-link-btn {
-            background: #e0f2fe; color: #0369a1; text-decoration: none;
-            padding: 8px 14px; border-radius: 8px; font-size: 11px; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 5px; transition: background 0.2s;
-        }
-        .report-link-btn:hover { background: #bae6fd; }
+        /* WHATSAPP STYLE CHAT TOOLBAR */
+        .chat-toolbar { display: flex; gap: 8px; align-items: center; padding-top: 10px; border-top: 1px solid var(--border); margin-top: 10px; }
+        .tool-btn { background: #f1f5f9; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+        .tool-btn:hover { background: #e2e8f0; }
+        .sticker-tray { display: flex; gap: 8px; padding: 8px 0; background: #f8fafc; border-top: 1px solid var(--border); overflow-x: auto; }
+        .sticker-item { font-size: 20px; cursor: pointer; padding: 4px; transition: transform 0.1s; }
+        .sticker-item:hover { transform: scale(1.2); }
 
-        .logout-btn {
-            display: flex; align-items: center; gap: 8px;
-            color: #ef4444; font-weight: 600; font-size: 13px;
-            background: #fef2f2; padding: 10px 14px; border-radius: 8px;
-            cursor: pointer; border: none; width: 100%; text-align: left;
-            transition: background 0.2s;
-        }
-        .logout-btn:hover { background: #fee2e2; }
+        /* CALL MODAL */
+        #callModal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); z-index: 3000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white; }
+        .call-avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #06b6d4); display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; margin-bottom: 20px; box-shadow: 0 0 30px rgba(99,102,241,0.5); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
+        /* PROFILE */
+        .profile-pic-preview { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin-bottom: 12px; }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .dashboard { display: block; }
-            .sidebar { display: none; }
-            .main-content { padding: 20px; }
+            .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
+            .app-container { flex-direction: column; }
+            .main-content { margin-left: 0; max-width: 100%; padding: 20px; }
+            .chat-container { flex-direction: column; height: auto; }
+            .chat-sidebar { width: 100%; height: 150px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN SCREEN -->
+    <!-- GOOGLE LOGIN SCREEN -->
     <div id="loginSection">
         <div class="login-card">
             <div class="login-logo">X</div>
             <h2 style="color:white; font-size:22px; font-weight:700;">Welcome to XeeRe</h2>
-            <p style="color:#94a3b8; font-size:13px; margin: 8px 0 32px;">Enterprise Intelligence Portal</p>
+            <p style="color:#94a3b8; font-size:11px; margin: 4px 0 2px;">By EryX Zee</p>
+            <p style="color:#94a3b8; font-size:13px; margin: 12px 0 28px;">Enterprise Intelligence & Community</p>
             <div id="g_id_onload" data-client_id="356035131446-ecqfu5t2ljbfaqepkq5glt4lcmtvjlq8.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" style="display: flex; justify-content: center;"></div>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
-    <div id="mainApp" class="dashboard hidden">
+    <!-- CALL SIMULATION MODAL -->
+    <div id="callModal" class="hidden">
+        <div class="call-avatar" id="callAvatarIcon">📞</div>
+        <h2 id="callTitle" style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Calling Alex Morgan...</h2>
+        <p id="callStatus" style="color: #94a3b8; font-size: 14px; margin-bottom: 30px;">Connecting securely...</p>
+        <button onclick="endCall()" style="background: #ef4444; color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.4);">End Call 📴</button>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="mainApp" class="app-container hidden">
+        
+        <!-- SIDEBAR NAVIGATION -->
         <aside class="sidebar">
             <div>
-                <div class="brand-box">
+                <div class="brand-section">
                     <div class="logo-icon">X</div>
                     <div>
-                        <div style="font-weight:700; font-size:15px;">XeeRe</div>
-                        <div style="font-size:11px; color:var(--primary); font-weight:500;">By EryX Zee</div>
+                        <div style="font-weight:700; font-size:16px; color:var(--text-main);">XeeRe</div>
+                        <div style="font-size:11px; color:var(--primary); font-weight:600;">By EryX Zee</div>
                     </div>
                 </div>
-                <p style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-bottom:8px;">Workspace</p>
-                <div style="font-size:13px; font-weight:500; color:var(--text-main); padding: 8px 0;">⚡ Review Intelligence</div>
+                <div class="nav-menu">
+                    <button class="nav-item active" onclick="switchTab('dashboard', this)">📊 Intelligence Dashboard</button>
+                    <button class="nav-item" onclick="switchTab('community', this)">🌐 Community Feed</button>
+                    <button class="nav-item" onclick="switchTab('chat', this)">💬 Messenger Inbox</button>
+                    <button class="nav-item" onclick="switchTab('profile', this)">👤 User Profile</button>
+                    <button class="nav-item" onclick="switchTab('chatbot', this)">🤖 AI Assistant Bot</button>
+                    <button class="nav-item" onclick="switchTab('feedback', this)">💡 Feedback & Complaints</button>
+                </div>
             </div>
             <div>
-                <button class="logout-btn" onclick="location.reload()">
-                    <span>🚪</span> Sign Out
-                </button>
+                <button class="nav-item" style="color:#ef4444; background:#fef2f2;" onclick="logoutApp()">🚪 Sign Out</button>
             </div>
         </aside>
 
+        <!-- CONTENT AREA -->
         <main class="main-content">
-            <div style="margin-bottom: 28px;">
-                <h1 style="font-size: 24px; font-weight: 700; letter-spacing: -0.025em;">Intelligence Dashboard</h1>
-                <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Paste review URLs to queue analysis, copy reports, and submit directly.</p>
+
+            <!-- TAB 1: DASHBOARD -->
+            <div id="tab-dashboard" class="tab-section active">
+                <div style="margin-bottom: 24px;">
+                    <h1 style="font-size: 22px; font-weight: 700;">Intelligence Dashboard</h1>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Select platform, queue links, and auto-generate legal removal reports.</p>
+                </div>
+
+                <div class="card">
+                    <div class="form-group">
+                        <label class="form-label">Select Target Platform</label>
+                        <select id="platformSelect" class="form-select">
+                            <option value="Google Maps">Google Maps (Review Policy)</option>
+                            <option value="Reddit">Reddit (Content Policy / Harassment)</option>
+                            <option value="Trustpilot">Trustpilot (Fake Review Guidelines)</option>
+                            <option value="Facebook">Facebook (Meta Community Standards)</option>
+                            <option value="Instagram">Instagram (Content Guidelines)</option>
+                            <option value="TikTok">TikTok (Community Standards)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Queue Links (One per line)</label>
+                        <textarea class="batch-area" id="linksInput" placeholder="Paste URLs here..."></textarea>
+                    </div>
+
+                    <button onclick="processBatch()" class="primary-btn">Run Automated Policy Analysis ⚡</button>
+                </div>
+
+                <div id="casesContainer"></div>
             </div>
 
-            <section class="card">
-                <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Queue Links (One per line)</label>
-                <textarea class="batch-area" id="linksInput" placeholder="https://maps.app.goo.gl/...&#10;https://maps.google.com/..."></textarea>
-                <button onclick="processBatch()" class="primary-btn">Run Queue Analysis ⚡</button>
-            </section>
-            
-            <div id="casesContainer"></div>
-        </main>
-    </div>
+            <!-- TAB 2: COMMUNITY FEED -->
+            <div id="tab-community" class="tab-section">
+                <div style="margin-bottom: 24px;">
+                    <h1 style="font-size: 22px; font-weight: 700;">Freelancer & Link Community</h1>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Connect with peers, share deals, and send friend requests.</p>
+                </div>
 
-<script>
-    function handleGoogleLogin(res) {
-        document.getElementById('loginSection').classList.add('hidden');
-        document.getElementById('mainApp').classList.remove('hidden');
-    }
-    
-    async function processBatch() {
-        const text = document.getElementById('linksInput').value;
-        const links = text.split('\n').filter(l => l.trim() !== '');
-        const container = document.getElementById('casesContainer');
-        
-        if (links.length === 0) {
-            alert('Please enter at least one valid link.');
-            return;
-        }
+                <div class="card">
+                    <textarea class="form-input" id="postInput" placeholder="What's on your mind regarding link deals or projects?" style="height:80px; resize:none;"></textarea>
+                    <button onclick="createPost()" class="primary-btn" style="margin-top:10px;">Post to Community 🚀</button>
+                </div>
 
-        container.innerHTML = `<p style="font-weight:600; color:var(--text-muted); font-size:13px; margin-bottom:16px;">Processing Queue (${links.length} items)...</p>`;
-
-        for (let i = 0; i < links.length; i++) {
-            let link = links[i].trim();
-            try {
-                const res = updatedFetch = await fetch('https://xeere-backend.onrender.com/analyze', { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify({ reviewLink: link }) 
-                });
-                const data = await res.json();
-                
-                let category = data.category || (i % 2 === 0 ? 'Spam / Fake Review' : 'Off-Policy Violation');
-                let reportText = data.reportText || `Hello Google Support, the review at ${link} violates community guidelines regarding ${category.toLowerCase()}. Please remove it.`;
-
-                const card = document.createElement('div');
-                card.className = 'case-card';
-                card.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <span style="font-size:12px; color:var(--text-main); font-weight:600;">📍 Case #${i+1}</span>
-                        <span style="font-size:10px; font-weight:700; background:#dcfce7; color:#166534; padding:3px 10px; border-radius:20px;">QUEUED & ANALYZED</span>
+                <div id="communityFeed">
+                    <div class="post-box">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span style="font-weight:700; font-size:13px;">Alex Morgan</span>
+                            <button onclick="sendFriendReq(this)" style="background:#e0e7ff; color:#4338ca; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">➕ Add Friend</button>
+                        </div>
+                        <p style="font-size:13px; color:var(--text-main);">Looking for partners to handle batch Trustpilot removals. DM me!</p>
                     </div>
-                    <div>
-                        <span class="category-badge">Category: ${category}</span>
-                    </div>
-                    <textarea class="report-textarea" id="report-${i}">${reportText}</textarea>
-                    <div class="action-row">
-                        <button class="copy-btn" onclick="copyReport('report-${i}', this)">📋 Copy AI Report</button>
-                        <a href="${link}" target="_blank" class="report-link-btn">🔗 Open Link to Report ↗</a>
-                    </div>
-                `;
-                container.appendChild(card);
-            } catch(e) {
-                const errCard = document.createElement('div');
-                errCard.className = 'case-card';
-                errCard.innerHTML = `<p style="color:#ef4444; font-size:12px; font-weight:500;">Error processing link #${i+1}: ${link}</p>`;
-                container.appendChild(errCard);
-            }
-        }
-    }
+                </div>
+            </div>
 
-    function copyReport(elementId, btn) {
-        const textarea = document.getElementById(elementId);
-        textarea.select();
-        document.execCommand('copy');
-        let oldText = btn.innerText;
-        btn.innerText = '✅ Copied Successfully!';
-        btn.style.background = '#166534';
-        setTimeout(() => {
-            btn.innerText = oldText;
-            btn.style.background = '#0f172a';
-        }, 2000);
-    }
-</script>
-</body>
-    </html>
-                
+            <!-- TAB 3: WHATSAPP-STYLE MESSENGER INBOX -->
+            <div id="tab-chat" class="tab-section">
+                <div style="margin-bottom: 24px;">
+                    <h1 style="font-size: 22px; font-weight: 700;">Messenger Inbox</h1>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">WhatsApp style direct chat with file sharing, stickers, emojis & calls.</p>
+                </div>
+
+                <div class="chat-container">
+                    <div class="chat-sidebar">
+                        <div style="padding:12px; border-bottom:1px solid var(--border); font-weight:600; font-size:12px; color:var(--text-muted);">ACTIVE CHATS</div>
+                        <div onclick="selectChat('Alex Morgan')" style="padding:12px 16px; cursor:pointer; border-bottom:1px solid var(--border); background:#fff; font-size:13px; font-weight:600;">💬 Alex Morgan</div>
+                        <div onclick="selectChat('Sarah Connor')" style="padding:12px 16px; cursor:pointer; border-bottom:1px solid var(--border); background:#fff; font-size:13px; font-weight:500;">💬 Sarah Connor</div>
+                    </div>
+                    <div class="chat-main">
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid var(--border);">
+                            <div style="font-weight:700; font-size:14px;" id="activeChatTitle">Chat with Alex Morgan</div>
+                            <div style="display:flex; gap:8px;">
+                                <button onclick="startCall('voice')" class="tool-btn" title="Voice Call">📞</button>
+                                <button onclick="startCall('video')" class="tool-btn" title="Video Call">📹</button>
+                            </div>
+                        </div>
+
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="msg incoming">Hey! Are you available for link deal projects?</div>
+                        </div>
+
+                        <div class="sticker-tray">
+                            <span class="sticker-item" onclick="sendSticker('🔥')">🔥</span>
+                            <span class="sticker-item" onclick="sendSticker('👍')">👍</span>
+                            <span class="sticker-item" onclick="sendSticker('🚀')">🚀</span>
+                            <span class="sticker-item" onclick="sendSticker('⭐')">⭐</span>
+                            <span class="sticker-item" onclick="sendSticker('🎉')">🎉</span>
+                            <span class="sticker-item" onclick="sendSticker('😎')">😎</span>
+                            <span class="sticker-item" onclick="sendSticker('💡')">💡</span>
+                            <span class="sticker-item" onclick="sendSticker('🎯')">🎯</span>
+                        </div>
+
+                        <div class="chat-toolbar">
+                            <input type="file" id="chatImgInput" accept="image/*" style="display:none;" onchange="sendChatImage(event)">
+                            <input type="file" id="chatFileInput" style="display:none;" onchange="sendChatFile(event)">
+
+                            <button class="tool-btn" onclick="document.getElementById('chatImgInput').click()" title="Send Picture">📷</button>
+                            <button class="tool-btn" onclick="document.getElementById('chatFileInput').click()" title="Attach File">📎</button>
+                            <button class="tool-btn" onclick="insertEmoji('😊')" title="Emoji">😊</button>
+                            <button class="tool-btn" onclick="insertEmoji('❤️')" title="Heart">❤️</button>
+
+                            <input type="text" id="chatInput" class="form-input" placeholder="Type a message or share link..." style="margin:0; flex:1;" onkeypress="if(event.key === 'Enter') sendMs
