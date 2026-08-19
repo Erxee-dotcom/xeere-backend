@@ -26,7 +26,7 @@
         body { background: var(--bg-main); color: var(--text-main); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         .hidden { display: none !important; }
 
-        /* PREMIUM LOGIN SCREEN */
+        /* SECURE LOGIN SCREEN */
         #loginSection {
             position: fixed; inset: 0;
             background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
@@ -157,7 +157,7 @@
 </head>
 <body>
 
-    <!-- LOGIN & REGISTRATION SCREEN -->
+    <!-- SECURE LOGIN & REGISTRATION SCREEN -->
     <div id="loginSection">
         <div class="login-card">
             <div class="login-logo">X</div>
@@ -177,7 +177,7 @@
                 <div class="g_id_signin" data-type="standard" data-shape="pill" style="display: flex; justify-content: center; margin-bottom: 10px;"></div>
             </div>
 
-            <!-- Manual Email / Password Section -->
+            <!-- Manual Email / Password Section (Facebook Style Form) -->
             <div id="manualAuthSection" class="hidden">
                 <div style="display: flex; gap: 6px; margin-bottom: 12px;">
                     <button onclick="switchManualMode('signin')" id="modeSignin" style="flex:1; padding:5px; border:none; border-radius:6px; background:rgba(255,255,255,0.15); color:white; font-size:11px; font-weight:600; cursor:pointer;">Sign In</button>
@@ -197,10 +197,6 @@
                     <input type="password" id="manualPassword" class="form-input" placeholder="••••••••" style="background:rgba(255,255,255,0.05); color:white; border-color:rgba(255,255,255,0.1);">
                 </div>
                 <button onclick="handleManualAuth()" id="manualSubmitBtn" class="primary-btn" style="margin-top: 4px;">Sign In to Dashboard</button>
-            </div>
-
-            <div style="margin-top: 14px;">
-                <button onclick="forceBypassLogin()" style="background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; width: 100%;">⚡ Quick Direct Enter (Bypass)</button>
             </div>
         </div>
     </div>
@@ -306,4 +302,6 @@
 
                 <div class="chat-container">
                     <div class="chat-sidebar">
-                        <div style="padding:12px; border-bottom:1px solid var(--border); font-weight:600; font-size:12px; color:var(--text-muted);">ACTIVE CHATS
+                        <div style="padding:12px; border-bottom:1px solid var(--border); font-weight:600; font-size:12px; color:var(--text-muted);">ACTIVE CHATS</div>
+                        <div onclick="selectChat('Alex Morgan')" style="padding:12px 16px; cursor:pointer; border-bottom:1px solid var(--border); background:#fff; font-size:13px; font-weight:600;">💬 Alex Morgan</div>
+                        <div onclick="selectChat('Sarah Connor')" style="padding:12px 16px; cursor:point
