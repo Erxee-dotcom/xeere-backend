@@ -10,493 +10,177 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <style>
-:root{
- --bg:#080d1c;--panel:#11182b;--panel2:#151d34;--blue:#4f46e5;
- --blue2:#6366f1;--text:#f8fafc;--muted:#94a3b8;
- --border:rgba(255,255,255,.09);--green:#22c55e;--red:#ef4444;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
- font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);
- color:var(--text);height:100vh;overflow:hidden
-}
+:root{--bg:#0f172a;--card:#1e1b4b;--side:#111827;--accent:#4f46e5;--hover:#4338ca;--text:#fff;--muted:#94a3b8;--border:rgba(255,255,255,.1)}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Tahoma,sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
-
-/* AUTH */
-#authScreen{
- height:100vh;display:flex;align-items:center;justify-content:center;
- padding:20px;background:radial-gradient(circle at 50% 30%,#20215a,#080d1c 65%)
-}
-.auth-card{
- width:100%;max-width:420px;background:rgba(17,24,43,.95);
- border:1px solid var(--border);border-radius:24px;padding:32px;
- box-shadow:0 25px 70px rgba(0,0,0,.45)
-}
-.logo{
- width:72px;height:72px;margin:0 auto 16px;border-radius:22px;
- display:flex;align-items:center;justify-content:center;
- background:linear-gradient(135deg,#38bdf8,#4f46e5 55%,#7c3aed);
- font-size:31px;font-weight:900;
- box-shadow:0 10px 35px rgba(79,70,229,.4);
- position:relative
-}
-.logo:after{
- content:"";position:absolute;width:28px;height:28px;
- border:2px solid rgba(255,255,255,.35);border-radius:50%
-}
-.auth-card h1{text-align:center;font-size:27px}
-.sub{text-align:center;color:var(--muted);font-size:13px;margin:7px 0 25px}
-.field{margin-bottom:14px}
-.field label{
- display:block;color:var(--muted);font-size:11px;font-weight:700;
- margin-bottom:6px;text-transform:uppercase
-}
-.field input,.field textarea,.field select{
- width:100%;background:#0b1223;border:1px solid var(--border);
- color:white;border-radius:10px;padding:12px;outline:none
-}
-.field input:focus,.field textarea:focus{border-color:var(--blue2)}
-.btn{
- border:0;border-radius:10px;padding:12px 16px;font-weight:700;
- color:white;background:var(--blue);transition:.2s
-}
-.btn:hover{background:#4338ca}
+#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle,#1e1b4b,#0f172a)}
+.login-card{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);padding:32px;border-radius:20px;text-align:center;box-shadow:0 15px 35px #0008}
+.logo{width:68px;height:68px;border-radius:18px;margin:0 auto 15px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:grid;place-items:center;font-size:30px;font-weight:800}
+.subtitle,.muted{color:var(--muted);font-size:13px}
+.input-group{text-align:left;margin:14px 0}
+label{display:block;color:var(--muted);font-size:11px;font-weight:700;margin-bottom:6px}
+input,textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:#ffffff0d;color:#fff;outline:none}
+textarea{resize:vertical}
+input:focus,textarea:focus{border-color:#818cf8}
+.btn{border:0;border-radius:8px;padding:11px 15px;background:var(--accent);color:#fff;font-weight:700}
+.btn:hover{background:var(--hover)}
 .btn.full{width:100%}
-.google{
- width:100%;margin-top:10px;background:#fff;color:#111827
-}
-.google:hover{background:#e5e7eb}
-.msg{font-size:12px;margin-top:12px;text-align:center}
-.error{color:#f87171}.success{color:#4ade80}
-.switch{text-align:center;margin-top:16px;color:var(--muted);font-size:12px}
-.switch span{color:#818cf8;cursor:pointer;font-weight:700}
-
-/* APP */
-#app{height:100vh;display:flex}
-.sidebar{
- width:260px;flex-shrink:0;background:#0b1120;
- border-right:1px solid var(--border);padding:18px;
- display:flex;flex-direction:column
-}
-.brand{
- display:flex;align-items:center;gap:10px;padding:5px 5px 20px
-}
-.brand-logo{
- width:40px;height:40px;border-radius:12px;
- background:linear-gradient(135deg,#38bdf8,#4f46e5,#7c3aed);
- display:flex;align-items:center;justify-content:center;font-weight:900
-}
-.brand-name{font-size:20px;font-weight:900}
-.brand-by{font-size:10px;color:var(--muted)}
-.nav{display:flex;flex-direction:column;gap:5px;overflow:auto}
-.nav button{
- border:0;background:transparent;color:var(--muted);
- text-align:left;padding:11px 12px;border-radius:9px;font-size:13px
-}
-.nav button:hover,.nav button.active{background:var(--blue);color:#fff}
-.sidebar-bottom{margin-top:auto}
-.user-mini{
- border-top:1px solid var(--border);padding-top:14px;margin-bottom:10px;
- font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis
-}
-.logout{width:100%;background:#991b1b}
-
-.main{flex:1;min-width:0;display:flex;flex-direction:column}
-.topbar{
- height:65px;flex-shrink:0;border-bottom:1px solid var(--border);
- display:flex;align-items:center;justify-content:space-between;padding:0 25px;
- background:#0c1325
-}
-.topbar h2{font-size:18px}
-.top-user{font-size:12px;color:var(--muted)}
-.content{flex:1;overflow:auto;padding:25px}
-.page{display:none;max-width:1200px;margin:auto}
-.page.active{display:block}
-.page-title{font-size:24px;margin-bottom:7px}
-.page-desc{color:var(--muted);font-size:13px;margin-bottom:20px}
-
-/* CARDS */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
-.card{
- background:var(--panel);border:1px solid var(--border);
- border-radius:14px;padding:20px;margin-bottom:16px
-}
-.card h3{font-size:16px;margin-bottom:8px}
-.card h4{color:#818cf8;margin-bottom:8px}
-.card p{color:var(--muted);font-size:13px;line-height:1.5}
-.stat{font-size:30px;font-weight:900;margin-top:10px}
-
-/* POSTS */
-.post{
- background:var(--panel);border:1px solid var(--border);
- border-radius:14px;padding:18px;margin-bottom:15px
-}
-.post-head{display:flex;align-items:center;gap:10px}
-.avatar{
- width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#06b6d4);
- display:flex;align-items:center;justify-content:center;font-weight:800
-}
-.post-name{font-size:13px;font-weight:700}
-.post-time{font-size:10px;color:var(--muted)}
-.post-body{font-size:14px;line-height:1.5;margin:15px 0}
-.post-actions{
- display:flex;gap:20px;border-top:1px solid var(--border);
- border-bottom:1px solid var(--border);padding:9px 0;color:var(--muted);font-size:12px
-}
-.post-actions span{cursor:pointer}.post-actions span:hover{color:white}
-.comment{background:#0b1223;border-radius:8px;padding:8px 10px;font-size:12px;margin-top:7px}
-.comment-box{display:flex;gap:7px;margin-top:10px}
-.comment-box input{
- flex:1;background:#0b1223;border:1px solid var(--border);
- color:white;border-radius:20px;padding:9px 13px;outline:0
-}
-.small-btn{padding:8px 12px;border:0;border-radius:8px;background:var(--blue);color:white;font-size:12px}
-
-/* TABLE/LINKS */
-.platform{
- display:flex;align-items:center;justify-content:space-between;gap:15px
-}
-.platform-info h3{margin-bottom:4px}
-.platform-info p{margin:0}
-.link{
- display:inline-block;background:var(--blue);color:white;text-decoration:none;
- padding:9px 12px;border-radius:8px;font-size:11px;font-weight:700;white-space:nowrap
-}
-
-/* CHAT */
-.chat{
- height:calc(100vh - 155px);min-height:450px;
- display:flex;background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden
-}
-.chat-list{width:280px;border-right:1px solid var(--border);overflow:auto}
-.chat-search{padding:12px;border-bottom:1px solid var(--border)}
-.chat-search input{
- width:100%;padding:9px;background:#0b1223;border:1px solid var(--border);
- border-radius:8px;color:white
-}
-.chat-person{padding:13px;border-bottom:1px solid var(--border);cursor:pointer}
-.chat-person:hover{background:#18213a}
-.chat-window{flex:1;display:flex;flex-direction:column;min-width:0}
-.chat-head{padding:13px 17px;border-bottom:1px solid var(--border);font-weight:700}
-.messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:9px}
-.bubble{max-width:70%;padding:9px 12px;border-radius:12px;font-size:13px}
-.in{background:#1e293b;align-self:flex-start}
-.out{background:var(--blue);align-self:flex-end}
-.chat-send{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
-.chat-send input{
- flex:1;background:#0b1223;border:1px solid var(--border);
- color:white;padding:10px;border-radius:9px
-}
-
-/* MOBILE */
-.menu-btn{display:none;background:transparent;border:0;color:white;font-size:22px}
-@media(max-width:760px){
- .sidebar{
-  position:fixed;left:-270px;top:0;bottom:0;z-index:20;
-  transition:.25s
- }
- .sidebar.open{left:0}
- .menu-btn{display:block}
- .topbar{padding:0 15px}
- .content{padding:15px}
- .chat-list{width:110px}
- .chat-person{font-size:11px}
- .platform{align-items:flex-start;flex-direction:column}
- .link{width:100%;text-align:center}
-}
+.google{margin-top:12px;background:#fff;color:#172033}
+.error{color:#f87171;font-size:12px;margin-top:10px}.success{color:#4ade80;font-size:12px;margin-top:10px}
+#app-screen{display:none;min-height:100vh}
+#app-screen.show{display:flex}
+.sidebar{width:260px;flex:none;background:var(--side);border-right:1px solid var(--border);padding:20px;display:flex;flex-direction:column;justify-content:space-between;min-height:100vh}
+.brand{font-size:21px;font-weight:800}.brand small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}
+.nav{list-style:none;margin-top:22px;display:grid;gap:6px}.nav button{width:100%;text-align:left;background:transparent;color:var(--muted);border:0;padding:11px 13px;border-radius:8px}.nav button:hover,.nav button.active{background:var(--accent);color:#fff}
+.main{flex:1;min-width:0}.topbar{height:65px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 25px;background:#111827aa}
+.mobile-menu{display:none;background:transparent;border:0;color:#fff;font-size:22px}
+.content{display:none;padding:25px;max-width:1400px;margin:auto}.content.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}
+.card h3,.card h4{margin-bottom:9px;color:#a5b4fc}.card p{color:var(--muted);font-size:13px;line-height:1.55}
+.platform{display:flex;flex-direction:column;justify-content:space-between;min-height:170px}
+a.btn{text-decoration:none;text-align:center;margin-top:15px}
+.post{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+.posthead{display:flex;gap:10px;align-items:center;margin-bottom:12px}.avatar{width:40px;height:40px;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-weight:800}
+.actions{display:flex;gap:18px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:9px 0;margin:12px 0;color:var(--muted);font-size:13px}.actions button{background:none;border:0;color:inherit}
+.comment{background:#ffffff08;padding:8px 10px;border-radius:8px;font-size:12px;margin:7px 0}.commentbar{display:flex;gap:8px;margin-top:10px}
+.commentbar input{border-radius:20px;padding:9px 12px}.commentbar button{border:0;border-radius:20px;padding:0 14px;background:var(--accent);color:#fff}
+.chat{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 120px);background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.chatpeople{border-right:1px solid var(--border);overflow:auto}.person{padding:13px 15px;border-bottom:1px solid #ffffff08;cursor:pointer}.person:hover{background:#ffffff08}
+.chatmain{display:flex;flex-direction:column;background:#0b1329}.chathead{padding:15px;border-bottom:1px solid var(--border);font-weight:700}.messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:9px}.bubble{max-width:70%;padding:10px 13px;border-radius:10px;font-size:13px}.bubble.in{align-self:flex-start;background:#1e293b}.bubble.out{align-self:flex-end;background:var(--accent)}.chatbar{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}.chatbar button{border:0;border-radius:8px;background:var(--accent);color:#fff;padding:0 18px}
+@media(max-width:800px){.sidebar{position:fixed;left:-280px;top:0;z-index:10;transition:.2s}.sidebar.open{left:0}.mobile-menu{display:block}.topbar{padding:0 15px}.content{padding:16px}.chat{grid-template-columns:120px 1fr}.chatpeople{font-size:12px}}
 </style>
 </head>
-
 <body>
 
-<!-- AUTH -->
-<section id="authScreen">
-<div class="auth-card">
- <div class="logo">XR</div>
- <h1>XeeRe</h1>
- <div class="sub">Enterprise Intelligence & Community<br>By EryX Zee</div>
-
- <div class="field">
-  <label>Email</label>
-  <input id="email" type="email" placeholder="name@example.com">
- </div>
-
- <div class="field">
-  <label>Password</label>
-  <input id="password" type="password" placeholder="Minimum 6 characters">
- </div>
-
- <button class="btn full" onclick="emailLogin()">Continue / Sign In</button>
- <button class="btn google" onclick="googleLogin()">🔵 Sign in with Google</button>
-
- <div id="authMsg" class="msg"></div>
- <div class="switch">
-  New to XeeRe? <span onclick="emailSignup()">Create account</span>
- </div>
-</div>
-</section>
-
-<!-- APP -->
-<section id="app" class="hidden">
-
-<aside id="sidebar" class="sidebar">
- <div>
-  <div class="brand">
-   <div class="brand-logo">XR</div>
-   <div>
-    <div class="brand-name">XeeRe</div>
-    <div class="brand-by">By EryX Zee</div>
-   </div>
+<div id="auth-screen">
+  <div class="login-card">
+    <div class="logo">XR</div>
+    <h2>Welcome to XeeRe</h2>
+    <p class="subtitle" style="margin:6px 0 22px">Enterprise Intelligence & Community</p>
+    <div class="input-group"><label>EMAIL ADDRESS</label><input id="auth-email" type="email" placeholder="name@example.com"></div>
+    <div class="input-group"><label>PASSWORD</label><input id="auth-password" type="password" placeholder="Minimum 6 characters"></div>
+    <button class="btn full" id="emailBtn">Continue / Sign In</button>
+    <button class="btn full google" id="googleBtn">🔵 Sign in with Google</button>
+    <p id="auth-error" class="error"></p><p id="auth-success" class="success"></p>
+    <p class="muted" style="margin-top:15px">New to XeeRe? The same button can create your account.</p>
   </div>
-
-  <nav class="nav">
-   <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
-   <button onclick="showPage('scanner',this)">🤖 Review Analyzer</button>
-   <button onclick="showPage('platforms',this)">🛡️ Platform Reports</button>
-   <button onclick="showPage('community',this)">🌐 Community</button>
-   <button onclick="showPage('friends',this)">👥 Friends</button>
-   <button onclick="showPage('messenger',this)">💬 Messenger</button>
-   <button onclick="showPage('ai',this)">⚡ AI Assistant</button>
-   <button onclick="showPage('profile',this)">👤 Profile</button>
-   <button onclick="showPage('policies',this)">📜 Policies</button>
-   <button onclick="showPage('feedback',this)">📝 Feedback</button>
-  </nav>
- </div>
-
- <div class="sidebar-bottom">
-  <div class="user-mini" id="sideEmail">Loading...</div>
-  <button class="btn logout" onclick="logout()">Sign Out</button>
- </div>
-</aside>
-
-<main class="main">
- <header class="topbar">
-  <div style="display:flex;align-items:center;gap:12px">
-   <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-   <h2 id="pageTitle">Dashboard</h2>
-  </div>
-  <div class="top-user" id="topEmail"></div>
- </header>
-
-<div class="content">
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="page active">
- <h1 class="page-title">Welcome to XeeRe</h1>
- <p class="page-desc">Your intelligence, reporting and community workspace.</p>
-
- <div class="grid">
-  <div class="card"><h4>👤 Account</h4><p>Authenticated Firebase account.</p><div class="stat" id="userStatus">✓</div></div>
-  <div class="card"><h4>📝 Posts</h4><p>Community posts created by users.</p><div class="stat" id="postCount">0</div></div>
-  <div class="card"><h4>👥 Friends</h4><p>Manage your community connections.</p><div class="stat" id="friendCount">0</div></div>
-  <div class="card"><h4>💬 Messenger</h4><p>Real-time Firestore messaging.</p><div class="stat">LIVE</div></div>
- </div>
-
- <div class="card">
-  <h3>🚀 XeeRe Intelligence</h3>
-  <p>Analyze submitted content for potential policy issues and use the appropriate platform's official reporting channel. Removal is always determined by the platform.</p>
- </div>
 </div>
 
-<!-- SCANNER -->
-<div id="scanner" class="page">
- <h1 class="page-title">🤖 Review & Violation Analyzer</h1>
- <p class="page-desc">Analyze text or URLs for possible policy categories.</p>
+<div id="app-screen">
+  <aside class="sidebar" id="sidebar">
+    <div>
+      <div class="brand">XeeRe <small>By EryX Zee</small></div>
+      <div class="nav">
+        <button class="active" data-tab="dashboard">📊 Dashboard</button>
+        <button data-tab="autodetect">🤖 Review Analyzer</button>
+        <button data-tab="reports">🛡️ Platform Reports</button>
+        <button data-tab="community">🌐 Community</button>
+        <button data-tab="friends">👥 Friends</button>
+        <button data-tab="inbox">💬 Messenger</button>
+        <button data-tab="ai">⚡ AI Assistant</button>
+        <button data-tab="profile">👤 Profile</button>
+        <button data-tab="policies">📜 Policies</button>
+        <button data-tab="feedback">📝 Feedback</button>
+      </div>
+    </div>
+    <button class="btn full" id="logoutBtn" style="background:#ef4444">Sign Out</button>
+  </aside>
 
- <div class="card">
-  <div class="field">
-   <label>Review text / platform URL</label>
-   <textarea id="reviewInput" rows="6" placeholder="Paste review text or a platform URL..."></textarea>
-  </div>
-  <button class="btn" onclick="analyzeReview()">Analyze</button>
- </div>
+  <main class="main">
+    <header class="topbar">
+      <button class="mobile-menu" id="menuBtn">☰</button>
+      <h3 id="title">Dashboard</h3>
+      <span id="userEmail" class="muted"></span>
+    </header>
 
- <div id="analysis" class="card hidden"></div>
+    <section id="tab-dashboard" class="content active">
+      <h1 style="margin-bottom:8px">Welcome to XeeRe</h1>
+      <p class="muted" style="margin-bottom:20px">Your intelligence, reporting and community workspace.</p>
+      <div class="grid">
+        <div class="card"><h3>👤 Account</h3><p>Firebase authentication is connected.</p></div>
+        <div class="card"><h3>📝 Posts</h3><p>Community posts.</p><strong id="postCount">0</strong></div>
+        <div class="card"><h3>👥 Friends</h3><p>Community connections.</p><strong id="friendCount">0</strong></div>
+        <div class="card"><h3>💬 Messenger</h3><p>Real-time Firestore messaging.</p><strong>LIVE</strong></div>
+      </div>
+    </section>
+
+    <section id="tab-autodetect" class="content">
+      <h2>🤖 Review & Violation Analyzer</h2>
+      <p class="muted" style="margin:8px 0 18px">Analyze text or a platform URL for possible policy categories. Removal is always determined by the platform.</p>
+      <div class="card">
+        <textarea id="reviewInput" rows="5" placeholder="Paste review text or platform URL..."></textarea>
+        <button class="btn" id="analyzeBtn" style="margin-top:12px">Analyze</button>
+      </div>
+      <div id="analysisResult" class="card hidden"></div>
+    </section>
+
+    <section id="tab-reports" class="content">
+      <h2 style="margin-bottom:18px">🛡️ Official Platform Reporting</h2>
+      <div class="grid">
+        <div class="card platform"><div><h3>Google Maps</h3><p>Business profile and review support.</p></div><a class="btn" target="_blank" href="https://support.google.com/business/answer/4596773">Open Google Support</a></div>
+        <div class="card platform"><div><h3>Reddit</h3><p>Report content and policy violations.</p></div><a class="btn" target="_blank" href="https://www.reddit.com/report">Open Reddit Report</a></div>
+        <div class="card platform"><div><h3>Trustpilot</h3><p>Review reporting and support.</p></div><a class="btn" target="_blank" href="https://support.trustpilot.com/hc/en-us">Open Trustpilot</a></div>
+        <div class="card platform"><div><h3>Facebook</h3><p>Report content through the Help Center.</p></div><a class="btn" target="_blank" href="https://www.facebook.com/help">Open Facebook Help</a></div>
+        <div class="card platform"><div><h3>Instagram</h3><p>Safety and reporting support.</p></div><a class="btn" target="_blank" href="https://help.instagram.com">Open Instagram Help</a></div>
+        <div class="card platform"><div><h3>TikTok</h3><p>Official feedback/reporting portal.</p></div><a class="btn" target="_blank" href="https://www.tiktok.com/legal/report/feedback">Open TikTok Report</a></div>
+      </div>
+    </section>
+
+    <section id="tab-community" class="content">
+      <h2>🌐 Community Feed</h2>
+      <div class="card"><textarea id="postText" rows="3" placeholder="What's on your mind?"></textarea><button class="btn" id="publishBtn" style="margin-top:10px">Publish Post</button></div>
+      <div id="feed"></div>
+    </section>
+
+    <section id="tab-friends" class="content">
+      <h2>👥 Friends</h2>
+      <div class="card"><div style="display:flex;gap:8px"><input id="userSearch" placeholder="Search by exact email..."><button class="btn" id="searchUserBtn">Search</button></div></div>
+      <div id="userResults"></div><div id="requests"></div><div id="friendsList"></div>
+    </section>
+
+    <section id="tab-inbox" class="content">
+      <h2 style="margin-bottom:12px">💬 Messenger</h2>
+      <div class="chat">
+        <div class="chatpeople" id="chatPeople"></div>
+        <div class="chatmain">
+          <div class="chathead" id="chatHeader">Select a friend</div>
+          <div class="messages" id="messages"></div>
+          <div class="chatbar"><input id="messageInput" placeholder="Write a message..."><button id="sendBtn">Send</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-ai" class="content">
+      <h2>⚡ AI Assistant</h2>
+      <div class="card"><textarea id="aiInput" rows="4" placeholder="Ask XeeRe about a policy/reporting workflow..."></textarea><button class="btn" id="askAiBtn" style="margin-top:10px">Ask Assistant</button></div>
+      <div id="aiOutput"></div>
+    </section>
+
+    <section id="tab-profile" class="content">
+      <h2>👤 Profile & Settings</h2>
+      <div class="card"><label>EMAIL</label><p id="profileEmail" class="muted"></p><label style="margin-top:15px">DISPLAY NAME</label><input id="displayName" placeholder="Your display name"><button class="btn" id="saveProfile" style="margin-top:10px">Save Profile</button><p id="profileMsg"></p></div>
+    </section>
+
+    <section id="tab-policies" class="content">
+      <h2>📜 Website Policies</h2>
+      <div class="card"><h3>Responsible Reporting</h3><p>XeeRe helps users identify possible policy concerns and navigate official reporting channels. Submit only truthful information and genuine evidence.</p></div>
+      <div class="card"><h3>Privacy</h3><p>Do not upload passwords, payment information, private documents or unnecessary personal information into community posts or messages.</p></div>
+      <div class="card"><h3>Community Rules</h3><p>No harassment, threats, spam, impersonation, fabricated evidence or malicious reporting.</p></div>
+    </section>
+
+    <section id="tab-feedback" class="content">
+      <h2>📝 Feedback & Support</h2>
+      <div class="card"><input id="feedbackSubject" placeholder="Subject"><textarea id="feedbackText" rows="6" style="margin-top:10px" placeholder="Message"></textarea><button class="btn" id="sendFeedback" style="margin-top:10px">Send Feedback</button><p id="feedbackMsg"></p></div>
+    </section>
+  </main>
 </div>
-
-<!-- PLATFORMS -->
-<div id="platforms" class="page">
- <h1 class="page-title">🛡️ Platform Reporting</h1>
- <p class="page-desc">Official reporting/support destinations.</p>
-
- <div class="grid">
-
-  <div class="card platform">
-   <div class="platform-info"><h3>Google Maps</h3><p>Business profile and review support.</p></div>
-   <a class="link" target="_blank" href="https://support.google.com/business/answer/4596773">Open</a>
-  </div>
-
-  <div class="card platform">
-   <div class="platform-info"><h3>Reddit</h3><p>Report content and policy violations.</p></div>
-   <a class="link" target="_blank" href="https://www.reddit.com/report">Open</a>
-  </div>
-
-  <div class="card platform">
-   <div class="platform-info"><h3>Trustpilot</h3><p>Review reporting and support.</p></div>
-   <a class="link" target="_blank" href="https://support.trustpilot.com/">Open</a>
-  </div>
-
-  <div class="card platform">
-   <div class="platform-info"><h3>Facebook</h3><p>Report content through Help Center.</p></div>
-   <a class="link" target="_blank" href="https://www.facebook.com/help/">Open</a>
-  </div>
-
-  <div class="card platform">
-   <div class="platform-info"><h3>Instagram</h3><p>Safety and reporting support.</p></div>
-   <a class="link" target="_blank" href="https://help.instagram.com/">Open</a>
-  </div>
-
-  <div class="card platform">
-   <div class="platform-info"><h3>TikTok</h3><p>Official feedback/reporting portal.</p></div>
-   <a class="link" target="_blank" href="https://www.tiktok.com/legal/report/feedback">Open</a>
-  </div>
-
- </div>
-</div>
-
-<!-- COMMUNITY -->
-<div id="community" class="page">
- <h1 class="page-title">🌐 Community Feed</h1>
- <p class="page-desc">Share updates and interact with the XeeRe community.</p>
-
- <div class="card">
-  <div class="field">
-   <textarea id="postInput" rows="3" placeholder="What's on your mind?"></textarea>
-  </div>
-  <button class="btn" onclick="createPost()">Publish Post</button>
- </div>
-
- <div id="feed"></div>
-</div>
-
-<!-- FRIENDS -->
-<div id="friends" class="page">
- <h1 class="page-title">👥 Friends</h1>
- <p class="page-desc">Find XeeRe users and send friend requests.</p>
-
- <div class="card">
-  <div style="display:flex;gap:8px">
-   <input id="userSearch" placeholder="Search by exact email..."
-    style="flex:1;background:#0b1223;border:1px solid var(--border);padding:11px;color:white;border-radius:9px">
-   <button class="btn" onclick="searchUser()">Search</button>
-  </div>
- </div>
-
- <div id="userResults"></div>
- <div id="requests"></div>
-</div>
-
-<!-- MESSENGER -->
-<div id="messenger" class="page">
- <h1 class="page-title">💬 Messenger</h1>
- <p class="page-desc">Real-time user-to-user messaging.</p>
-
- <div class="chat">
-  <div class="chat-list">
-   <div class="chat-search">
-    <input placeholder="Friends" oninput="filterFriends(this.value)">
-   </div>
-   <div id="chatPeople"></div>
-  </div>
-
-  <div class="chat-window">
-   <div class="chat-head" id="chatHeader">Select a friend</div>
-   <div class="messages" id="messages"></div>
-   <div class="chat-send">
-    <input id="messageInput" placeholder="Write a message..." onkeypress="if(event.key==='Enter')sendMessage()">
-    <button class="btn" onclick="sendMessage()">Send</button>
-   </div>
-  </div>
- </div>
-</div>
-
-<!-- AI -->
-<div id="ai" class="page">
- <h1 class="page-title">⚡ AI Assistant</h1>
- <p class="page-desc">Helpful guidance for policy analysis and XeeRe workflows.</p>
-
- <div class="card">
-  <div class="field">
-   <label>Ask XeeRe</label>
-   <textarea id="aiInput" rows="5" placeholder="Example: What information should I collect before reporting a suspicious review?"></textarea>
-  </div>
-  <button class="btn" onclick="askAI()">Ask Assistant</button>
- </div>
- <div id="aiOutput" class="card hidden"></div>
-</div>
-
-<!-- PROFILE -->
-<div id="profile" class="page">
- <h1 class="page-title">👤 Profile & Settings</h1>
-
- <div class="card">
-  <h3>Account</h3>
-  <p id="profileEmail" style="margin-top:10px"></p>
-  <p id="profileUid" style="margin-top:6px;font-size:11px"></p>
- </div>
-
- <div class="card">
-  <h3>Display name</h3>
-  <div class="field" style="margin-top:12px">
-   <input id="displayName" placeholder="Your display name">
-  </div>
-  <button class="btn" onclick="saveProfile()">Save Profile</button>
-  <div id="profileMsg" class="msg"></div>
- </div>
-</div>
-
-<!-- POLICIES -->
-<div id="policies" class="page">
- <h1 class="page-title">📜 Website Policies</h1>
-
- <div class="card">
-  <h3>Responsible Reporting</h3>
-  <p>XeeRe helps users identify possible policy concerns and navigate official reporting channels. Users should submit only truthful information and genuine evidence.</p>
- </div>
-
- <div class="card">
-  <h3>Privacy</h3>
-  <p>Do not upload passwords, payment information, private documents or unnecessary personal information into community posts or messages.</p>
- </div>
-
- <div class="card">
-  <h3>Community Rules</h3>
-  <p>No harassment, threats, spam, impersonation, fabricated evidence or malicious reporting.</p>
- </div>
-</div>
-
-<!-- FEEDBACK -->
-<div id="feedback" class="page">
- <h1 class="page-title">📝 Feedback & Support</h1>
-
- <div class="card">
-  <div class="field">
-   <label>Subject</label>
-   <input id="feedbackSubject" placeholder="Subject">
-  </div>
-
-  <div class="field">
-   <label>Message</label>
-   <textarea id="feedbackText" rows="6" placeholder="Tell us what happened..."></textarea>
-  </div>
-
-  <button class="btn" onclick="sendFeedback()">Send Feedback</button>
-  <div id="feedbackMsg" class="msg"></div>
- </div>
-</div>
-
-</div>
-</main>
-</section>
 
 <script>
-/* =========================
-   FIREBASE
-========================= */
-
-const firebaseConfig = {
+const firebaseConfig={
  apiKey:"AIzaSyCsXHd2NtxunSfbqhiSbN2xrxhG6NQsTgw",
  authDomain:"xeera-7b670.firebaseapp.com",
  projectId:"xeera-7b670",
@@ -507,942 +191,212 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const auth=firebase.auth();
 const db=firebase.firestore();
 
-let currentUser=null;
-let selectedFriend=null;
-let messageUnsubscribe=null;
-let allFriends=[];
+let currentUser=null, selectedFriend=null, messageUnsub=null, allFriends=[];
+const titles={dashboard:"Dashboard",autodetect:"Review Analyzer",reports:"Platform Reports",community:"Community",friends:"Friends",inbox:"Messenger",ai:"AI Assistant",profile:"Profile & Settings",policies:"Website Policies",feedback:"Feedback & Support"};
 
-/* =========================
-   AUTH
-========================= */
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function showError(msg){document.getElementById("auth-error").textContent=msg;document.getElementById("auth-success").textContent="";}
+function showSuccess(msg){document.getElementById("auth-success").textContent=msg;document.getElementById("auth-error").textContent="";}
 
-function authMessage(text,type="error"){
- const el=document.getElementById("authMsg");
- el.className="msg "+type;
- el.textContent=text;
+document.querySelectorAll(".nav button").forEach(btn=>btn.onclick=()=>switchTab(btn.dataset.tab,btn));
+function switchTab(tab,btn){
+ document.querySelectorAll(".content").forEach(x=>x.classList.remove("active"));
+ const el=document.getElementById("tab-"+tab); if(el)el.classList.add("active");
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));
+ if(btn)btn.classList.add("active"); else document.querySelector(`.nav button[data-tab="${tab}"]`)?.classList.add("active");
+ document.getElementById("title").textContent=titles[tab]||"XeeRe";
+ document.getElementById("sidebar").classList.remove("open");
+ if(tab==="friends")loadRequests();
+ if(tab==="inbox")loadFriends();
 }
 
-function emailSignup(){
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
+document.getElementById("menuBtn").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
 
- if(!email||password.length<6){
-  authMessage("Enter a valid email and password of at least 6 characters.");
-  return;
- }
-
- auth.createUserWithEmailAndPassword(email,password)
- .then(cred=>{
-  return db.collection("users").doc(cred.user.uid).set({
-   uid:cred.user.uid,
-   email:cred.user.email,
-   displayName:cred.user.email.split("@")[0],
-   createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  },{merge:true});
- })
- .then(()=>authMessage("Account created successfully!","success"))
- .catch(e=>authMessage(e.message));
+async function ensureUser(user){
+ const ref=db.collection("users").doc(user.uid);
+ const snap=await ref.get();
+ const data={uid:user.uid,email:user.email||"",displayName:user.displayName||"",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+ if(!snap.exists)data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+ await ref.set(data,{merge:true});
 }
 
-function emailLogin(){
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
-
- if(!email||!password){
-  authMessage("Please enter email and password.");
-  return;
- }
-
- auth.signInWithEmailAndPassword(email,password)
- .catch(e=>authMessage(e.message));
+async function emailAuth(){
+ const email=document.getElementById("auth-email").value.trim();
+ const pass=document.getElementById("auth-password").value;
+ if(!email||!pass){showError("Enter email and password.");return;}
+ if(pass.length<6){showError("Password must be at least 6 characters.");return;}
+ try{
+   let cred;
+   try{cred=await auth.signInWithEmailAndPassword(email,pass);}
+   catch(e){
+     if(e.code==="auth/user-not-found"){
+       cred=await auth.createUserWithEmailAndPassword(email,pass);
+       showSuccess("Account created successfully.");
+     }else throw e;
+   }
+   await ensureUser(cred.user);
+ }catch(e){showError(e.message);}
 }
+document.getElementById("emailBtn").onclick=emailAuth;
 
-function googleLogin(){
- const provider=new firebase.auth.GoogleAuthProvider();
-
- auth.signInWithPopup(provider)
- .then(cred=>{
-  return db.collection("users").doc(cred.user.uid).set({
-   uid:cred.user.uid,
-   email:cred.user.email,
-   displayName:cred.user.displayName||cred.user.email.split("@")[0],
-   photoURL:cred.user.photoURL||"",
-   lastLogin:firebase.firestore.FieldValue.serverTimestamp()
-  },{merge:true});
- })
- .catch(e=>authMessage(e.message));
-}
-
-function logout(){
- auth.signOut();
-}
+document.getElementById("googleBtn").onclick=async()=>{
+ try{
+   const provider=new firebase.auth.GoogleAuthProvider();
+   const cred=await auth.signInWithPopup(provider);
+   await ensureUser(cred.user);
+ }catch(e){showError(e.message);}
+};
 
 auth.onAuthStateChanged(async user=>{
+ currentUser=user;
  if(user){
-  currentUser=user;
+   document.getElementById("auth-screen").style.display="none";
+   document.getElementById("app-screen").classList.add("show");
+   document.getElementById("userEmail").textContent=user.email||"";
+   document.getElementById("profileEmail").textContent=user.email||"";
+   document.getElementById("displayName").value=user.displayName||"";
+   await ensureUser(user);
+   startFeed();
+   loadFriends();
+ }else{
+   document.getElementById("auth-screen").style.display="flex";
+   document.getElementById("app-screen").classList.remove("show");
+ }
+});
 
-  document.getElementById("authScreen").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
+document.getElementById("logoutBtn").onclick=()=>auth.signOut();
 
-  document.getElementById("sideEmail").textContent=user.email;
-  document.getElementById("topEmail").textContent=user.email;
-  document.getElementById("profileEmail").textContent="Email: "+user.email;
-  document.getElementById("profileUid").textContent="UID: "+user.uid;
+document.getElementById("analyzeBtn").onclick=()=>{
+ const text=document.getElementById("reviewInput").value.trim();
+ const box=document.getElementById("analysisResult");
+ if(!text){box.classList.remove("hidden");box.innerHTML="<h3>⚠️ Enter content first</h3>";return;}
+ const s=text.toLowerCase();
+ let platform="General", categories=[];
+ if(s.includes("google")||s.includes("maps"))platform="Google Maps";
+ else if(s.includes("reddit"))platform="Reddit";
+ else if(s.includes("trustpilot"))platform="Trustpilot";
+ else if(s.includes("facebook"))platform="Facebook";
+ else if(s.includes("instagram"))platform="Instagram";
+ else if(s.includes("tiktok"))platform="TikTok";
+ if(/spam|advertis|promot/.test(s))categories.push("Possible spam/promotional content");
+ if(/threat|kill|violence/.test(s))categories.push("Possible threat/violent content");
+ if(/harass|abuse|bully|insult/.test(s))categories.push("Possible harassment/abuse");
+ if(/personal|phone|address|email/.test(s))categories.push("Possible personal-information issue");
+ if(!categories.length)categories.push("No obvious category detected from the supplied text");
+ box.classList.remove("hidden");
+ box.innerHTML=`<h3>✨ Analysis</h3><p style="margin-top:8px">Platform: <b>${esc(platform)}</b></p><p style="margin-top:6px">Possible categories: ${categories.map(esc).join(", ")}</p><p class="muted" style="margin-top:10px">Use the platform's official reporting channel and submit truthful evidence. XeeRe does not guarantee removal.</p>`;
+};
 
-  await db.collection("users").doc(user.uid).set({
-   uid:user.uid,
-   email:user.email,
-   lastLogin:firebase.firestore.FieldValue.serverTimestamp()
-  },{merge:true});
+document.getElementById("publishBtn").onclick=async()=>{
+ if(!currentUser)return;
+ const text=document.getElementById("postText").value.trim(); if(!text)return;
+ await db.collection("posts").add({uid:currentUser.uid,email:currentUser.email,text,likes:[],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+ document.getElementById("postText").value="";
+};
 
-  loadPosts()} /* =========================
-   COMMUNITY - LIKE
-========================= */
-
-async function toggleLike(postId, liked) {
-    if (!currentUser) return;
-
-    const ref = db.collection("posts").doc(postId);
-
-    try {
-        if (liked) {
-            await ref.update({
-                likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
-            });
-        } else {
-            await ref.update({
-                likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-            });
-        }
-    } catch (error) {
-        console.error(error);
-    }
+function startFeed(){
+ db.collection("posts").orderBy("createdAt","desc").limit(50).onSnapshot(snap=>{
+  const feed=document.getElementById("feed"); feed.innerHTML="";
+  document.getElementById("postCount").textContent=snap.size;
+  snap.forEach(doc=>{
+   const p=doc.data(), liked=(p.likes||[]).includes(currentUser.uid);
+   const div=document.createElement("div");div.className="post";
+   div.innerHTML=`<div class="posthead"><div class="avatar">${esc((p.email||"U")[0].toUpperCase())}</div><div><b>${esc(p.email||"User")}</b><div class="muted">XeeRe community</div></div></div><p>${esc(p.text)}</p><div class="actions"><button data-like="${doc.id}">${liked?"❤️":"👍"} Like (${(p.likes||[]).length})</button></div><div id="comments-${doc.id}"></div><div class="commentbar"><input id="comment-${doc.id}" placeholder="Write a comment..."><button data-comment="${doc.id}">Send</button></div>`;
+   feed.appendChild(div);
+   loadComments(doc.id);
+  });
+  feed.querySelectorAll("[data-like]").forEach(b=>b.onclick=()=>addComment(b.dataset.comment));
+ });
+ }
+async function addComment(postId){
+ const input=document.getElementById("comment-"+postId);const text=input.value.trim();if(!text)return;
+ await db.collection("posts").doc(postId).collection("comments").add({uid:currentUser.uid,email:currentUser.email,text,createdAt:firebase.firestore.FieldValue.serverTimestamp()});input.value="";
+}
+function loadComments(postId){
+ db.collection("posts").doc(postId).collection("comments").orderBy("createdAt","asc").onSnapshot(s=>{
+  const box=document.getElementById("comments-"+postId);if(!box)return;box.innerHTML="";
+  s.forEach(d=>{const c=d.data();box.innerHTML+=`<div class="comment"><b>${esc(c.email)}</b>: ${esc(c.text)}</div>`;});
+ });
 }
 
+document.getElementById("searchUserBtn").onclick=async()=>{
+ const email=document.getElementById("userSearch").value.trim().toLowerCase(),box=document.getElementById("userResults");box.innerHTML="";
+ if(!email)return;
+ const snap=await db.collection("users").where("email","==",email).limit(10).get();
+ if(snap.empty){box.innerHTML='<div class="card"><p>No user found.</p></div>';return;}
+ snap.forEach(d=>{const u=d.data();if(u.uid===currentUser.uid)return;const div=document.createElement("div");div.className="card";div.innerHTML=`<h3>👤 ${esc(u.displayName||u.email)}</h3><p>${esc(u.email)}</p><button class="btn" style="margin-top:10px">➕ Send Friend Request</button>`;div.querySelector("button").onclick=()=>sendRequest(u.uid);box.appendChild(div);});
+};
 
-/* =========================
-   COMMUNITY - COMMENTS
-========================= */
-
-async function addComment(postId) {
-    if (!currentUser) return;
-
-    const input = document.getElementById("comment-" + postId);
-    if (!input) return;
-
-    const text = input.value.trim();
-    if (!text) return;
-
-    try {
-        await db.collection("posts")
-            .doc(postId)
-            .collection("comments")
-            .add({
-                uid: currentUser.uid,
-                email: currentUser.email,
-                text: text,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-        input.value = "";
-    } catch (error) {
-        console.error(error);
-        alert("Comment failed: " + error.message);
-    }
+async function sendRequest(to){
+ const q=await db.collection("friendRequests").where("from","==",currentUser.uid).where("to","==",to).where("status","==","pending").get();
+ if(!q.empty){alert("Request already sent.");return;}
+ await db.collection("friendRequests").add({from:currentUser.uid,fromEmail:currentUser.email,to,status:"pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+ alert("Friend request sent.");
 }
-
-
-function loadComments(postId) {
-
-    db.collection("posts")
-        .doc(postId)
-        .collection("comments")
-        .orderBy("createdAt", "asc")
-        .onSnapshot(snapshot => {
-
-            const box = document.getElementById("comments-" + postId);
-
-            if (!box) return;
-
-            box.innerHTML = "";
-
-            snapshot.forEach(doc => {
-
-                const c = doc.data();
-
-                const div = document.createElement("div");
-
-                div.className = "comment";
-
-                div.innerHTML =
-                    "<b>" +
-                    escapeHTML(c.email || "User") +
-                    ":</b> " +
-                    escapeHTML(c.text);
-
-                box.appendChild(div);
-            });
-        });
+function loadRequests(){
+ db.collection("friendRequests").where("to","==",currentUser.uid).where("status","==","pending").onSnapshot(s=>{
+  const box=document.getElementById("requests");box.innerHTML=s.empty?"":'<div class="card"><h3>📩 Friend Requests</h3></div>';
+  s.forEach(d=>{const r=d.data();const div=document.createElement("div");div.className="card";div.innerHTML=`<p>${esc(r.fromEmail)}</p><button class="btn" style="margin-top:10px">✅ Accept</button>`;div.querySelector("button").onclick=()=>acceptRequest(d.id,r.from);box.appendChild(div);});
+ });
 }
-
-
-/* =========================
-   FRIEND SEARCH
-========================= */
-
-async function searchUser() {
-
-    const emailInput = document.getElementById("userSearch");
-    const results = document.getElementById("userResults");
-
-    const email = emailInput.value.trim().toLowerCase();
-
-    results.innerHTML = "";
-
-    if (!email) {
-        results.innerHTML =
-            '<div class="card"><p>Enter an email address.</p></div>';
-        return;
-    }
-
-    try {
-
-        const snapshot = await db.collection("users")
-            .where("email", "==", email)
-            .limit(10)
-            .get();
-
-        if (snapshot.empty) {
-
-            results.innerHTML =
-                '<div class="card"><p>No XeeRe user found with this email.</p></div>';
-
-            return;
-        }
-
-        snapshot.forEach(doc => {
-
-            const user = doc.data();
-
-            if (user.uid === currentUser.uid) return;
-
-            const card = document.createElement("div");
-
-            card.className = "card";
-
-            card.innerHTML = `
-                <h3>👤 ${escapeHTML(user.displayName || "XeeRe User")}</h3>
-                <p>${escapeHTML(user.email)}</p>
-
-                <button
-                    class="btn"
-                    style="margin-top:12px"
-                    onclick="sendFriendRequest('${user.uid}')">
-                    ➕ Send Friend Request
-                </button>
-            `;
-
-            results.appendChild(card);
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        results.innerHTML =
-            '<div class="card"><p>Error: ' +
-            escapeHTML(error.message) +
-            '</p></div>';
-    }
+async function acceptRequest(id,from){
+ const friendshipId=[currentUser.uid,from].sort().join("_"),batch=db.batch();
+ batch.update(db.collection("friendRequests").doc(id),{status:"accepted"});
+ batch.set(db.collection("friendships").doc(friendshipId),{members:[currentUser.uid,from],createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+ await batch.commit();loadFriends();
 }
-
-
-/* =========================
-   FRIEND REQUEST
-========================= */
-
-async function sendFriendRequest(toUid) {
-
-    if (!currentUser) return;
-
-    try {
-
-        const existing = await db.collection("friendRequests")
-            .where("from", "==", currentUser.uid)
-            .where("to", "==", toUid)
-            .where("status", "==", "pending")
-            .get();
-
-        if (!existing.empty) {
-
-            alert("Friend request already sent.");
-
-            return;
-        }
-
-        await db.collection("friendRequests").add({
-
-            from: currentUser.uid,
-            fromEmail: currentUser.email,
-
-            to: toUid,
-
-            status: "pending",
-
-            createdAt:
-                firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        alert("Friend request sent successfully.");
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Request failed: " + error.message);
-    }
+function loadFriends(){
+ db.collection("friendships").where("members","array-contains",currentUser.uid).onSnapshot(async s=>{
+  allFriends=[];
+  for(const d of s.docs){const other=d.data().members.find(x=>x!==currentUser.uid);if(!other)continue;const u=await db.collection("users").doc(other).get();if(u.exists)allFriends.push(u.data());}
+  document.getElementById("friendCount").textContent=allFriends.length;renderFriends();
+ });
 }
-
-
-/* =========================
-   LOAD FRIEND REQUESTS
-========================= */
-
-function loadRequests() {
-
-    if (!currentUser) return;
-
-    db.collection("friendRequests")
-        .where("to", "==", currentUser.uid)
-        .where("status", "==", "pending")
-        .onSnapshot(snapshot => {
-
-            const box = document.getElementById("requests");
-
-            if (!box) return;
-
-            box.innerHTML = "";
-
-            if (snapshot.empty) {
-
-                box.innerHTML = `
-                    <div class="card">
-                        <h3>📩 Friend Requests</h3>
-                        <p style="margin-top:8px">
-                            No pending requests.
-                        </p>
-                    </div>
-                `;
-
-                return;
-            }
-
-            const heading = document.createElement("div");
-
-            heading.className = "card";
-
-            heading.innerHTML =
-                "<h3>📩 Friend Requests</h3>";
-
-            box.appendChild(heading);
-
-            snapshot.forEach(doc => {
-
-                const request = doc.data();
-
-                const card = document.createElement("div");
-
-                card.className = "card";
-
-                card.innerHTML = `
-                    <h3>👤 ${escapeHTML(request.fromEmail)}</h3>
-
-                    <button
-                        class="btn"
-                        onclick="acceptRequest(
-                            '${doc.id}',
-                            '${request.from}'
-                        )">
-                        ✅ Accept
-                    </button>
-                `;
-
-                box.appendChild(card);
-            });
-        });
+function renderFriends(){
+ const box=document.getElementById("friendsList");box.innerHTML=allFriends.length?'<div class="card"><h3>My Friends</h3></div>':'<div class="card"><p>No friends yet. Search by exact email to connect.</p></div>';
+ allFriends.forEach(u=>{const d=document.createElement("div");d.className="card";d.innerHTML=`<p>👤 ${esc(u.displayName||u.email)}</p>`;box.appendChild(d);});
+ const people=document.getElementById("chatPeople");people.innerHTML="";allFriends.forEach(u=>{const d=document.createElement("div");d.className="person";d.textContent="👤 "+(u.displayName||u.email);d.onclick=()=>openChat(u.uid,u.email);people.appendChild(d);});
 }
-
-
-/* =========================
-   ACCEPT FRIEND
-========================= */
-
-async function acceptRequest(requestId, fromUid) {
-
-    if (!currentUser) return;
-
-    try {
-
-        const friendshipId =
-            [currentUser.uid, fromUid].sort().join("_");
-
-        const batch = db.batch();
-
-        batch.update(
-            db.collection("friendRequests").doc(requestId),
-            {
-                status: "accepted"
-            }
-        );
-
-        batch.set(
-            db.collection("friendships").doc(friendshipId),
-            {
-                members: [
-                    currentUser.uid,
-                    fromUid
-                ],
-                createdAt:
-                    firebase.firestore.FieldValue.serverTimestamp()
-            }
-        );
-
-        await batch.commit();
-
-        alert("Friend request accepted!");
-
-        loadFriends();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Could not accept request: " +
-            error.message
-        );
-    }
+function openChat(uid,email){
+ selectedFriend={uid,email};document.getElementById("chatHeader").textContent=email;document.getElementById("messages").innerHTML="";
+ if(messageUnsub)messageUnsub();
+ const cid=[currentUser.uid,uid].sort().join("_");
+ messageUnsub=db.collection("conversations").doc(cid).collection("messages").orderBy("createdAt","asc").onSnapshot(s=>{
+  const box=document.getElementById("messages");box.innerHTML="";
+  s.forEach(d=>{const m=d.data(),b=document.createElement("div");b.className="bubble "+(m.from===currentUser.uid?"out":"in");b.textContent=m.text;box.appendChild(b);});
+  box.scrollTop=box.scrollHeight;
+ });
 }
-
-
-/* =========================
-   LOAD FRIENDS
-========================= */
-
-function loadFriends() {
-
-    if (!currentUser) return;
-
-    db.collection("friendships")
-        .where(
-            "members",
-            "array-contains",
-            currentUser.uid
-        )
-        .onSnapshot(async snapshot => {
-
-            allFriends = [];
-
-            for (const doc of snapshot.docs) {
-
-                const members =
-                    doc.data().members || [];
-
-                const friendId =
-                    members.find(
-                        id => id !== currentUser.uid
-                    );
-
-                if (!friendId) continue;
-
-                try {
-
-                    const userDoc =
-                        await db.collection("users")
-                            .doc(friendId)
-                            .get();
-
-                    if (userDoc.exists) {
-
-                        allFriends.push(
-                            userDoc.data()
-                        );
-                    }
-
-                } catch (error) {
-
-                    console.error(error);
-                }
-            }
-
-            const count =
-                document.getElementById("friendCount");
-
-            if (count) {
-                count.textContent =
-                    allFriends.length;
-            }
-
-            renderFriends();
-        });
-}
-
-
-/* =========================
-   FRIEND LIST
-========================= */
-
-function renderFriends(filter = "") {
-
-    const box =
-        document.getElementById("chatPeople");
-
-    if (!box) return;
-
-    const search =
-        filter.toLowerCase();
-
-    const filtered =
-        allFriends.filter(user =>
-            (user.email || "")
-                .toLowerCase()
-                .includes(search)
-        );
-
-    if (!filtered.length) {
-
-        box.innerHTML = `
-            <div style="
-                padding:15px;
-                color:#94a3b8;
-                font-size:12px">
-                No friends yet.
-            </div>
-        `;
-
-        return;
-    }
-
-    box.innerHTML = "";
-
-    filtered.forEach(user => {
-
-        const div =
-            document.createElement("div");
-
-        div.className =
-            "chat-person";
-
-        div.innerHTML = `
-            👤
-            ${escapeHTML(
-                user.displayName ||
-                user.email
-            )}
-        `;
-
-        div.onclick = () =>
-            openChat(
-                user.uid,
-                user.email
-            );
-
-        box.appendChild(div);
-    });
-}
-
-
-function filterFriends(value) {
-    renderFriends(value);
-}
-
-
-/* =========================
-   MESSENGER
-========================= */
-
-function openChat(uid, email) {
-
-    if (!currentUser) return;
-
-    selectedFriend = {
-        uid: uid,
-        email: email
-    };
-
-    document.getElementById(
-        "chatHeader"
-    ).textContent = email;
-
-    const messages =
-        document.getElementById("messages");
-
-    messages.innerHTML = "";
-
-    if (messageUnsubscribe) {
-        messageUnsubscribe();
-        messageUnsubscribe = null;
-    }
-
-    const conversationId =
-        [currentUser.uid, uid]
-            .sort()
-            .join("_");
-
-    messageUnsubscribe =
-        db.collection("conversations")
-            .doc(conversationId)
-            .collection("messages")
-            .orderBy("createdAt", "asc")
-            .onSnapshot(snapshot => {
-
-                messages.innerHTML = "";
-
-                snapshot.forEach(doc => {
-
-                    const message =
-                        doc.data();
-
-                    const bubble =
-                        document.createElement("div");
-
-                    bubble.className =
-                        "bubble " +
-                        (
-                            message.from ===
-                            currentUser.uid
-                                ? "out"
-                                : "in"
-                        );
-
-                    bubble.textContent =
-                        message.text;
-
-                    messages.appendChild(
-                        bubble
-                    );
-                });
-
-                messages.scrollTop =
-                    messages.scrollHeight;
-            });
-}
-
-
-async function sendMessage() {
-
-    if (!currentUser ||
-        !selectedFriend) {
-
-        alert("First select a friend.");
-
-        return;
-    }
-
-    const input =
-        document.getElementById(
-            "messageInput"
-        );
-
-    const text =
-        input.value.trim();
-
-    if (!text) return;
-
-    const conversationId =
-        [currentUser.uid,
-         selectedFriend.uid]
-        .sort()
-        .join("_");
-
-    try {
-
-        await db.collection(
-            "conversations"
-        )
-        .doc(conversationId)
-        .collection("messages")
-        .add({
-
-            from: currentUser.uid,
-
-            to: selectedFriend.uid,
-
-            text: text,
-
-            createdAt:
-                firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-        });
-
-        input.value = "";
-
-    } catch (error) {
-
-        alert(
-            "Message failed: " +
-            error.message
-        );
-    }
-}
-
-
-/* =========================
-   AI ASSISTANT
-========================= */
-
-function askAI() {
-
-    const input =
-        document.getElementById(
-            "aiInput"
-        );
-
-    const output =
-        document.getElementById(
-            "aiOutput"
-        );
-
-    const question =
-        input.value.trim();
-
-    if (!question) return;
-
-    output.classList.remove("hidden");
-
-    output.innerHTML = `
-        <h3>⚡ XeeRe Assistant</h3>
-
-        <p style="margin-top:12px">
-            I can help you organize the issue,
-            identify possible policy categories,
-            prepare truthful reporting information,
-            and find the appropriate official
-            reporting channel.
-        </p>
-
-        <p style="
-            margin-top:12px;
-            color:#818cf8">
-
-            Current question:
-            ${escapeHTML(question)}
-        </p>
-
-        <p style="
-            margin-top:12px;
-            color:#94a3b8">
-
-            ⚠️ The AI Assistant UI is currently
-            local. A real AI API can be connected
-            later through your backend.
-        </p>
-    `;
-}
-
-
-/* =========================
-   PROFILE
-========================= */
-
-async function saveProfile() {
-
-    if (!currentUser) return;
-
-    const name =
-        document.getElementById(
-            "displayName"
-        ).value.trim();
-
-    if (!name) return;
-
-    try {
-
-        await db.collection("users")
-            .doc(currentUser.uid)
-            .set({
-
-                displayName: name,
-
-                updatedAt:
-                    firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
-
-            }, {
-                merge: true
-            });
-
-        await currentUser
-            .updateProfile({
-                displayName: name
-            });
-
-        const msg =
-            document.getElementById(
-                "profileMsg"
-            );
-
-        msg.textContent =
-            "Profile saved successfully.";
-
-        msg.className =
-            "msg success";
-
-    } catch (error) {
-
-        alert(error.message);
-    }
-}
-
-
-/* =========================
-   FEEDBACK
-========================= */
-
-async function sendFeedback() {
-
-    if (!currentUser) return;
-
-    const subject =
-        document.getElementById(
-            "feedbackSubject"
-        ).value.trim();
-
-    const message =
-        document.getElementById(
-            "feedbackText"
-        ).value.trim();
-
-    const result =
-        document.getElementById(
-            "feedbackMsg"
-        );
-
-    if (!subject || !message) {
-
-        result.textContent =
-            "Please complete both fields.";
-
-        result.className =
-            "msg error";
-
-        return;
-    }
-
-    try {
-
-        await db.collection(
-            "feedback"
-        ).add({
-
-            uid: currentUser.uid,
-
-            email: currentUser.email,
-
-            subject: subject,
-
-            message: message,
-
-            createdAt:
-                firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-        });
-
-        document.getElementById(
-            "feedbackSubject"
-        ).value = "";
-
-        document.getElementById(
-            "feedbackText"
-        ).value = "";
-
-        result.textContent =
-            "Feedback submitted successfully.";
-
-        result.className =
-            "msg success";
-
-    } catch (error) {
-
-        result.textContent =
-            error.message;
-
-        result.className =
-            "msg error";
-    }
-}
-
-
-/* =========================
-   HTML SECURITY
-========================= */
-
-function escapeHTML(value) {
-
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================
-   TIME
-========================= */
-
-function formatTime(timestamp) {
-
-    if (!timestamp)
-        return "Just now";
-
-    try {
-
-        return timestamp
-            .toDate()
-            .toLocaleString();
-
-    } catch {
-
-        return "Just now";
-    }
-}
-
-
-/* =========================
-   SIDEBAR
-========================= */
-
-function toggleSidebar() {
-
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
-
-    sidebar.classList.toggle(
-        "open"
-    );
-}
-
-
-/* =========================
-   INITIAL PAGE
-========================= */
-
-console.log(
-    "XeeRe application initialized."
-);
-
+document.getElementById("sendBtn").onclick=async()=>{
+ if(!selectedFriend)return;
+ const input=document.getElementById("messageInput"),text=input.value.trim();if(!text)return;
+ const cid=[currentUser.uid,selectedFriend.uid].sort().join("_");
+ await db.collection("conversations").doc(cid).collection("messages").add({from:currentUser.uid,to:selectedFriend.uid,text,createdAt:firebase.firestore.FieldValue.serverTimestamp()});input.value="";
+};
+document.getElementById("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("sendBtn").click();});
+
+document.getElementById("askAiBtn").onclick=()=>{
+ const q=document.getElementById("aiInput").value.trim();if(!q)return;
+ document.getElementById("aiOutput").innerHTML=`<div class="card"><h3>⚡ XeeRe Assistant</h3><p>For: <b>${esc(q)}</b></p><p style="margin-top:10px">I can help classify possible policy concerns and identify the appropriate official reporting route. Submit only truthful information and genuine evidence.</p></div>`;
+};
+
+document.getElementById("saveProfile").onclick=async()=>{
+ const name=document.getElementById("displayName").value.trim();if(!name)return;
+ await currentUser.updateProfile({displayName:name});await db.collection("users").doc(currentUser.uid).set({displayName:name,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+ document.getElementById("profileMsg").textContent="Profile saved successfully.";document.getElementById("profileMsg").className="success";
+};
+document.getElementById("sendFeedback").onclick=async()=>{
+ const subject=document.getElementById("feedbackSubject").value.trim(),message=document.getElementById("feedbackText").value.trim();if(!subject||!message)return;
+ await db.collection("feedback").add({uid:currentUser.uid,email:currentUser.email,subject,message,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+ document.getElementById("feedbackMsg").textContent="Feedback submitted successfully.";document.getElementById("feedbackMsg").className="success";
+ document.getElementById("feedbackSubject").value="";document.getElementById("feedbackText").value="";
+};
+
+console.log("XeeRe initialized");
 </script>
-
 </body>
 </html>
+
