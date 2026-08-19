@@ -1,307 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XeeRe — Enterprise Intelligence & Community Platform</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6366f1">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg-main: #f8fafc;
-            --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --radius: 12px;
-            --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-        .hidden { display: none !important; }
-
-        /* SECURE LOGIN SCREEN */
-        #loginSection {
-            position: fixed; inset: 0;
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 2000; padding: 20px;
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px; padding: 40px 32px;
-            width: 100%; max-width: 440px; text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        .login-logo {
-            width: 56px; height: 56px; border-radius: 16px; margin: 0 auto 12px;
-            background: linear-gradient(135deg, #6366f1, #06b6d4);
-            color: white; display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 24px; box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
-        }
-
-        /* MAIN APP LAYOUT */
-        .app-container { display: flex; min-height: 100vh; }
-        
-        /* SIDEBAR / NAVIGATION */
-        .sidebar {
-            width: 280px; background: var(--surface);
-            border-right: 1px solid var(--border);
-            padding: 24px; display: flex; flex-direction: column; justify-content: space-between;
-            position: fixed; height: 100vh; z-index: 100;
-        }
-        .brand-section { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; }
-        .logo-icon {
-            width: 42px; height: 42px; border-radius: 10px;
-            background: linear-gradient(135deg, #6366f1, #06b6d4);
-            color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px;
-        }
-        .nav-menu { display: flex; flex-direction: column; gap: 6px; }
-        .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-            border-radius: var(--radius); font-size: 13px; font-weight: 600; color: var(--text-muted);
-            cursor: pointer; transition: all 0.2s; border: none; background: transparent; width: 100%; text-align: left;
-        }
-        .nav-item:hover, .nav-item.active { background: #e0e7ff; color: #4338ca; }
-
-        /* MAIN CONTENT AREA */
-        .main-content {
-            flex: 1; margin-left: 280px; padding: 40px; max-width: calc(100% - 280px);
-        }
-
-        /* CARDS & UI COMPONENTS */
-        .card {
-            background: var(--surface); border-radius: var(--radius);
-            padding: 24px; border: 1px solid var(--border);
-            box-shadow: var(--shadow); margin-bottom: 24px;
-        }
-        .tab-section { display: none; }
-        .tab-section.active { display: block; }
-
-        /* FORM CONTROLS */
-        .form-group { margin-bottom: 14px; text-align: left; }
-        .form-label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.05em; }
-        .form-select, .form-input, .batch-area {
-            width: 100%; padding: 10px 14px; border: 1.5px solid var(--border);
-            border-radius: var(--radius); font-size: 13px; outline: none; background: #fafafa; color: var(--text-main);
-            transition: border-color 0.2s;
-        }
-        .form-select:focus, .form-input:focus, .batch-area:focus { border-color: var(--primary); background: #fff; }
-        .batch-area { height: 120px; resize: none; }
-
-        .primary-btn {
-            width: 100%; padding: 12px; background: var(--primary);
-            color: white; border: none; border-radius: var(--radius);
-            font-weight: 600; cursor: pointer; font-size: 14px;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25); transition: background 0.2s;
-        }
-        .primary-btn:hover { background: var(--primary-hover); }
-
-        /* CASE CARDS */
-        .case-card {
-            border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 20px; margin-bottom: 16px; background: var(--surface);
-        }
-        .platform-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; background: #f1f5f9; color: #475569; text-transform: uppercase; margin-bottom: 8px; }
-        .category-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #e0e7ff; color: #4338ca; margin-bottom: 10px; }
-        .report-textarea { width: 100%; height: 80px; margin-top: 8px; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 12px; resize: none; background: #f8fafc; outline: none; }
-        .action-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-        .copy-btn { background: var(--text-main); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600; }
-        .report-link-btn { background: #e0f2fe; color: #0369a1; text-decoration: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
-
-        /* COMMUNITY & CHAT STYLES */
-        .post-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
-        .chat-container { display: flex; height: 72vh; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-        .chat-sidebar { width: 300px; border-right: 1px solid var(--border); overflow-y: auto; background: #fafafa; }
-        .chat-main { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; background: #fdfdfd; }
-        .chat-messages { flex: 1; overflow-y: auto; padding-right: 10px; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; max-width: 75%; word-break: break-word; }
-        .msg.incoming { background: #f1f5f9; align-self: flex-start; color: var(--text-main); }
-        .msg.outgoing { background: var(--primary); color: white; align-self: flex-end; }
-        .chat-img-preview { max-width: 200px; border-radius: 8px; margin-top: 6px; display: block; }
-        .chat-file-box { background: rgba(0,0,0,0.05); padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 4px; }
-
-        /* WHATSAPP STYLE CHAT TOOLBAR */
-        .chat-toolbar { display: flex; gap: 8px; align-items: center; padding-top: 10px; border-top: 1px solid var(--border); margin-top: 10px; }
-        .tool-btn { background: #f1f5f9; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: background 0.2s; }
-        .tool-btn:hover { background: #e2e8f0; }
-        .sticker-tray { display: flex; gap: 8px; padding: 8px 0; background: #f8fafc; border-top: 1px solid var(--border); overflow-x: auto; }
-        .sticker-item { font-size: 20px; cursor: pointer; padding: 4px; transition: transform 0.1s; }
-        .sticker-item:hover { transform: scale(1.2); }
-
-        /* CALL MODAL */
-        #callModal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); z-index: 3000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white; }
-        .call-avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #06b6d4); display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; margin-bottom: 20px; box-shadow: 0 0 30px rgba(99,102,241,0.5); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        /* PROFILE */
-        .profile-pic-preview { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin-bottom: 12px; }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
-            .app-container { flex-direction: column; }
-            .main-content { margin-left: 0; max-width: 100%; padding: 20px; }
-            .chat-container { flex-direction: column; height: auto; }
-            .chat-sidebar { width: 100%; height: 150px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6366f1">
+<title>XeeRe — Enterprise Intelligence & Community</title>
+<style>
+:root{--p:#6366f1;--ph:#4f46e5;--bg:#f6f8fc;--card:#fff;--text:#101828;--muted:#667085;--line:#e4e7ec;--danger:#ef4444;--success:#16a34a;--r:14px}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}button,input,textarea,select{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}.app{min-height:100vh}.sidebar{position:fixed;z-index:50;left:0;top:0;bottom:0;width:260px;background:#fff;border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px;padding:4px 10px 25px}.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#06b6d4);color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px}.brand b{font-size:17px}.brand small{display:block;color:var(--p);font-weight:700;margin-top:2px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;text-align:left;padding:12px 13px;border-radius:11px;color:var(--muted);font-weight:650;font-size:13px}.nav button:hover,.nav button.active{background:#eef2ff;color:#4338ca}.logout{border:0;background:#fff1f2;color:#dc2626;padding:12px;border-radius:11px;font-weight:700;width:100%}
+.main{margin-left:260px;padding:28px;max-width:1500px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:15px}.topbar h1{margin:0;font-size:25px}.topbar p{margin:5px 0 0;color:var(--muted);font-size:13px}.user-chip{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:30px}.avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#e0e7ff;display:grid;place-items:center;font-weight:800;color:#4338ca}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:0 4px 18px rgba(16,24,40,.04);margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.stat{padding:18px;border-radius:14px;background:#fff;border:1px solid var(--line)}.stat b{font-size:25px}.muted{color:var(--muted)}.label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:750;color:var(--muted);display:block;margin-bottom:6px}.input,.select,.textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fbfcfe;outline:none}.input:focus,.select:focus,.textarea:focus{border-color:var(--p);background:#fff}.textarea{resize:vertical;min-height:110px}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700}.primary{background:var(--p);color:#fff}.primary:hover{background:var(--ph)}.secondary{background:#eef2ff;color:#4338ca}.dark{background:#101828;color:#fff}.danger{background:#fee2e2;color:#b91c1c}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.between{display:flex;justify-content:space-between;align-items:center;gap:10px}.section{display:none}.section.active{display:block}.notice{padding:12px 14px;border-radius:10px;background:#fffbeb;color:#92400e;border:1px solid #fde68a;font-size:12px}
+.case{border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:12px}.badge{display:inline-block;border-radius:30px;padding:4px 9px;background:#eef2ff;color:#4338ca;font-size:10px;font-weight:800}.case h3{margin:8px 0 5px;font-size:15px}.report{white-space:pre-wrap;background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:11px;font-size:12px;line-height:1.55;margin-top:10px}
+.post{border:1px solid var(--line);padding:15px;border-radius:12px;margin-top:12px}.post p{font-size:13px;line-height:1.55}.post-actions{display:flex;gap:7px;margin-top:10px}.post-actions button{border:0;background:#f2f4f7;border-radius:8px;padding:7px 10px;font-size:11px}
+.chat{height:70vh;min-height:500px;background:#fff;border:1px solid var(--line);border-radius:14px;display:grid;grid-template-columns:260px 1fr;overflow:hidden}.chat-list{border-right:1px solid var(--line);overflow:auto;background:#fafbfc}.contact{padding:13px 15px;border-bottom:1px solid var(--line);cursor:pointer}.contact.active,.contact:hover{background:#eef2ff}.chat-main{display:flex;flex-direction:column;min-width:0}.chat-head{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:9px;background:#fbfcfe}.bubble{max-width:75%;padding:9px 12px;border-radius:13px;font-size:13px;line-height:1.45}.in{background:#eef2f6;align-self:flex-start}.out{background:var(--p);color:#fff;align-self:flex-end}.bubble img{max-width:240px;border-radius:9px;display:block;margin-top:6px}.file{padding:9px;background:rgba(0,0,0,.06);border-radius:8px;margin-top:5px}.composer{border-top:1px solid var(--line);padding:10px}.composer textarea{min-height:44px;max-height:100px;resize:none}.tools{display:flex;gap:6px;overflow:auto;padding-top:7px}.tool{border:0;background:#f2f4f7;border-radius:9px;padding:7px 10px}.stickers{display:none;gap:8px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:7px}.stickers button{border:0;background:transparent;font-size:23px}.profile-grid{display:grid;grid-template-columns:240px 1fr;gap:20px}.profile-avatar{width:150px;height:150px;border-radius:50%;object-fit:cover;background:#e0e7ff;border:3px solid var(--p)}.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.login{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:radial-gradient(circle at top right,#312e81,#0f172a);padding:20px}.login-card{width:min(440px,100%);background:rgba(255,255,255,.06);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.12);padding:32px;border-radius:24px;color:#fff}.login-card .input{color:#fff;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}.login-card .input::placeholder{color:#94a3b8}.login-logo{margin:auto auto 12px;width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#6366f1,#06b6d4);display:grid;place-items:center;font-size:25px;font-weight:800}.auth-tabs{display:flex;gap:5px;background:rgba(255,255,255,.06);padding:4px;border-radius:10px;margin:18px 0}.auth-tabs button{flex:1;border:0;background:transparent;color:#94a3b8;padding:8px;border-radius:8px}.auth-tabs button.active{background:var(--p);color:#fff}.error{color:#fca5a5;font-size:12px;margin-top:9px}.toast{position:fixed;right:20px;bottom:20px;background:#101828;color:#fff;padding:12px 16px;border-radius:10px;z-index:5000;font-size:12px;box-shadow:0 10px 30px #0003}
+.mobile-menu{display:none}.modal{position:fixed;inset:0;background:#0008;z-index:3000;display:grid;place-items:center;padding:20px}.modal-box{width:min(500px,100%);background:#fff;border-radius:16px;padding:22px}.call-screen{position:fixed;inset:0;z-index:4000;background:#101828;color:#fff;display:grid;place-items:center;text-align:center}.call-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#06b6d4);display:grid;place-items:center;font-size:35px;margin:auto;animation:pulse 1.5s infinite}@keyframes pulse{50%{transform:scale(1.06)}}
+@media(max-width:900px){.sidebar{width:220px}.main{margin-left:220px;padding:20px}.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.sidebar{display:none}.sidebar.mobile-open{display:flex;width:82%;box-shadow:10px 0 40px #0002}.main{margin-left:0;padding:15px;padding-top:72px}.mobile-menu{display:block;position:fixed;z-index:100;top:12px;left:12px;border:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px}.topbar{align-items:flex-start}.topbar h1{font-size:20px}.grid{grid-template-columns:1fr}.chat{grid-template-columns:1fr;height:75vh}.chat-list{height:125px;border-right:0;border-bottom:1px solid var(--line);display:flex;overflow-x:auto}.contact{min-width:170px}.profile-grid{grid-template-columns:1fr}.gallery{grid-template-columns:repeat(3,1fr)}}
+</style>
 </head>
 <body>
 
-    <!-- SECURE LOGIN & REGISTRATION SCREEN -->
-    <div id="loginSection">
-        <div class="login-card">
-            <div class="login-logo">X</div>
-            <h2 style="color:white; font-size:20px; font-weight:700;">Welcome to XeeRe</h2>
-            <p style="color:#94a3b8; font-size:11px; margin: 2px 0 2px;">By EryX Zee</p>
-            <p style="color:#94a3b8; font-size:12px; margin: 8px 0 16px;">Enterprise Intelligence & Community</p>
-            
-            <!-- Auth Method Switcher Tabs -->
-            <div style="display: flex; gap: 6px; margin-bottom: 16px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 10px;">
-                <button onclick="switchAuthTab('google')" id="authTabGoogle" style="flex:1; padding:7px; border:none; border-radius:8px; background:var(--primary); color:white; font-size:11px; font-weight:600; cursor:pointer;">Google Login</button>
-                <button onclick="switchAuthTab('manual')" id="authTabManual" style="flex:1; padding:7px; border:none; border-radius:8px; background:transparent; color:#94a3b8; font-size:11px; font-weight:600; cursor:pointer;">Email / Password</button>
-            </div>
+<div id="login" class="login">
+  <div class="login-card">
+    <div class="login-logo">X</div>
+    <h2 style="text-align:center;margin:0">Welcome to XeeRe</h2>
+    <p style="text-align:center;color:#94a3b8;font-size:12px">By EryX Zee · Enterprise Intelligence & Community</p>
+    <div class="auth-tabs">
+      <button id="signinTab" class="active" onclick="setAuth('signin')">Sign In</button>
+      <button id="signupTab" onclick="setAuth('signup')">Create Account</button>
+    </div>
+    <div id="nameWrap" class="hidden"><label class="label" style="color:#94a3b8">Full name</label><input id="name" class="input" placeholder="Your name"></div>
+    <div style="margin-top:10px"><label class="label" style="color:#94a3b8">Email</label><input id="email" class="input" type="email" placeholder="name@example.com"></div>
+    <div style="margin-top:10px"><label class="label" style="color:#94a3b8">Password</label><input id="password" class="input" type="password" placeholder="At least 6 characters"></div>
+    <button class="btn primary" style="width:100%;margin-top:15px" onclick="auth()">Continue</button>
+    <div id="authError" class="error"></div>
+    <p style="font-size:10px;color:#94a3b8;line-height:1.5;margin-top:16px">This standalone HTML keeps the session in this browser until the user explicitly signs out. For production-grade authentication, connect the same UI to Firebase/Supabase/Auth.js on Vercel.</p>
+  </div>
+</div>
 
-            <!-- Google Login Container -->
-            <div id="googleAuthSection">
-                <div id="g_id_onload" data-client_id="356035131446-ecqfu5t2ljbfaqepkq5glt4lcmtvjlq8.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
-                <div class="g_id_signin" data-type="standard" data-shape="pill" style="display: flex; justify-content: center; margin-bottom: 10px;"></div>
-            </div>
+<aside id="sidebar" class="sidebar">
+  <div>
+    <div class="brand"><div class="logo">X</div><div><b>XeeRe</b><small>By EryX Zee</small></div></div>
+    <nav class="nav">
+      <button class="active" onclick="show('dashboard',this)">📊 Intelligence Dashboard</button>
+      <button onclick="show('community',this)">🌐 Community Feed</button>
+      <button onclick="show('chat',this)">💬 Messenger Inbox</button>
+      <button onclick="show('profile',this)">👤 User Profile</button>
+      <button onclick="show('bot',this)">🤖 AI Assistant</button>
+      <button onclick="show('feedback',this)">💡 Feedback & Complaints</button>
+    </nav>
+  </div>
+  <button class="logout" onclick="logout()">🚪 Sign Out</button>
+</aside>
+<button class="mobile-menu" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">☰</button>
 
-            <!-- Manual Email / Password Section (Facebook Style Form) -->
-            <div id="manualAuthSection" class="hidden">
-                <div style="display: flex; gap: 6px; margin-bottom: 12px;">
-                    <button onclick="switchManualMode('signin')" id="modeSignin" style="flex:1; padding:5px; border:none; border-radius:6px; background:rgba(255,255,255,0.15); color:white; font-size:11px; font-weight:600; cursor:pointer;">Sign In</button>
-                    <button onclick="switchManualMode('signup')" id="modeSignup" style="flex:1; padding:5px; border:none; border-radius:6px; background:transparent; color:#94a3b8; font-size:11px; font-weight:600; cursor:pointer;">Sign Up</button>
-                </div>
+<main id="app" class="main hidden">
+  <div class="topbar">
+    <div><h1 id="pageTitle">Intelligence Dashboard</h1><p id="pageSub">Policy analysis, reports and case management.</p></div>
+    <div class="user-chip"><img id="topAvatar" class="avatar" alt=""><span id="topName">User</span></div>
+  </div>
 
-                <div class="form-group" id="nameFieldGroup" style="display:none;">
-                    <label class="form-label" style="color:#94a3b8;">Full Name</label>
-                    <input type="text" id="manualName" class="form-input" placeholder="Zeeshan Ahmad" style="background:rgba(255,255,255,0.05); color:white; border-color:rgba(255,255,255,0.1);">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" style="color:#94a3b8;">Email Address</label>
-                    <input type="email" id="manualEmail" class="form-input" placeholder="name@example.com" style="background:rgba(255,255,255,0.05); color:white; border-color:rgba(255,255,255,0.1);">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" style="color:#94a3b8;">Password</label>
-                    <input type="password" id="manualPassword" class="form-input" placeholder="••••••••" style="background:rgba(255,255,255,0.05); color:white; border-color:rgba(255,255,255,0.1);">
-                </div>
-                <button onclick="handleManualAuth()" id="manualSubmitBtn" class="primary-btn" style="margin-top: 4px;">Sign In to Dashboard</button>
-            </div>
+  <section id="dashboard" class="section active">
+    <div class="grid">
+      <div class="stat"><span class="muted">Reports</span><br><b id="statReports">0</b></div>
+      <div class="stat"><span class="muted">Community Posts</span><br><b id="statPosts">0</b></div>
+      <div class="stat"><span class="muted">Messages</span><br><b id="statMessages">0</b></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div class="between"><div><h3 style="margin:0">Multi-Platform Policy Analyzer</h3><p class="muted" style="font-size:12px">Paste public URLs or case text. XeeRe drafts a neutral policy report for manual submission.</p></div></div>
+      <div class="grid" style="margin-top:16px">
+        <div><label class="label">Platform</label><select id="platform" class="select"><option>Google Maps</option><option>Reddit</option><option>Trustpilot</option><option>Facebook</option><option>Instagram</option><option>TikTok</option></select></div>
+        <div style="grid-column:span 2"><label class="label">URL(s), one per line</label><textarea id="urls" class="textarea" style="min-height:80px" placeholder="https://..."></textarea></div>
+      </div>
+      <div style="margin-top:12px"><label class="label">Optional case/content details</label><textarea id="caseText" class="textarea" placeholder="Paste the review/comment or describe the issue. Do not fabricate evidence."></textarea></div>
+      <button class="btn primary" style="margin-top:12px" onclick="analyze()">⚡ Generate Policy Reports</button>
+    </div>
+    <div id="cases"></div>
+  </section>
+
+  <section id="community" class="section">
+    <div class="card"><textarea id="postInput" class="textarea" placeholder="Share a project, link deal, question or useful update..."></textarea><button class="btn primary" style="margin-top:10px" onclick="createPost()">🚀 Publish Post</button></div>
+    <div id="feed"></div>
+  </section>
+
+  <section id="chat" class="section">
+    <div class="chat">
+      <div id="chatList" class="chat-list"></div>
+      <div class="chat-main">
+        <div class="chat-head"><b id="chatPerson">Alex Morgan</b><div class="row"><button class="btn secondary" onclick="startCall('Alex Morgan','audio')">📞</button><button class="btn secondary" onclick="startCall('Alex Morgan','video')">📹</button></div></div>
+        <div id="messages" class="messages"></div>
+        <div class="composer">
+          <div id="stickers" class="stickers"></div>
+          <textarea id="messageInput" class="input" placeholder="Type a message..."></textarea>
+          <div class="tools">
+            <button class="tool" onclick="document.getElementById('imageFile').click()">🖼️ Picture</button>
+            <button class="tool" onclick="document.getElementById('fileFile').click()">📎 File</button>
+            <button class="tool" onclick="insertLink()">🔗 Link</button>
+            <button class="tool" onclick="toggleStickers()">😊 Stickers</button>
+            <button class="tool" onclick="emoji()">😀 Emoji</button>
+            <button class="btn primary" style="margin-left:auto" onclick="sendMessage()">Send ➤</button>
+          </div>
+          <input id="imageFile" class="hidden" type="file" accept="image/*" onchange="attachImage(this)">
+          <input id="fileFile" class="hidden" type="file" onchange="attachFile(this)">
         </div>
+      </div>
     </div>
+  </section>
 
-    <!-- CALL SIMULATION MODAL -->
-    <div id="callModal" class="hidden">
-        <div class="call-avatar" id="callAvatarIcon">📞</div>
-        <h2 id="callTitle" style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Calling Alex Morgan...</h2>
-        <p id="callStatus" style="color: #94a3b8; font-size: 14px; margin-bottom: 30px;">Connecting securely...</p>
-        <button onclick="endCall()" style="background: #ef4444; color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.4);">End Call 📴</button>
+  <section id="profile" class="section">
+    <div class="card profile-grid">
+      <div style="text-align:center"><img id="profileAvatar" class="profile-avatar" alt=""><br><input id="avatarFile" class="hidden" type="file" accept="image/*" onchange="uploadAvatar(this)"><button class="btn secondary" style="margin-top:10px" onclick="document.getElementById('avatarFile').click()">📷 Change Avatar</button></div>
+      <div>
+        <h3>Profile Details</h3>
+        <label class="label">Display Name</label><input id="profileName" class="input">
+        <label class="label" style="margin-top:10px">Bio</label><textarea id="profileBio" class="textarea"></textarea>
+        <button class="btn primary" style="margin-top:10px" onclick="saveProfile()">Save Profile</button>
+      </div>
     </div>
+    <div class="card"><h3>Media Gallery</h3><p class="muted" style="font-size:12px">Upload pictures for this browser profile.</p><input id="galleryFile" type="file" accept="image/*" multiple onchange="uploadGallery(this)" class="input"><div id="gallery" class="gallery" style="margin-top:14px"></div></div>
+  </section>
 
-    <!-- MAIN APP CONTAINER -->
-    <div id="mainApp" class="app-container hidden">
-        
-        <!-- SIDEBAR NAVIGATION -->
-        <aside class="sidebar">
-            <div>
-                <div class="brand-section">
-                    <div class="logo-icon">X</div>
-                    <div>
-                        <div style="font-weight:700; font-size:16px; color:var(--text-main);">XeeRe</div>
-                        <div style="font-size:11px; color:var(--primary); font-weight:600;">By EryX Zee</div>
-                    </div>
-                </div>
-                <div class="nav-menu">
-                    <button class="nav-item active" onclick="switchTab('dashboard', this)">📊 Intelligence Dashboard</button>
-                    <button class="nav-item" onclick="switchTab('community', this)">🌐 Community Feed</button>
-                    <button class="nav-item" onclick="switchTab('chat', this)">💬 Messenger Inbox</button>
-                    <button class="nav-item" onclick="switchTab('profile', this)">👤 User Profile</button>
-                    <button class="nav-item" onclick="switchTab('chatbot', this)">🤖 AI Assistant Bot</button>
-                    <button class="nav-item" onclick="switchTab('feedback', this)">💡 Feedback & Complaints</button>
-                </div>
-            </div>
-            <div>
-                <button class="nav-item" style="color:#ef4444; background:#fef2f2;" onclick="logoutApp()">🚪 Sign Out</button>
-            </div>
-        </aside>
+  <section id="bot" class="section">
+    <div class="card"><h3>🤖 XeeRe AI Assistant</h3><p class="muted" style="font-size:12px">Built-in local assistant for drafting reports, explaining workflows and preparing support messages.</p><div id="botMessages" class="messages" style="height:48vh;border:1px solid var(--line);border-radius:10px;margin-top:12px"></div><div class="row" style="margin-top:10px"><input id="botInput" class="input" placeholder="Ask XeeRe something..." onkeydown="if(event.key==='Enter')askBot()"><button class="btn primary" onclick="askBot()">Ask</button></div></div>
+  </section>
 
-        <!-- CONTENT AREA -->
-        <main class="main-content">
+  <section id="feedback" class="section">
+    <div class="card"><h3>💡 Feedback & Complaint Portal</h3><p class="muted" style="font-size:12px">Send feedback or report a problem with the application.</p><label class="label" style="margin-top:15px">Type</label><select id="feedbackType" class="select"><option>General Feedback</option><option>Bug Report</option><option>Complaint</option><option>Feature Request</option></select><label class="label" style="margin-top:12px">Message</label><textarea id="feedbackText" class="textarea" placeholder="Describe the issue..."></textarea><button class="btn primary" style="margin-top:10px" onclick="sendFeedback()">Submit</button></div>
+  </section>
+</main>
 
-            <!-- TAB 1: DASHBOARD -->
-            <div id="tab-dashboard" class="tab-section active">
-                <div style="margin-bottom: 24px;">
-                    <h1 style="font-size: 22px; font-weight: 700;">Intelligence Dashboard</h1>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Select platform, queue links, and auto-generate legal removal reports.</p>
-                </div>
+<div id="callScreen" class="call-screen hidden"><div><div class="call-avatar">📞</div><h2 id="callName">Calling...</h2><p id="callStatus" class="muted">Connecting securely...</p><button class="btn danger" onclick="endCall()" style="margin-top:20px">📴 End Call</button></div></div>
+<div id="toast" class="toast hidden"></div>
 
-                <div class="card">
-                    <div class="form-group">
-                        <label class="form-label">Select Target Platform</label>
-                        <select id="platformSelect" class="form-select">
-                            <option value="Google Maps">Google Maps (Review Policy)</option>
-                            <option value="Reddit">Reddit (Content Policy / Harassment)</option>
-                            <option value="Trustpilot">Trustpilot (Fake Review Guidelines)</option>
-                            <option value="Facebook">Facebook (Meta Community Standards)</option>
-                            <option value="Instagram">Instagram (Content Guidelines)</option>
-                            <option value="TikTok">TikTok (Community Standards)</option>
-                        </select>
-                    </div>
+<script>
+const KEY='xeere_state_v3', SESSION='xeere_session_v3';
+let state=JSON.parse(localStorage.getItem(KEY)||'null')||{users:{},posts:[],reports:[],messages:{'Alex Morgan':[],'Sarah Connor':[],'Jordan Lee':[]},gallery:[],feedback:[]};
+let authMode='signin', currentChat='Alex Morgan', pendingAttachment=null;
 
-                    <div class="form-group">
-                        <label class="form-label">Queue Links (One per line)</label>
-                        <textarea class="batch-area" id="linksInput" placeholder="Paste URLs here..."></textarea>
-                    </div>
-
-                    <button onclick="processBatch()" class="primary-btn">Run Automated Policy Analysis ⚡</button>
-                </div>
-
-                <div id="casesContainer"></div>
-            </div>
-
-            <!-- TAB 2: COMMUNITY FEED -->
-            <div id="tab-community" class="tab-section">
-                <div style="margin-bottom: 24px;">
-                    <h1 style="font-size: 22px; font-weight: 700;">Freelancer & Link Community</h1>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Connect with peers, share deals, and send friend requests.</p>
-                </div>
-
-                <div class="card">
-                    <textarea class="form-input" id="postInput" placeholder="What's on your mind regarding link deals or projects?" style="height:80px; resize:none;"></textarea>
-                    <button onclick="createPost()" class="primary-btn" style="margin-top:10px;">Post to Community 🚀</button>
-                </div>
-
-                <div id="communityFeed">
-                    <div class="post-box">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <span style="font-weight:700; font-size:13px;">Alex Morgan</span>
-                            <button onclick="sendFriendReq(this)" style="background:#e0e7ff; color:#4338ca; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">➕ Add Friend</button>
-                        </div>
-                        <p style="font-size:13px; color:var(--text-main);">Looking for partners to handle batch Trustpilot removals. DM me!</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: WHATSAPP-STYLE MESSENGER INBOX -->
-            <div id="tab-chat" class="tab-section">
-                <div style="margin-bottom: 24px;">
-                    <h1 style="font-size: 22px; font-weight: 700;">Messenger Inbox</h1>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">WhatsApp style direct chat with file sharing, stickers, emojis & calls.</p>
-                </div>
-
-                <div class="chat-container">
-                    <div class="chat-sidebar">
-                        <div style="padding:12px; border-bottom:1px solid var(--border); font-weight:600; font-size:12px; color:var(--text-muted);">ACTIVE CHATS</div>
-                        <div onclick="selectChat('Alex Morgan')" style="padding:12px 16px; cursor:pointer; border-bottom:1px solid var(--border); background:#fff; font-size:13px; font-weight:600;">💬 Alex Morgan</div>
-                        <div onclick="selectChat('Sarah Connor')" style="padding:12px 16px; cursor:point
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function session(){return localStorage.getItem(SESSION)}
+function currentUser(){let e=session();return e?state.users[e]:null}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.remove('hidden');setTimeout(()=>x.classList.add('hidden'),2200)}
+function setAuth(m){authMode=m;signinTab.classList.toggle('active',m==='signin');signupTab.classList.toggle('active',m==='signup');nameWrap.classList.toggle('hidden',m!=='signup');authError.textContent=''}
+function auth(){
+ let e=email.value.trim().toLowerCase(), p=password.value, n=name.value.trim();
+ if(!e||p.length<6||(authMode==='signup'&&!n)){authError.textContent='Enter valid details. Password must contain at least 6 characters.';return}
+ if(authMode==='signup'){if(state.users[e]){authError.textContent='Account already exists in this browser.';return}state.users[e]={email:e,name:n,pass:p,bio:'',avatar:''}}
+ else if(!state.users[e]||state.users[e].pass!==p){authError.textContent='Incorrect email or password.';return}
+ localStorage.setItem(SESSION,e);save();openApp()
+}
+function openApp(){login.classList.add('hidden');app.classList.remove('hidden');refresh();show('dashboard',document.querySelector('.nav button'))}
+function logout(){localStorage.removeItem(SESSION);location.reload()}
+function refresh(){
+ let u=currentUser();if(!u){login.classList.remove('hidden');app.classList.add('hidden');return}
+ topName.textContent=u.name;profileName.value=u.name;profileBio.value=u.bio||'';setAvatar(u.avatar,u.name);renderFeed();renderChats();renderMessages();renderGallery();statReports.textContent=state.reports.length;statPosts.textContent=state.posts.length;statMessages.textContent=Object.values(state.messages).flat().length
+}
+function setAvatar(src,name){let els=[topAvatar,profileAvatar];els.forEach(x=>{x.src=src||'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><rect width="100%" height="100%" fill="#e0e7ff"/><text x="50%" y="55%" text-anchor="middle" font-size="55" font-family="Arial" fill="#4338ca">${(name||'U')[0].toUpperCase()}</text></svg>`)})}
+const titles={dashboard:['Intelligence Dashboard','Policy analysis, reports and case management.'],community:['Community Feed','Connect, post and share projects.'],chat:['Messenger Inbox','WhatsApp-style messaging with media, links, emojis, stickers and calls.'],profile:['User Profile','Manage your p
