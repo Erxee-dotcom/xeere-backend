@@ -34,16 +34,18 @@
 </head>
 <body>
 
+    <!-- SECURE GOOGLE LOGIN SCREEN -->
     <div id="loginSection">
         <div class="login-card">
             <div class="login-logo">X</div>
             <h2 style="color:white;">Welcome to XeeRe</h2>
             <p style="color:#94a3b8; font-size:12px; margin: 10px 0 30px;">Secure Login via Google</p>
             <div id="g_id_onload" data-client_id="356035131446-ecqfu5t2ljbfaqepkq5glt4lcmtvjlq8.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
-            <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
+            <div class="g_id_signin" data-type="standard" data-shape="pill" style="display: flex; justify-content: center;"></div>
         </div>
     </div>
 
+    <!-- MAIN DASHBOARD -->
     <div id="mainApp" class="dashboard hidden">
         <aside class="sidebar">
             <div class="brand-box">
@@ -53,7 +55,7 @@
                     <div style="font-size:10px; color:#6366f1;">By EryX Zee</div>
                 </div>
             </div>
-            <p style="cursor:pointer;" onclick="location.reload()">🚪 Logout</p>
+            <p style="cursor:pointer; color:#ef4444; font-weight:600; font-size:12px;" onclick="location.reload()">🚪 Logout</p>
         </aside>
         <main class="main-content">
             <h1>Intelligence Dashboard</h1>
