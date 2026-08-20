@@ -147,7 +147,7 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
   </div>
 </div>
 <div class="top-actions">
-<button class="icon-btn" id="alertBtn" title="Alerts">🔔<span id="alertBadge" class="count-badge">0</span></button>
+<button class="icon-btn" id="alertBtn" title="Alerts" type="button">🔔<span id="alertBadge" class="count-badge">0</span></button>
 <div class="avatar" id="profileBtn" title="My Profile">E</div>
 </div>
 </header>
@@ -297,7 +297,7 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 <option value="Social Media Post">Social Media Post</option>
 </select></div>
 <button class="btn" id="analyzeBtn">Analyze & Generate Report</button>
-<div id="analyzerLoading" class="hidden"><div class="spinner"></div><p style="text-align:center;" class="muted">Fetching and analyzing content against platform policies...</p></div>
+<div id="analyzerLoading" class="hidden"><div class="spinner"></div><p style="text-align:center;" class="muted">Analyzing the supplied text against the built-in screening rules...</p></div>
 <div id="analysisResult" style="margin-top:16px"></div>
 </div>
 </section>
@@ -442,7 +442,7 @@ const firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage();
 let currentUser=null,allFriends=[],selectedFriend=null;
-let unsubs=[],commentUnsubs={},messageUnsub=null,notificationUnsub=null;
+let unsubs=[],commentUnsubs={},messageUnsub=null,notificationUnsub=null,friendsUnsub=null,requestsUnsub=null,statusesUnsub=null,gigsUnsub=null,ordersUnsub=null,withdrawalsUnsub=null,adminOrdersUnsub=null,adminWithdrawalsUnsub=null;
 
 // 🔒 Admin Email Hardcoded
 const ADMIN_EMAIL = "lfear7670@gmail.com"; 
@@ -450,7 +450,7 @@ const ADMIN_EMAIL = "lfear7670@gmail.com";
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 const toast=m=>{const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2600)};
-const fmt=t=>{try{return t?.toDate().toLocaleString()}catch{return"Just now"}};
+const fmt=t=>{try{return t?.toDate?t.toDate().toLocaleString():"Just now"}catch{return"Just now"}};
 const initials=n=>(n||"E").trim().charAt(0).toUpperCase();
 
 function calculateAge(dob){
@@ -490,6 +490,7 @@ $("adminPanelDrawerBtn").onclick=()=>{
  page("admin-panel");
 };
 
+$("alertBtn").onclick=()=>page("alerts");
 $("profileBtn").onclick=()=>page("profile");
 $("createPostNavBtn").onclick=()=>{ page("home"); setTimeout(()=>$("postText").focus(),100); };
 $("homeCreate").onclick=()=>{ page("home"); setTimeout(()=>$("postText").focus(),100); };
@@ -586,10 +587,18 @@ async function emailAuth(){
  }catch(e){$("auth-error").textContent=e.message}
 }
 $("emailBtn").onclick=emailAuth;
+$("auth-password").addEventListener("keydown",e=>{if(e.key==="Enter")emailAuth()});
 $("googleBtn").onclick=async()=>{try{const p=new firebase.auth.GoogleAuthProvider();const c=await auth.signInWithPopup(p);await ensureUser(c.user)}catch(e){$("auth-error").textContent=e.message}};
 $("logoutBtn").onclick=()=>auth.signOut();
 
-function cleanup(){unsubs.forEach(f=>{try{f()}catch{}});unsubs=[];Object.values(commentUnsubs).forEach(f=>{try{f()}catch{}});commentUnsubs={};if(messageUnsub)messageUnsub();if(notificationUnsub)notificationUnsub()}
+function cleanup(){
+  unsubs.forEach(f=>{try{f()}catch{}});
+  unsubs=[];
+  Object.values(commentUnsubs).forEach(f=>{try{f()}catch{}});
+  commentUnsubs={};
+  [messageUnsub,notificationUnsub,friendsUnsub,requestsUnsub,statusesUnsub,gigsUnsub,ordersUnsub,withdrawalsUnsub,adminOrdersUnsub,adminWithdrawalsUnsub].forEach(f=>{try{if(typeof f==="function")f()}catch{}});
+  messageUnsub=notificationUnsub=friendsUnsub=requestsUnsub=statusesUnsub=gigsUnsub=ordersUnsub=withdrawalsUnsub=adminOrdersUnsub=adminWithdrawalsUnsub=null;
+}
 
 // AUTH STATE PERSISTENCE & ADMIN BUTTON TOGGLE
 auth.onAuthStateChanged(async u=>{
@@ -1033,8 +1042,8 @@ $("analyzeBtn").onclick=()=>{
     <div style="margin:12px 0;">
       <b>Detected Categories:</b> ${isViolation? found.map(c=>`<span class="badge" style="background:#fee2e2;color:#991b1b;margin-right:5px;">${esc(c)}</span>`).join("") : '<span class="badge" style="background:#dcfce7;color:#166534;">No policy violation detected</span>'}
     </div>
-    <p style="line-height:1.6;font-size:13px;"><b>Recommended Action:</b> ${isViolation? "Content flagged as potentially violating terms of service. You may submit an official takedown request using the platform's support workflow." : "Content appears compliant with general community standards."}</p>
-    <button class="btn small" style="margin-top:12px;" onclick="toast('Takedown request generated for official review.')">Submit Takedown Notice</button>
+    <p style="line-height:1.6;font-size:13px;"><b>Recommended Action:</b> ${isViolation? "Potential policy signals were detected. Review the result against the platform's current policy and use the platform's official reporting workflow if appropriate." : "No matching signal was found by this built-in screening rule set; this does not prove that the content complies with platform policy."}</p>
+    <button class="btn small" style="margin-top:12px;" onclick="toast('Takedown request generated for official review.')">Prepare Report</button>
   </div>`;
  }, 1500);
 };
@@ -1117,7 +1126,7 @@ function openCheckoutModal(gigId, gig){
 
   await db.collection("orders").add({
     gigId, clientUid:currentUser.uid, freelancerUid:gig.uid, title:gig.title, price:gig.price,
-    devFee, netFreelancer, method, trxId, status:"Pending Verification", deliveryNote="", createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    devFee, netFreelancer, method, trxId, status:"Pending Verification", deliveryNote:"", createdAt:firebase.firestore.FieldValue.serverTimestamp()
   });
   closeModal();
   toast("Order submitted! Waiting for payment verification.");
