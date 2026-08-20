@@ -116,22 +116,76 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 .empty{padding:35px;text-align:center;color:var(--muted)}
 @media(max-width:800px){.topbar{padding:0 12px}.brand{font-size:20px}.navbar{justify-content:flex-start}.nav-item{min-width:68px}.page{padding:18px 12px 40px}.hero{padding:24px}.chat{grid-template-columns:1fr;height:620px}.chat-list{display:flex;overflow-x:auto;border-right:0;border-bottom:1px solid var(--border);max-height:90px}.person{min-width:180px}.chat{grid-template-rows:90px 1fr}.profile-main{align-items:flex-start;flex-direction:column}.profile-card{padding:0 12px 20px}.intro-logo{font-size:42px}}
 
-/* ERYX0 COMPLETE SOCIAL POLISH */
-.media-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.media-preview-item{position:relative;width:110px;height:90px;border-radius:12px;overflow:hidden;background:var(--surface2);border:1px solid var(--border)}.media-preview-item img,.media-preview-item video{width:100%;height:100%;object-fit:cover}.media-preview-item button{position:absolute;top:4px;right:4px;border:0;border-radius:50%;width:22px;height:22px;background:rgba(0,0,0,.65);color:#fff}.post-media{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:7px;margin-top:13px}.post-media img,.post-media video{width:100%;max-height:520px;object-fit:cover;border-radius:14px;background:var(--surface2)}.comment-media{max-width:180px;max-height:150px;border-radius:10px;display:block;margin-top:7px;object-fit:cover}.emoji-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.emoji-row button{width:34px;height:34px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:20px;cursor:pointer;transition:.15s}.emoji-row button:hover{transform:scale(1.15)}.composer-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.tool-btn{border:1px solid var(--border);background:var(--surface2);color:var(--text);border-radius:11px;padding:8px 11px;font-weight:800;font-size:11px}.notification{cursor:pointer}.notification:hover{background:var(--surface2)}.notification .notification-text b{font-weight:900}.verified{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:#1d9bf0;color:#fff;font-size:10px;margin-left:3px;vertical-align:middle}.online-pulse{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;box-shadow:0 0 0 0 rgba(34,197,94,.45);animation:pulseOnline 1.8s infinite}@keyframes pulseOnline{70%{box-shadow:0 0 0 7px rgba(34,197,94,0)}}#appLoading{position:fixed;inset:0;z-index:99999;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px}.dark #appLoading{background:rgba(16,19,27,.94)}.app-loader{width:54px;height:54px;border-radius:17px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;color:#fff;font-size:25px;box-shadow:0 14px 35px rgba(91,92,226,.28);animation:loadPulse 1s infinite alternate}@keyframes loadPulse{to{transform:scale(1.08)}}
+/* FINAL ORGANIZED NAVIGATION */
+.navbar{justify-content:flex-start;height:64px;padding:7px 10px;gap:5px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.navbar::-webkit-scrollbar{display:none}
+.nav-item{flex:0 0 72px;width:72px;height:50px}
+.nav-item.active{box-shadow:inset 0 -2px 0 var(--primary)}
+.navbar .count-badge{display:flex;top:1px;right:7px}
+@media(max-width:800px){.mode-bar{padding:6px 8px}.navbar{height:60px;padding:5px 8px}.nav-item{flex-basis:68px;width:68px;height:48px}.create-nav{flex-basis:48px;width:48px}}
+
+/* ERYX0 FINAL POLISH */
+.app-loader{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;background:rgba(243,246,251,.72);backdrop-filter:blur(7px);opacity:0;transition:opacity .18s ease}
+body.dark .app-loader{background:rgba(16,19,27,.72)} .app-loader.show{display:flex;opacity:1}
+.loader-card{min-width:170px;padding:22px;border:1px solid var(--border);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);text-align:center}
+.loader-ring{width:34px;height:34px;margin:0 auto 10px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .65s linear infinite}
+.loader-text{font-size:11px;font-weight:800;color:var(--muted)}
+.brain-svg{width:100%;height:100%}.brain-svg text{font-family:Inter,Segoe UI,Arial,sans-serif;font-weight:1000}
+.cat-ai{width:26px;height:26px;display:block;overflow:visible}.cat-arm{transform-origin:36px 16px;animation:catWave 1.1s ease-in-out infinite alternate}
+@keyframes catWave{from{transform:rotate(0deg)}to{transform:rotate(-24deg)}}
+.byline{font-size:9px;color:var(--muted);letter-spacing:.7px;margin-top:1px;font-weight:800}
+.verified{display:inline-grid;place-items:center;width:17px;height:17px;margin-left:5px;border-radius:50%;background:#1d9bf0;color:#fff;font-size:10px;font-weight:1000;vertical-align:middle;box-shadow:0 2px 6px rgba(29,155,240,.25)}
+.profile-name-row,.post-name-row{display:flex;align-items:center;flex-wrap:wrap;gap:3px}
+.media-picker{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.media-btn{border:1px solid var(--border);background:var(--surface2);color:var(--text);padding:8px 11px;border-radius:11px;font-size:11px;font-weight:800}
+.media-name{font-size:11px;color:var(--muted);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.post-media{margin-top:12px;border-radius:15px;overflow:hidden;border:1px solid var(--border);background:#000}.post-media img,.post-media video{display:block;width:100%;max-height:560px;object-fit:cover}
+.feed-title{display:flex;align-items:center;justify-content:space-between;margin:12px 0}
+.profile-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.profile-metric{padding:14px;border:1px solid var(--border);border-radius:15px;background:var(--surface2);text-align:center}
+.profile-metric strong{display:block;font-size:20px}.profile-metric span{font-size:10px;color:var(--muted)}
+.verified-card{margin-top:18px;border:1px solid rgba(29,155,240,.25);background:linear-gradient(135deg,rgba(29,155,240,.08),rgba(91,92,226,.07));border-radius:18px;padding:17px}
+.verified-icon{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#1d9bf0;color:#fff;font-weight:1000}
+.freelance-profile{display:grid;grid-template-columns:76px 1fr auto;gap:15px;align-items:center}
+.freelance-profile-avatar{width:76px;height:76px;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:grid;place-items:center;font-size:26px;font-weight:1000}
+.freelance-profile-avatar img{width:100%;height:100%;object-fit:cover}
+.freelance-mini-stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}.freelance-mini-stats b{font-size:15px}.freelance-mini-stats span{font-size:10px;color:var(--muted)}
+.reel-card{position:relative;overflow:hidden;border-radius:20px;background:#000;min-height:420px}.reel-card video{width:100%;height:620px;max-height:72vh;object-fit:cover;display:block}
+.reel-overlay{position:absolute;left:0;right:0;bottom:0;padding:18px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+.reel-overlay b{font-size:14px}.reel-overlay p{font-size:12px;margin-top:5px}
+@media(max-width:800px){.profile-metrics{grid-template-columns:repeat(3,1fr)}.freelance-profile{grid-template-columns:60px 1fr}.freelance-profile .btn{grid-column:1/-1}.freelance-profile-avatar{width:60px;height:60px}.reel-card video{height:70vh}}
+
+/* SOCIAL APP EXPANSION */
+.emoji-tool{width:34px;height:34px;border:1px solid var(--border);border-radius:11px;background:var(--surface2);cursor:pointer;display:grid;place-items:center;transition:.18s}
+.emoji-tool:hover{transform:translateY(-2px) scale(1.05);border-color:var(--primary)}
+.custom-emoji{width:24px;height:24px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18));animation:emojiFloat 2s ease-in-out infinite}
+@keyframes emojiFloat{50%{transform:translateY(-2px) rotate(2deg)}}
+.comment-media{display:block;max-width:180px;max-height:160px;border-radius:12px;margin-top:7px;object-fit:cover;border:1px solid var(--border)}
+.commentbar{flex-wrap:wrap}.commentbar-main{display:flex;gap:7px;width:100%}.comment-tools{display:flex;gap:6px;align-items:center}
+.comment-tool{border:1px solid var(--border);background:var(--surface2);border-radius:10px;padding:6px 9px;cursor:pointer}
+.comment-emoji-panel{display:none;gap:5px;flex-wrap:wrap;padding:8px;border:1px solid var(--border);background:var(--surface);border-radius:12px;margin-top:6px}
+.comment-emoji-panel.show{display:flex}
+.security-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.security-card{padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--surface2)}
+.security-icon{font-size:24px}.policy-list{padding-left:20px;line-height:1.8;color:var(--muted);font-size:12px}
+.freelance-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:18px}
+.tool-card{padding:16px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(135deg,var(--surface),var(--surface2))}
+.tool-card h3{margin:5px 0}.tool-card p{font-size:11px;color:var(--muted);line-height:1.5}
+
+
+/* PREMIUM LOGIN POLISH + FUNCTIONAL ADDITIONS */
+#auth-screen{position:relative;overflow:hidden;background:linear-gradient(135deg,#f7f9ff 0%,#eef2ff 42%,#fff1f7 100%)}#auth-screen:before,#auth-screen:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(20px);opacity:.55;pointer-events:none}#auth-screen:before{left:-140px;top:-120px;background:radial-gradient(circle,rgba(91,92,226,.26),transparent 65%)}#auth-screen:after{right:-150px;bottom:-140px;background:radial-gradient(circle,rgba(236,72,153,.22),transparent 65%)}.login-card{position:relative;z-index:1;background:rgba(255,255,255,.82);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.7);box-shadow:0 30px 90px rgba(91,92,226,.18),inset 0 1px 0 rgba(255,255,255,.85)}.login-card:before{content:"";position:absolute;inset:-1px;border-radius:28px;padding:1px;background:linear-gradient(135deg,rgba(91,92,226,.35),rgba(236,72,153,.25),rgba(255,255,255,.4));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}.login-card .logo{box-shadow:0 18px 45px rgba(91,92,226,.32)}.login-card input{background:rgba(247,249,253,.86)}.login-card .btn.full{min-height:46px}.media-preview{display:none;margin-top:10px;border:1px solid var(--border);border-radius:15px;overflow:hidden;background:var(--surface2)}.media-preview.show{display:block}.media-preview img,.media-preview video{display:block;width:100%;max-height:280px;object-fit:cover;background:#000}.media-preview-actions{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 10px}.post-owner-tools{margin-left:auto;display:flex;gap:6px}.post-tool-btn{border:1px solid var(--border);background:var(--surface2);color:var(--text);border-radius:10px;padding:6px 9px;font-size:11px;font-weight:800}.edited-label{color:var(--muted);font-size:10px;margin-left:5px}.comment-head{display:flex;gap:6px;align-items:center;justify-content:space-between}.comment-actions{display:flex;gap:4px}.comment-actions button{border:0;background:transparent;color:var(--muted);font-size:10px;font-weight:800}.chat-media-preview{display:none;padding:8px 12px;border-top:1px solid var(--border);background:var(--surface)}.chat-media-preview.show{display:flex;align-items:center;justify-content:space-between;gap:8px}.chat-media-preview img,.chat-media-preview video{width:70px;height:55px;object-fit:cover;border-radius:10px;border:1px solid var(--border);background:#000}.message-media{display:block;margin-top:7px;max-width:230px;max-height:220px;border-radius:12px;object-fit:cover;background:#000}.chatbar .media-btn{border-radius:25px;padding:0 12px}.notification{cursor:pointer}.notification:hover{background:var(--surface2)}body.dark .login-card{background:rgba(23,27,37,.84);border-color:rgba(255,255,255,.08)}body.dark #auth-screen{background:linear-gradient(135deg,#10131b 0%,#171b25 48%,#261727 100%)}
+
 </style>
 </head>
 
-<body><div id="appLoading"><div class="app-loader">🧠</div><b id="appLoadingText">Loading ERYX0…</b></div>
-<input id="postMediaInput" type="file" accept="image/*,video/*" multiple hidden>
-<input id="commentMediaPicker" type="file" accept="image/*" hidden>
-<input id="messageMediaInput" type="file" accept="image/*,video/*" multiple hidden>
+<body>
 
-
-<div id="intro"><div class="intro-logo"><span>E</span><span>R</span><span>Y</span><span>X</span><span>0</span></div></div>
+<div id="intro"><div style="text-align:center"><div class="intro-logo" style="font-size:0;width:92px;height:92px;margin:auto"><svg class="brain-svg" viewBox="0 0 80 80" aria-hidden="true"><defs><linearGradient id="brainBg" x1="0" x2="1"><stop stop-color="#5b5ce2"/><stop offset=".55" stop-color="#7d5cff"/><stop offset="1" stop-color="#ec4899"/></linearGradient><filter id="brainShadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity=".25"/></filter></defs><rect x="2" y="2" width="76" height="76" rx="22" fill="url(#brainBg)"/><path d="M39 17c-8-8-20-1-18 8-8 2-10 13-3 18-6 8 2 17 10 14 2 9 13 10 17 3 5 7 16 4 16-5 8-4 6-15-1-18 3-10-7-18-15-12-2-5-4-7-6-8z" fill="#fff" filter="url(#brainShadow)"/><path d="M40 19v43M30 22c4 3 5 6 4 10M24 33c5 0 8 3 8 7M27 47c4-1 7 1 8 5M49 23c-4 3-5 6-4 10M55 34c-5-1-8 2-8 6M53 48c-4-1-7 1-8 5" fill="none" stroke="#7d5cff" stroke-width="2.6" stroke-linecap="round"/><text x="40" y="72" text-anchor="middle" font-size="9" fill="#fff">E0</text></svg></div><div style="font-size:13px;font-weight:900;color:#697586;margin-top:10px">By EryX Zee</div></div></div>
 
 <section id="auth-screen">
 <div class="login-card">
-<div class="logo">E0</div>
+<div class="logo"><svg class="brain-svg" viewBox="0 0 80 80" aria-hidden="true"><defs><linearGradient id="brainBg" x1="0" x2="1"><stop stop-color="#5b5ce2"/><stop offset=".55" stop-color="#7d5cff"/><stop offset="1" stop-color="#ec4899"/></linearGradient><filter id="brainShadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity=".25"/></filter></defs><rect x="2" y="2" width="76" height="76" rx="22" fill="url(#brainBg)"/><path d="M39 17c-8-8-20-1-18 8-8 2-10 13-3 18-6 8 2 17 10 14 2 9 13 10 17 3 5 7 16 4 16-5 8-4 6-15-1-18 3-10-7-18-15-12-2-5-4-7-6-8z" fill="#fff" filter="url(#brainShadow)"/><path d="M40 19v43M30 22c4 3 5 6 4 10M24 33c5 0 8 3 8 7M27 47c4-1 7 1 8 5M49 23c-4 3-5 6-4 10M55 34c-5-1-8 2-8 6M53 48c-4-1-7 1-8 5" fill="none" stroke="#7d5cff" stroke-width="2.6" stroke-linecap="round"/><text x="40" y="72" text-anchor="middle" font-size="9" fill="#fff">E0</text></svg></div>
 <h1>Welcome to ERYX0</h1>
 <p class="auth-sub">Social Network • Freelance Marketplace • AI Intelligence</p>
 <div class="input-group"><label>Email</label><input id="auth-email" type="email" autocomplete="email" placeholder="you@example.com"></div>
@@ -143,18 +197,18 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 </div>
 </section>
 
-<div id="app">
+<div class="app-loader" id="appLoader"><div class="loader-card"><div class="loader-ring"></div><div class="loader-text">ERYX0 loading…</div></div></div><div id="app">
 <header class="topbar">
 <div class="brand">
   <button class="icon-btn" id="menuBtn" title="Menu" style="margin-right:5px;">☰</button>
-  <div class="brand-mark">E0</div>
+  <div class="brand-mark"><svg class="brain-svg" viewBox="0 0 80 80" aria-hidden="true"><defs><linearGradient id="brainBg" x1="0" x2="1"><stop stop-color="#5b5ce2"/><stop offset=".55" stop-color="#7d5cff"/><stop offset="1" stop-color="#ec4899"/></linearGradient><filter id="brainShadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity=".25"/></filter></defs><rect x="2" y="2" width="76" height="76" rx="22" fill="url(#brainBg)"/><path d="M39 17c-8-8-20-1-18 8-8 2-10 13-3 18-6 8 2 17 10 14 2 9 13 10 17 3 5 7 16 4 16-5 8-4 6-15-1-18 3-10-7-18-15-12-2-5-4-7-6-8z" fill="#fff" filter="url(#brainShadow)"/><path d="M40 19v43M30 22c4 3 5 6 4 10M24 33c5 0 8 3 8 7M27 47c4-1 7 1 8 5M49 23c-4 3-5 6-4 10M55 34c-5-1-8 2-8 6M53 48c-4-1-7 1-8 5" fill="none" stroke="#7d5cff" stroke-width="2.6" stroke-linecap="round"/><text x="40" y="72" text-anchor="middle" font-size="9" fill="#fff">E0</text></svg></div>
   <div class="brand-text-container">
     <h1>ERYX0</h1>
-    <div class="brand-sub">By EryX Zee</div>
+    <div class="byline">By EryX Zee</div>
   </div>
 </div>
 <div class="top-actions">
-<button class="icon-btn" id="alertBtn" title="Alerts">🔔<span id="alertBadge" class="count-badge">0</span></button>
+<button class="icon-btn" id="alertBtn" title="Alerts" type="button">🔔<span id="alertBadge" class="count-badge">0</span></button>
 <div class="avatar" id="profileBtn" title="My Profile">E</div>
 </div>
 </header>
@@ -170,21 +224,22 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 <!-- Social Navigation Bar -->
 <nav class="navbar" id="socialNavbar">
 <button class="nav-item active" data-page="home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></button>
+<button class="nav-item" data-page="reels"><span class="nav-icon">▶️</span><span class="nav-label">Reels</span></button>
 <button class="nav-item" data-page="network"><span class="nav-icon">👥</span><span class="nav-label">Friends</span></button>
-<button class="nav-item create-nav" id="createPostNavBtn" title="Create Post">⊕</button>
-<button class="nav-item" data-page="ai"><span class="nav-icon"><img src="https://i.ibb.co/1G3489y/28284.png" class="ai-nav-icon" alt="EryX AI"></span><span class="nav-label" style="color:var(--primary);font-weight:900;">EryX AI</span></button>
 <button class="nav-item" data-page="messages"><span class="nav-icon">💬</span><span class="nav-label">Messages</span><span id="msgBadge" class="count-badge">0</span></button>
-<button class="nav-item" data-page="reels"><span class="nav-icon">🎬</span><span class="nav-label">Reels</span></button>
+<button class="nav-item create-nav" id="createPostNavBtn" title="Create Post" aria-label="Create Post">＋</button>
+<button class="nav-item" data-page="ai"><span class="nav-icon"><svg class="cat-ai" viewBox="0 0 44 44" aria-label="EryX AI waving cat"><defs><linearGradient id="catBody" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs><circle cx="22" cy="22" r="21" fill="#eef0ff"/><path d="M12 17l2-8 7 5c2-1 4-1 6 0l7-5 1 9c3 7-1 14-10 15-10 1-16-5-13-16z" fill="url(#catBody)"/><circle cx="17" cy="20" r="2" fill="#fff"/><circle cx="29" cy="20" r="2" fill="#fff"/><circle cx="17" cy="20" r=".8" fill="#222"/><circle cx="29" cy="20" r=".8" fill="#222"/><path d="M20 26q2 2 4 0" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><path class="cat-arm" d="M33 23q8-8 6-13" fill="none" stroke="#ec4899" stroke-width="4" stroke-linecap="round"/><text x="22" y="38" text-anchor="middle" font-size="5" font-weight="900" fill="#5b5ce2">HI!</text></svg></span><span class="nav-label">EryX AI</span></button>
+<button class="nav-item" data-page="analyzer"><span class="nav-icon">🔍</span><span class="nav-label">Analyzer</span></button>
 <button class="nav-item" data-page="alerts"><span class="nav-icon">🔔</span><span class="nav-label">Alerts</span><span id="navAlertBadge" class="count-badge">0</span></button>
-<button class="nav-item" data-page="analyzer"><span class="nav-icon">🔍</span><span class="nav-label">Analyzer</span></button><button class="nav-item" data-page="profile"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></button>
+<button class="nav-item" data-page="profile"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></button><button class="nav-item" data-page="security"><span class="nav-icon">🛡️</span><span class="nav-label">Security</span></button>
 </nav>
 
 <!-- Freelance Marketplace Navigation Bar -->
 <nav class="navbar hidden" id="freelanceNavbar">
-<button class="nav-item active" data-page="freelance-market"><span class="nav-icon">💼</span><span class="nav-label">Explore</span></button>
-<button class="nav-item" data-page="freelance-orders"><span class="nav-icon">📦</span><span class="nav-label">My Orders</span></button>
-<button class="nav-item" data-page="freelance-create"><span class="nav-icon">➕</span><span class="nav-label">Post Gig</span></button>
-<button class="nav-item" data-page="freelance-payouts"><span class="nav-icon">💰</span><span class="nav-label">Payouts</span></button>
+<button class="nav-item active" data-page="freelance-market"><span class="nav-icon">🏪</span><span class="nav-label">Explore</span></button>
+<button class="nav-item" data-page="freelance-orders"><span class="nav-icon">📦</span><span class="nav-label">Orders</span></button>
+<button class="nav-item create-nav" data-page="freelance-create" title="Post Gig" aria-label="Post Gig">＋</button>
+<button class="nav-item" data-page="freelance-payouts"><span class="nav-icon">💰</span><span class="nav-label">Payouts</span></button><button class="nav-item" data-page="analyzer"><span class="nav-icon">🔗</span><span class="nav-label">Link Analyzer</span></button>
 <button class="nav-item" id="helpGuidelinesBtn"><span class="nav-icon">ℹ️</span><span class="nav-label">Help</span></button>
 </nav>
 
@@ -194,24 +249,25 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 <div class="status-bar" id="statusBar">
   <div class="status-item" id="addStatusBtn">
     <div class="status-ring"><div class="status-inner" style="background:var(--primary);color:#fff;font-size:22px;">＋</div></div>
-    <div class="status-name">Add Status</div>
+    <div class="status-name">Just Status</div>
   </div>
 </div>
 
-<div class="stat"><div class="stat-icon">📝</div><strong id="statPosts">0</strong><span>Recent posts</span></div>
-<div class="stat"><div class="stat-icon">🔔</div><strong id="statAlerts">0</strong><span>Unread alerts</span></div>
-<div class="stat"><div class="stat-icon">🟢</div><strong id="statOnline">0</strong><span>Friends online</span></div>
-</div>
 
-<div class="card composer" style="margin-top:18px"><div class="composer-row"><div id="composerAvatar" class="composer-avatar">E</div><div style="flex:1"><textarea id="postText" maxlength="5000" placeholder="What's on your mind?"></textarea><div id="postMediaPreview" class="media-preview"></div><div class="composer-tools"><button class="tool-btn" id="postPhotoBtn">📷 Photo</button><button class="tool-btn" id="postVideoBtn">🎥 Video</button><button class="tool-btn" id="postEmojiBtn">😊 Emoji</button><button class="tool-btn" id="postReelBtn">🎬 Reel</button><button class="btn" id="publishBtn">Publish</button></div><div id="postEmojiRow" class="emoji-row hidden"></div></div></div></div>
-<div id="feed"></div>
+<div class="card composer"><div class="composer-row"><div id="composerAvatar" class="composer-avatar">E</div><div style="flex:1"><textarea id="postText" maxlength="5000" placeholder="What's on your mind?"></textarea><div class="media-picker"><button class="media-btn" id="postMediaBtn" type="button">🖼️ Photo / 🎬 Video</button><span class="media-name" id="postMediaName">No media selected</span><input id="postMediaFile" type="file" accept="image/*,video/*" class="hidden"></div><div id="postMediaPreview" class="media-preview"></div><div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn" id="publishBtn">Publish</button></div></div></div></div>
+<div class="feed-title"><h3>Latest Posts</h3><span class="muted">User feed</span></div><div id="feed"></div>
 </section>
 
-<section id="page-reels" class="page"><div class="page-heading"><h1>🎬 Reels</h1><p>Short videos from the ERYX0 community.</p></div><div id="reelsFeed"></div></section>
+<!-- REELS -->
+<section id="page-reels" class="page">
+<div class="page-heading"><h1>Reels</h1><p>Short videos shared by ERYX0 users.</p></div>
+<div id="reelsFeed"></div>
+</section>
+
 <!-- ERYX AI -->
 <section id="page-ai" class="page">
 <div class="page-heading" style="display:flex;align-items:center;gap:12px;">
-  <img src="https://i.ibb.co/1G3489y/28284.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);" alt="EryX AI">
+  <svg class="cat-ai" viewBox="0 0 44 44" aria-label="EryX AI waving cat"><defs><linearGradient id="catBody" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs><circle cx="22" cy="22" r="21" fill="#eef0ff"/><path d="M12 17l2-8 7 5c2-1 4-1 6 0l7-5 1 9c3 7-1 14-10 15-10 1-16-5-13-16z" fill="url(#catBody)"/><circle cx="17" cy="20" r="2" fill="#fff"/><circle cx="29" cy="20" r="2" fill="#fff"/><circle cx="17" cy="20" r=".8" fill="#222"/><circle cx="29" cy="20" r=".8" fill="#222"/><path d="M20 26q2 2 4 0" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><path class="cat-arm" d="M33 23q8-8 6-13" fill="none" stroke="#ec4899" stroke-width="4" stroke-linecap="round"/><text x="22" y="38" text-anchor="middle" font-size="5" font-weight="900" fill="#5b5ce2">HI!</text></svg>
   <div>
     <h1>EryX AI Assistant</h1>
     <p>Powered by Google Intelligence — Ask anything, generate ideas, or analyze tasks.</p>
@@ -278,7 +334,7 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 <div class="chat-main">
 <div class="chat-head" id="chatHead">Select a friend to start chatting.</div>
 <div class="messages" id="messages"><div class="empty">Your messages will appear here.</div></div>
-<div class="chatbar"><button class="tool-btn" id="messageMediaBtn" title="Gallery">📷</button><input id="messageInput" placeholder="Write a message..." disabled><button class="tool-btn" id="voiceCallBtn" title="Voice call">📞</button><button class="tool-btn" id="videoCallBtn" title="Video call">🎥</button><button class="btn" id="sendMessageBtn" disabled>Send</button></div>
+<div id="chatMediaPreview" class="chat-media-preview"></div><div class="chatbar"><button class="btn secondary media-btn" id="messageMediaBtn" type="button" disabled>🖼️</button><input id="messageMediaFile" type="file" accept="image/*,video/*" class="hidden"><input id="messageInput" placeholder="Write a message..." disabled><button class="btn" id="sendMessageBtn" disabled>Send</button></div>
 </div>
 </div>
 </section>
@@ -303,7 +359,7 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 <option value="Social Media Post">Social Media Post</option>
 </select></div>
 <button class="btn" id="analyzeBtn">Analyze & Generate Report</button>
-<div id="analyzerLoading" class="hidden"><div class="spinner"></div><p style="text-align:center;" class="muted">Fetching and analyzing content against platform policies...</p></div>
+<div id="analyzerLoading" class="hidden"><div class="spinner"></div><p style="text-align:center;" class="muted">Analyzing the supplied text against the built-in screening rules...</p></div>
 <div id="analysisResult" style="margin-top:16px"></div>
 </div>
 </section>
@@ -311,7 +367,12 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 <!-- FREELANCE MARKETPLACE: EXPLORE GIGS -->
 <section id="page-freelance-market" class="page">
 <div class="page-heading"><h1>Freelance Marketplace</h1><p>Hire top freelancers or offer your professional services securely.</p></div>
-<div class="grid" id="freelanceGigsGrid"></div><div class="card" style="margin-top:18px"><h3>🧠 Freelance Intelligence Tools</h3><p class="muted" style="margin:6px 0 12px">Screen a review or URL and prepare a policy-aware report draft.</p><button class="btn small" data-page-jump="analyzer">🔍 Google / Link Analyzer</button></div>
+<div class="card" id="freelanceProfileCard" style="margin-bottom:18px"></div>
+<div class="freelance-tools">
+ <div class="tool-card"><div>🔗</div><h3>Google Review & Link Analyzer</h3><p>Paste a review/content URL and text to screen for potential policy signals and prepare a compliant report draft.</p><button class="btn small" data-page-jump="analyzer">Open Analyzer</button></div>
+ <div class="tool-card"><div>🧾</div><h3>Professional Service Tools</h3><p>Create gigs for research, content, design, development, marketing and other legitimate freelance services.</p><button class="btn small" data-page-jump="freelance-create">Create Gig</button></div>
+</div>
+<div class="grid" id="freelanceGigsGrid"></div>
 </section>
 
 <!-- FREELANCE ORDERS & ESCROW -->
@@ -375,6 +436,29 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 </div>
 </section>
 
+
+<!-- SECURITY & POLICIES -->
+<section id="page-security" class="page">
+<div class="page-heading"><h1>🛡️ Security, Privacy & Policies</h1><p>Controls and guidelines for a safer ERYX0 community.</p></div>
+<div class="security-grid">
+<div class="security-card"><div class="security-icon">🔐</div><h3>Account Security</h3><p class="muted">Use a strong password, keep your email secure, and never share login codes.</p></div>
+<div class="security-card"><div class="security-icon">👁️</div><h3>Privacy</h3><p class="muted">Choose Public or Private profile visibility.</p></div>
+<div class="security-card"><div class="security-icon">🚩</div><h3>Report & Block</h3><p class="muted">Report abusive, deceptive, spam, impersonation or unsafe content.</p></div>
+<div class="security-card"><div class="security-icon">🧠</div><h3>AI & Analyzer Safety</h3><p class="muted">Analyzer results are screening suggestions, not proof of a policy violation.</p></div>
+</div>
+<div class="card" style="margin-top:18px"><h3>Community Guidelines</h3><ul class="policy-list">
+<li>No threats, targeted harassment, hate or violent encouragement.</li>
+<li>No impersonation, fraud, deceptive identity or malicious spam.</li>
+<li>Respect privacy; do not post private information without permission.</li>
+<li>Only upload media you own or have permission to share.</li>
+<li>Do not use ERYX0 to facilitate illegal activity or abuse.</li>
+</ul></div>
+<div class="card" style="margin-top:18px"><h3>Privacy Controls</h3>
+<div class="setting-row"><div><b>Profile Visibility</b><p class="muted">Change who can view your profile.</p></div><button class="btn small" id="securityPrivacyBtn">Open Privacy Setting</button></div>
+<div class="setting-row"><div><b>Notifications</b><p class="muted">Control realtime activity notifications.</p></div><label class="switch"><input id="securityNotifyToggle" type="checkbox" checked><span class="slider"></span></label></div>
+</div>
+</section>
+
 <!-- MY PROFILE PAGE -->
 <section id="page-profile" class="page">
 <div class="page-heading"><h1>My Profile</h1><p>Manage your unified profile, public visibility, and posts.</p></div>
@@ -383,17 +467,18 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
 <div class="profile-card">
 <div class="profile-main">
 <div>
-<div id="profileAvatarLarge" class="profile-avatar-large">E</div>
+<div id="profileAvatarLarge" class="profile-avatar-large" title="Tap to change profile picture">E</div><input id="directProfileFile" type="file" accept="image/*" class="hidden">
 <div class="profile-name" id="profileName">ERYX0 User</div>
 <div class="profile-username" id="profileUsername">@user</div>
 <div class="profile-details" id="profileDetails"></div>
 <div class="profile-bio" id="profileBio">No bio yet.</div>
-<div class="profile-stats"><div class="profile-stat"><strong id="profileFriendCount">0</strong><span>Friends</span></div><div class="profile-stat"><strong id="profileOnlineCount">0</strong><span>Friends Online</span></div><div class="profile-stat"><strong id="profilePostCount">0</strong><span>Posts</span></div></div>
+<div class="profile-metrics"><div class="profile-metric"><strong id="profileFriendCount">0</strong><span>Friends</span></div><div class="profile-metric"><strong id="profilePostCount">0</strong><span>Posts</span></div><div class="profile-metric"><strong id="profileOnlineCount">0</strong><span>Friends Online</span></div></div>
 </div>
-<button class="btn" id="editProfileBtn">Edit Profile</button>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="editProfileBtn">Edit Profile</button><button class="btn secondary" id="verifyProfileBtn">🔵 Get EryX0 Verified</button></div>
 </div>
 </div>
 </div>
+<div class="verified-card" id="verifiedCard"><div style="display:flex;gap:12px;align-items:center"><div class="verified-icon">✓</div><div><b>EryX0 Verified</b><p class="muted">Optional verification with payment and admin review.</p></div></div></div>
 <div class="card" style="margin-top:18px">
 <h3>My Activity & Posts</h3>
 <div id="userProfileFeed" style="margin-top:14px"></div>
@@ -427,6 +512,7 @@ body.dark .topbar{background:rgba(23,27,37,.94)}
     <div style="margin-top:20px;">
       <!-- Hidden by default for normal users, shown only for Admin -->
       <button class="btn secondary full hidden" id="adminPanelDrawerBtn" style="margin-bottom:10px;">🛡️ Admin Control Panel</button>
+      <button class="btn secondary full" id="securityDrawerBtn" style="margin-bottom:10px;">🛡️ Security & Policies</button>
       <button class="btn danger full" id="logoutBtn">Logout</button>
     </div>
   </div>
@@ -447,10 +533,11 @@ const firebaseConfig={
 };
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage();
-let currentUser=null,allFriends=[],selectedFriend=null;
-let unsubs=[],commentUnsubs={},messageUnsub=null,notificationUnsub=null,friendsUnsub=null,requestsUnsub=null,statusesUnsub=null,reelsUnsub=null,gigsUnsub=null,ordersUnsub=null,payoutsUnsub=null;
+let currentUser=null,allFriends=[],selectedFriend=null,currentChatFile=null;
+let unsubs=[],commentUnsubs={},messageUnsub=null,notificationUnsub=null,friendsUnsub=null,requestsUnsub=null,statusesUnsub=null,reelsUnsub=null,gigsUnsub=null,ordersUnsub=null,withdrawalsUnsub=null,adminOrdersUnsub=null,adminWithdrawalsUnsub=null;
 
-// 🔒 Admin Email Hardcoded
+// 🔒 Admin Email Hardcoded for UI convenience only.
+// IMPORTANT: Real admin protection must also be enforced in Firestore Security Rules / Cloud Functions.
 const ADMIN_EMAIL = "lfear7670@gmail.com"; 
 
 const $=id=>document.getElementById(id);
@@ -470,22 +557,24 @@ function calculateAge(dob){
 $("modeSocialBtn").onclick=()=>{
  $("modeSocialBtn").classList.add("active");
  $("modeFreelanceBtn").classList.remove("active");
- $("socialNavbar").style.display="flex";
- $("freelanceNavbar").style.display="none";
+ $("socialNavbar").classList.remove("hidden");
+ $("freelanceNavbar").classList.add("hidden");
  page("home");
 };
 $("modeFreelanceBtn").onclick=()=>{
  $("modeFreelanceBtn").classList.add("active");
  $("modeSocialBtn").classList.remove("active");
- $("socialNavbar").style.display="none";
- $("freelanceNavbar").style.display="flex";
+ $("socialNavbar").classList.add("hidden");
+ $("freelanceNavbar").classList.remove("hidden");
  page("freelance-market");
 };
 
 // Top-Left Menu Drawer
-$("menuBtn").onclick=()=>$("settingsDrawer").classList.add("show");
-$("closeDrawer").onclick=()=>$("settingsDrawer").classList.remove("show");
-$("settingsDrawer").onclick=e=>{if(e.target===$("settingsDrawer"))$("settingsDrawer").classList.remove("show")};
+function openDrawer(){ $("settingsDrawer")?.classList.add("show"); }
+function closeDrawer(){ $("settingsDrawer")?.classList.remove("show"); }
+$("menuBtn").onclick=openDrawer;
+$("closeDrawer").onclick=closeDrawer;
+$("settingsDrawer").onclick=e=>{if(e.target===$("settingsDrawer"))closeDrawer()};
 
 $("adminPanelDrawerBtn").onclick=()=>{
  if(currentUser?.email !== ADMIN_EMAIL) {
@@ -499,7 +588,7 @@ $("adminPanelDrawerBtn").onclick=()=>{
 $("alertBtn").onclick=()=>page("alerts");
 $("profileBtn").onclick=()=>page("profile");
 $("createPostNavBtn").onclick=()=>{ page("home"); setTimeout(()=>$("postText").focus(),100); };
-$("homeCreate").onclick=()=>{ page("home"); setTimeout(()=>$("postText").focus(),100); };
+if($("homeCreate"))$("homeCreate").onclick=()=>{ page("home"); setTimeout(()=>$("postText")?.focus(),100); };
 
 // Help Guidelines Modal
 $("helpGuidelinesBtn").onclick=()=>openModal("Platform Guidelines & Payments", `
@@ -558,46 +647,75 @@ function page(p){
 
  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
  const el=$("page-"+p);if(el)el.classList.add("active");
- document.querySelectorAll(".nav-item[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
+ document.querySelectorAll(".navbar:not(.hidden) .nav-item[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
  if(p==="network")loadNetwork();
+ if(p==="reels")loadReels();
  if(p==="messages")loadFriends();
  if(p==="alerts")loadNotifications();
-  if(p==="reels")startReels();
  if(p==="profile")loadProfile();
+ if(p==="security"){const b=$("securityPrivacyBtn");if(b)b.onclick=()=>{$("profilePrivacySelect").focus();toast("Use Profile Visibility in Settings & Privacy.");};}
  if(p==="freelance-market")loadFreelanceGigs();
  if(p==="freelance-orders")loadMyOrders();
  if(p==="freelance-payouts")loadPayouts();
  if(p==="admin-panel")loadAdminPanel();
+ const loader=$("appLoader");if(loader){loader.classList.add("show");setTimeout(()=>loader.classList.remove("show"),170);}
  window.scrollTo({top:0,behavior:"smooth"});
 }
 document.querySelectorAll(".nav-item[data-page]").forEach(b=>b.onclick=()=>page(b.dataset.page));
 document.querySelectorAll("[data-page-jump]").forEach(b=>b.onclick=()=>page(b.dataset.pageJump));
+document.addEventListener("click",e=>{const b=e.target.closest("[data-page-jump]");if(b)page(b.dataset.pageJump)});
 
 async function ensureUser(u){
  if(!u)return;
  const ref=db.collection("users").doc(u.uid),snap=await ref.get();
  const old=snap.exists?snap.data():{};
- const data={uid:u.uid,email:u.email||"",displayName:old.displayName||u.displayName||"ERYX0 User",username:old.username||("user_"+u.uid.slice(0,8)),bio:old.bio||"",dob:old.dob||"",gender:old.gender||"Male",status:old.status||"Single 👤",privacy:old.privacy||"public",photoURL:old.photoURL||u.photoURL||"",coverURL:old.coverURL||"",online:true,lastSeen:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+ const data={uid:u.uid,email:u.email||"",displayName:old.displayName||u.displayName||"ERYX0 User",username:old.username||("user_"+u.uid.slice(0,8)),bio:old.bio||"",dob:old.dob||"",gender:old.gender||"Male",status:old.status||"Single 👤",privacy:old.privacy||"public",verified:old.verified===true,verificationStatus:old.verificationStatus||"none",photoURL:old.photoURL||u.photoURL||"",coverURL:old.coverURL||"",online:true,lastSeen:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
  if(!snap.exists)data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
  await ref.set(data,{merge:true});
 }
 
 async function emailAuth(){
  const email=$("auth-email").value.trim(),password=$("auth-password").value;
+ $("auth-error").textContent=""; $("auth-success").textContent="";
  if(!email||!password)return $("auth-error").textContent="Enter email and password.";
  if(password.length<6)return $("auth-error").textContent="Password must be at least 6 characters.";
  try{
   let c;
   try{c=await auth.signInWithEmailAndPassword(email,password)}
-  catch(e){if(e.code==="auth/user-not-found")c=await auth.createUserWithEmailAndPassword(email,password);else throw e}
+  catch(e){
+   if(e.code==="auth/user-not-found") c=await auth.createUserWithEmailAndPassword(email,password);
+   else if(e.code==="auth/invalid-credential") throw new Error("Invalid email/password. If this is a new account, make sure Email/Password sign-up is enabled in Firebase Authentication.");
+   else throw e;
+  }
   await ensureUser(c.user);
+  $("auth-success").textContent="Signed in successfully.";
  }catch(e){$("auth-error").textContent=e.message}
 }
 $("emailBtn").onclick=emailAuth;
+$("auth-password").addEventListener("keydown",e=>{if(e.key==="Enter")emailAuth()});
 $("googleBtn").onclick=async()=>{try{const p=new firebase.auth.GoogleAuthProvider();const c=await auth.signInWithPopup(p);await ensureUser(c.user)}catch(e){$("auth-error").textContent=e.message}};
-$("logoutBtn").onclick=async()=>{setLoading(true,"Signing you out securely…");try{await auth.signOut()}catch(e){setLoading(false);toast(e.message)}};
+$("logoutBtn").onclick=async()=>{
+ const loader=$("appLoader"); if(loader)loader.classList.add("show");
+ try{
+  if(currentUser){
+   await db.collection("users").doc(currentUser.uid).set({online:false,lastSeen:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  }
+ }catch(e){toast(e.message)}
+ try{await auth.signOut()}catch(e){toast(e.message)}finally{const loader=$("appLoader"); if(loader)loader.classList.remove("show");}
+};
+$("securityDrawerBtn").onclick=()=>{closeDrawer();page("security")};
 
-function cleanup(){unsubs.forEach(f=>{try{f()}catch{}});unsubs=[];Object.values(commentUnsubs).forEach(f=>{try{f()}catch{}});commentUnsubs={};[messageUnsub,notificationUnsub,friendsUnsub,requestsUnsub,statusesUnsub,reelsUnsub,gigsUnsub,ordersUnsub,payoutsUnsub].forEach(f=>{try{if(typeof f==="function")f()}catch{}});messageUnsub=notificationUnsub=friendsUnsub=requestsUnsub=statusesUnsub=reelsUnsub=gigsUnsub=ordersUnsub=payoutsUnsub=null}
+function cleanup(){
+  clearInterval(presenceTimer);
+  presenceTimer=null;
+  unsubs.forEach(f=>{try{f()}catch{}});
+  unsubs=[];
+  Object.values(commentUnsubs).forEach(f=>{try{f()}catch{}});
+  commentUnsubs={};
+  [messageUnsub,notificationUnsub,friendsUnsub,requestsUnsub,statusesUnsub,reelsUnsub,gigsUnsub,ordersUnsub,withdrawalsUnsub,adminOrdersUnsub,adminWithdrawalsUnsub].forEach(f=>{try{if(typeof f==="function")f()}catch{}});
+  if(window.msgBadgeUnsub){try{window.msgBadgeUnsub()}catch{};window.msgBadgeUnsub=null;}
+  messageUnsub=notificationUnsub=friendsUnsub=requestsUnsub=statusesUnsub=reelsUnsub=gigsUnsub=ordersUnsub=withdrawalsUnsub=adminOrdersUnsub=adminWithdrawalsUnsub=null;
+}
 
 // AUTH STATE PERSISTENCE & ADMIN BUTTON TOGGLE
 auth.onAuthStateChanged(async u=>{
@@ -618,20 +736,46 @@ auth.onAuthStateChanged(async u=>{
  }
 
  await ensureUser(u);
+ startPresence();
  await loadProfile();
  startFeed();
  loadFriends();
  loadNotifications();
+ listenMessageBadges();
  loadStatuses();
  loadFreelanceGigs();
 });
 
+let presenceTimer=null;
+async function markOnline(){
+ if(!currentUser)return;
+ try{await db.collection("users").doc(currentUser.uid).set({online:true,lastSeen:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch{}
+}
+function startPresence(){
+ clearInterval(presenceTimer);markOnline();presenceTimer=setInterval(markOnline,30000);
+ window.addEventListener("beforeunload",()=>{try{db.collection("users").doc(currentUser.uid).set({online:false,lastSeen:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch{}},{once:true});
+}
 async function getMe(){const s=await db.collection("users").doc(currentUser.uid).get();return s.exists?s.data():{}}
+
+async function getOnlineFriendCount(){
+ if(!allFriends.length)return 0;
+ let count=0,now=Date.now();
+ for(const fid of allFriends){
+  try{
+   const s=await db.collection("users").doc(fid).get();
+   if(s.exists){
+    const u=s.data(), last=u.lastSeen?.toDate?u.lastSeen.toDate().getTime():0;
+    if(u.online===true && last && now-last<90000)count++;
+   }
+  }catch{}
+ }
+ return count;
+}
 async function loadProfile(){
  if(!currentUser)return;
  const d=await getMe(),name=d.displayName||"ERYX0 User",un="@"+(d.username||"user");
- $("welcomeTitle").textContent="Welcome, "+name;
- $("profileName").textContent=name;
+ if($("welcomeTitle"))$("welcomeTitle").textContent="Welcome, "+name;
+ $("profileName").innerHTML=esc(name)+(d.verified?'<span class="verified" title="EryX0 Verified">✓</span>':"");
  $("profileUsername").textContent=un;
  $("profileBio").textContent=d.bio||"No bio yet.";
  $("profileEmail").textContent=currentUser.email||"";
@@ -649,11 +793,16 @@ async function loadProfile(){
  const coverEl=$("profileCover");
  if(d.coverURL){coverEl.innerHTML=`<img src="${esc(d.coverURL)}">`;}else{coverEl.innerHTML="";}
 
- const ps=await db.collection("posts").where("uid","==",currentUser.uid).get();
+ const ps=await db.collection("posts").where("uid","==",currentUser.uid).orderBy("createdAt","desc").get();
  $("profilePostCount").textContent=ps.size;
- $("statPosts").textContent=ps.size;
+ if($("statPosts"))$("statPosts").textContent=ps.size;
  $("profileFriendCount").textContent=allFriends.length;
- $("statFriends").textContent=allFriends.length;
+ if($("statFriends"))$("statFriends").textContent=allFriends.length;
+ const onlineCount=await getOnlineFriendCount();
+ $("profileOnlineCount").textContent=onlineCount;
+ if($("statOnline"))$("statOnline").textContent=onlineCount;
+
+ const vc=$("verifiedCard"); if(vc) vc.innerHTML=d.verified?'<div style="display:flex;gap:12px;align-items:center"><div class="verified-icon">✓</div><div><b>EryX0 Verified</b><p class="muted">Your profile has the blue verification badge.</p></div></div>':'<div style="display:flex;gap:12px;align-items:center"><div class="verified-icon">✓</div><div><b>Get EryX0 Verified</b><p class="muted">Request verification, choose a payment method, and wait for admin review.</p></div></div>';
 
  const userFeed=$("userProfileFeed"); userFeed.innerHTML="";
  ps.forEach(doc=>renderPost(doc.id,doc.data(),userFeed));
@@ -676,7 +825,7 @@ async function openUserProfile(uid){
   return;
  }
 
- $("upName").textContent=u.displayName||"User";
+ $("upName").innerHTML=esc(u.displayName||"User")+(u.verified?'<span class="verified" title="EryX0 Verified">✓</span>':"");
  $("upUsername").textContent="@"+(u.username||"user");
  $("upBio").textContent=u.bio||"No bio yet.";
  const age=calculateAge(u.dob);
@@ -696,12 +845,17 @@ async function openUserProfile(uid){
   addBtn.onclick=()=>sendFriendRequest(uid);
  }
 
- $("upMessageBtn").onclick=()=>{
-  selectedFriend=u; page("messages"); openChat(u);
- };
+ const msgBtn=$("upMessageBtn");
+ if(allFriends.includes(uid)){
+  msgBtn.disabled=false; msgBtn.textContent="💬 Message";
+  msgBtn.onclick=()=>{ selectedFriend=u; page("messages"); openChat(u); };
+ }else{
+  msgBtn.disabled=false; msgBtn.textContent="💬 Message";
+  msgBtn.onclick=()=>toast("Add this user as a friend before messaging.");
+ }
 
  const feedBox=$("upUserFeed"); feedBox.innerHTML="";
- const ps=await db.collection("posts").where("uid","==",uid).get();
+ const ps=await db.collection("posts").where("uid","==",uid).orderBy("createdAt","desc").get();
  if(ps.empty){feedBox.innerHTML='<div class="empty">No public posts yet.</div>';}
  else{ps.forEach(doc=>renderPost(doc.id,doc.data(),feedBox));}
 
@@ -712,6 +866,37 @@ function openModal(title,body){$("modalTitle").textContent=title;$("modalBody").
 function closeModal(){$("modal").classList.remove("show");$("modalBody").innerHTML=""}
 $("modalClose").onclick=closeModal;$("modal").onclick=e=>{if(e.target===$("modal"))closeModal()};
 
+$("verifyProfileBtn").onclick=async()=>{
+ const me=await getMe();
+ if(me.verified)return toast("Your profile is already verified.");
+ openModal("EryX0 Verification",`
+  <div style="text-align:center;margin-bottom:15px"><div class="verified-icon" style="margin:auto;font-size:18px">✓</div><h3 style="margin-top:8px">EryX0 Verified</h3><p class="muted">Verification is optional and subject to admin review.</p></div>
+  <div class="input-group"><label>Payment Method</label><select id="verifyMethod"><option value="JazzCash">JazzCash</option><option value="EasyPaisa">EasyPaisa</option></select></div>
+  <div class="input-group"><label>Transaction ID</label><input id="verifyTrx" placeholder="Enter payment transaction ID"></div>
+  <div class="card" style="padding:12px;margin-bottom:12px"><b>Verification Policy</b><p class="muted" style="margin-top:5px;line-height:1.5">Submit accurate account information. Verification is reviewed manually. Payment does not guarantee approval if the account fails the platform's verification requirements.</p></div>
+  <label style="display:flex;gap:8px;align-items:flex-start;font-size:11px"><input id="verifyAgree" type="checkbox" style="width:auto;margin-top:2px"> I agree to the verification policy and admin review.</label>
+  <button class="btn full" id="submitVerifyBtn" style="margin-top:14px">Submit Verification Request</button>
+ `);
+ $("submitVerifyBtn").onclick=async()=>{
+  const method=$("verifyMethod").value,trx=$("verifyTrx").value.trim();
+  if(!trx)return toast("Enter the transaction ID.");
+  if(!$("verifyAgree").checked)return toast("Please accept the verification policy.");
+  try{await db.collection("verificationRequests").add({uid:currentUser.uid,displayName:me.displayName||"ERYX0 User",method,trxId:trx,status:"Pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});closeModal();toast("Verification request submitted for admin review.");}
+  catch(e){toast(e.message)}
+ };
+};
+$("profileAvatarLarge").onclick=()=>$("directProfileFile").click();
+$("directProfileFile").onchange=async e=>{
+ const file=e.target.files[0];if(!file)return;
+ if(file.size>10*1024*1024)return toast("Profile picture must be 10 MB or smaller.");
+ try{
+  toast("Uploading profile picture…");
+  const ref=storage.ref().child(`profiles/${currentUser.uid}_${Date.now()}`);
+  await ref.put(file);const url=await ref.getDownloadURL();
+  await db.collection("users").doc(currentUser.uid).set({photoURL:url,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  await currentUser.updateProfile({photoURL:url});await loadProfile();toast("Profile picture updated.");
+ }catch(err){toast(err.message)}
+};
 $("editProfileBtn").onclick=async()=>{
  const d=await getMe();
  openModal("Edit Profile",`
@@ -736,6 +921,7 @@ $("editProfileBtn").onclick=async()=>{
   <div class="input-group"><label>Bio</label><textarea id="mBio" rows="3">${esc(d.bio||"")}</textarea></div>
   <div class="input-group"><label>Upload Profile Picture</label><input id="mPhotoFile" type="file" accept="image/*"></div>
   <div class="input-group"><label>Upload Cover Photo</label><input id="mCoverFile" type="file" accept="image/*"></div>
+  <div class="card" style="padding:12px"><b>Profile photo shortcut</b><p class="muted">You can also tap your profile picture directly to choose one from your gallery.</p></div>
   <button class="btn full" id="saveProfile">Save Profile</button>
  `);
  
@@ -779,70 +965,154 @@ $("editProfileBtn").onclick=async()=>{
 };
 
 
-let postMediaFiles=[],pendingCommentMedia=null,pendingMessageMedia=[];
-const emojis=['😂','❤️','🔥','😍','😎','🥹','🤯','👏','🎉','💯','🫶','😅','🤝','✨','🚀','😈'];
-function setLoading(on,text='Loading ERYX0…'){const x=$('appLoading');if(!x)return;x.style.display=on?'flex':'none';$('appLoadingText').textContent=text}
-function sound(type='click'){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=type==='notification'?760:440;g.gain.setValueAtTime(.0001,c.currentTime);g.gain.exponentialRampToValueAtTime(.045,c.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.12);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.13)}catch(e){}}
-function renderPreview(files,box){box.innerHTML='';files.forEach((f,i)=>{const d=document.createElement('div');d.className='media-preview-item';const u=URL.createObjectURL(f);d.innerHTML=(f.type.startsWith('video/')?`<video src="${u}" muted></video>`:`<img src="${u}">`)+`<button type="button">×</button>`;d.querySelector('button').onclick=()=>{files.splice(i,1);renderPreview(files,box)};box.appendChild(d)})}
-async function uploadFile(file,path){const ref=storage.ref().child(path+'/'+currentUser.uid+'_'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_'));await ref.put(file);return await ref.getDownloadURL()}
-function setupEmojiRow(id,callback){const row=$(id);row.innerHTML=emojis.map(e=>`<button type="button" data-e="${e}">${e}</button>`).join('');row.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>callback(b.dataset.e))}
-setupEmojiRow('postEmojiRow',e=>{$('postText').value+=e;$('postText').focus()});
-$('postPhotoBtn').onclick=()=>{const i=$('postMediaInput');i.accept='image/*';i.click()};
-$('postVideoBtn').onclick=()=>{const i=$('postMediaInput');i.accept='video/*';i.click()};
-$('postReelBtn').onclick=()=>{const i=$('postMediaInput');i.accept='video/*';i.click();$('postText').dataset.reel='1'};
-$('postEmojiBtn').onclick=()=>{$('postEmojiRow').classList.toggle('hidden')};
-$('postMediaInput').onchange=e=>{postMediaFiles=[...e.target.files];renderPreview(postMediaFiles,$('postMediaPreview'))};
-async function publishPost(){
- const text=$('postText').value.trim();if(!currentUser)return;
- if(!text&&!postMediaFiles.length)return toast('Write something or add a photo/video.');
- setLoading(true,'Publishing your post…');
- try{const me=await getMe();const media=[];for(const f of postMediaFiles){const url=await uploadFile(f,'posts');media.push({url,type:f.type.startsWith('video/')?'video':'image',name:f.name})}
-  const isReel=$('postText').dataset.reel==='1' || media.some(x=>x.type==='video');
-  await db.collection('posts').add({uid:currentUser.uid,displayName:me.displayName||'ERYX0 User',username:me.username||'user',photoURL:me.photoURL||'',text,media,isReel,reactions:{},createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-  $('postText').value='';$('postText').dataset.reel='';postMediaFiles=[];$('postMediaInput').value='';$('postMediaPreview').innerHTML='';$('postEmojiRow').classList.add('hidden');toast('Post published successfully.');sound('notification');
- }catch(e){console.error(e);toast('Post failed: '+e.message)}finally{setLoading(false)}
+async function uploadMediaFile(file, folder, maxMB=25){if(!file)return {url:"",type:"",storagePath:""};if(file.size>maxMB*1024*1024)throw new Error(`Media must be ${maxMB} MB or smaller.`);const isVideo=file.type.startsWith("video/"),isImage=file.type.startsWith("image/");if(!isVideo&&!isImage)throw new Error("Only image or video files are supported.");const safe=file.name.replace(/[^a-z0-9._-]/gi,"_"),storagePath=`${folder}/${currentUser.uid}/${Date.now()}_${safe}`,ref=storage.ref().child(storagePath);await ref.put(file);return {url:await ref.getDownloadURL(),type:isVideo?"video":"image",storagePath};}
+function renderMediaPreview(box,file,onRemove){if(!box)return;if(!file){box.classList.remove("show");box.innerHTML="";return;}const url=URL.createObjectURL(file),type=file.type.startsWith("video/")?"video":"image";box.classList.add("show");box.innerHTML=`${type==="video"?`<video src="${url}" controls muted playsinline></video>`:`<img src="${url}" alt="Selected media preview">`}<div class="media-preview-actions"><span class="media-name">${esc(file.name)}</span><div style="display:flex;gap:6px"><button class="btn small secondary" type="button" data-change-media>Change</button><button class="btn small danger" type="button" data-remove-media>Remove</button></div></div>`;box.querySelector("[data-remove-media]").onclick=onRemove;box.querySelector("[data-change-media]").onclick=()=>$("postMediaFile").click();}
+function clearPostMedia(){const f=$("postMediaFile");if(f)f.value="";if($("postMediaName"))$("postMediaName").textContent="No media selected";renderMediaPreview($("postMediaPreview"),null,()=>{});}
+async function deleteStoragePath(path){if(!path)return;try{await storage.ref().child(path).delete()}catch(e){console.warn("Storage delete skipped",e.message)}}
+async function createNotification(uid,type,text,extra={}){if(!uid||!currentUser)return;if(uid===currentUser.uid&&["like","comment"].includes(type))return;let me={};try{me=await getMe()}catch{};return db.collection("notifications").add({uid,type,text,read:false,fromUid:currentUser.uid,fromName:me.displayName||currentUser.displayName||"ERYX0 User",fromPhotoURL:me.photoURL||currentUser.photoURL||"",targetType:extra.targetType||"",targetId:extra.targetId||"",postId:extra.postId||"",commentId:extra.commentId||"",conversationId:extra.conversationId||"",requestId:extra.requestId||"",createdAt:firebase.firestore.FieldValue.serverTimestamp()});}
+async function openPost(postId){page("home");setTimeout(()=>{const el=document.getElementById("post-"+postId);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.style.outline="3px solid rgba(91,92,226,.35)";setTimeout(()=>el.style.outline="",1600)}else toast("Post is not available or still loading.");},450)}
+async function openChatByUid(uid){if(!uid)return;const snap=await db.collection("users").doc(uid).get();if(!snap.exists)return toast("User not found.");if(!allFriends.includes(uid))return toast("Add this user as a friend before messaging.");page("messages");setTimeout(()=>openChat(snap.data()),250)}
+async function handleNotificationClick(id,n){try{await db.collection("notifications").doc(id).update({read:true})}catch{};if(n.targetType==="post"||n.postId)return openPost(n.postId||n.targetId);if(n.targetType==="chat"||n.conversationId)return openChatByUid(n.fromUid);if(n.targetType==="request")return page("network");if(n.targetType==="profile"&&(n.fromUid||n.targetId))return openUserProfile(n.targetId||n.fromUid);page("alerts")}
+function updateMsgBadge(count){const b=$("msgBadge");if(!b)return;b.textContent=count||0;b.style.display=count?"flex":"none";}
+function listenMessageBadges(){if(window.msgBadgeUnsub){try{window.msgBadgeUnsub()}catch{}}window.msgBadgeUnsub=db.collection("conversations").where("members","array-contains",currentUser.uid).onSnapshot(s=>{let total=0;s.forEach(d=>{const u=d.data().unread||{};total+=Number(u[currentUser.uid]||0)});updateMsgBadge(total)},e=>console.warn("Message badge listener",e.message));}
+async function publishPost(){const text=$("postText").value.trim(),file=$("postMediaFile").files[0];if(!currentUser)return;if(!text&&!file)return toast("Write something or choose a photo/video.");const btn=$("publishBtn"),oldText=btn.textContent;btn.disabled=true;btn.textContent="Publishing…";try{const me=await getMe();let mediaURL="",mediaType="",storagePath="";if(file){toast("Uploading media…");const up=await uploadMediaFile(file,"posts",25);mediaURL=up.url;mediaType=up.type;storagePath=up.storagePath;}await db.collection("posts").add({uid:currentUser.uid,displayName:me.displayName||"ERYX0 User",username:me.username||"user",photoURL:me.photoURL||"",verified:me.verified===true,text,mediaURL,mediaType,storagePath,reactions:{},edited:false,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});$("postText").value="";clearPostMedia();toast("Post published.");}catch(e){toast(e.message)}finally{btn.disabled=false;btn.textContent=oldText;}}
+$("publishBtn").onclick=publishPost;$("postMediaBtn").onclick=()=>$("postMediaFile").click();$("postMediaFile").onchange=e=>{const file=e.target.files[0];if(!file){clearPostMedia();return}if(!file.type.startsWith("image/")&&!file.type.startsWith("video/")){toast("Only image/video supported.");clearPostMedia();return}$("postMediaName").textContent=file.name;renderMediaPreview($("postMediaPreview"),file,clearPostMedia);};
+
+function loadReels(){
+ const box=$("reelsFeed");if(!box)return;
+ if(reelsUnsub) { try{reelsUnsub()}catch{} }
+ reelsUnsub=db.collection("posts").where("mediaType","==","video").orderBy("createdAt","desc").limit(30).onSnapshot(s=>{
+  box.innerHTML="";
+  if(s.empty){box.innerHTML='<div class="card empty">No reels yet. Upload a video from Create Post.</div>';return}
+  s.forEach(doc=>{
+   const p=doc.data(),el=document.createElement("article");el.className="reel-card";el.innerHTML=`<video src="${esc(p.mediaURL)}" controls playsinline preload="metadata"></video><div class="reel-overlay"><b>${esc(p.displayName||"ERYX0 User")}${p.verified?'<span class="verified">✓</span>':""}</b><p>${esc(p.text||"")}</p></div>`;box.appendChild(el);
+  });
+ },e=>{box.innerHTML=`<div class="card">${esc(e.message)}</div>`});
 }
-$('publishBtn').onclick=publishPost;
-function startFeed(){const u=db.collection('posts').orderBy('createdAt','desc').limit(50).onSnapshot(s=>{$('feed').innerHTML='';s.forEach(d=>renderPost(d.id,d.data(),$('feed')))},e=>{$('feed').innerHTML=`<div class="card">Unable to load feed: ${esc(e.message)}</div>`});unsubs.push(u);startReels()}
-function renderMedia(media){if(!Array.isArray(media)||!media.length)return '';return `<div class="post-media">${media.map(m=>m.type==='video'?`<video controls preload="metadata" src="${esc(m.url)}"></video>`:`<img loading="lazy" src="${esc(m.url)}" alt="Post media">`).join('')}</div>`}
-function renderPost(id,p,feed){
- const reactions=p.reactions||{};let total=0;Object.values(reactions).forEach(a=>total+=(a||[]).length);const userReaction=Object.keys(reactions).find(e=>(reactions[e]||[]).includes(currentUser.uid))||'👍';
- const d=document.createElement('article');d.className='post';d.innerHTML=`<div class="post-head"><div class="avatar" data-profile="${p.uid}">${p.photoURL?`<img src="${esc(p.photoURL)}">`:esc(initials(p.displayName))}</div><div><div class="post-name" data-profile="${p.uid}">${esc(p.displayName||'ERYX0 User')}</div><div class="post-username">@${esc(p.username||'user')}</div><div class="post-time">${fmt(p.createdAt)}</div></div></div><div class="post-text">${esc(p.text||'')}</div>${renderMedia(p.media)}<div class="post-actions" style="position:relative"><button data-react-toggle>${userReaction} React (${total})</button><div class="reaction-picker" id="picker-${id}">${emojis.slice(0,8).map(e=>`<button class="reaction-btn" data-emoji="${e}">${e}</button>`).join('')}</div><button data-share>🔗 Share</button><button data-copy>📋 Copy</button></div><div id="comments-${id}"></div><div class="commentbar"><input id="comment-${id}" placeholder="Write a comment..."><button data-comment>Send</button><button data-comment-media title="Add image">📷</button></div><div id="comment-emoji-${id}" class="emoji-row hidden"></div>`;
- d.id="post-"+id;feed.appendChild(d);d.querySelectorAll('[data-profile]').forEach(x=>x.onclick=()=>openUserProfile(p.uid));const picker=$('picker-'+id);d.querySelector('[data-react-toggle]').onclick=()=>picker.classList.toggle('show');d.querySelectorAll('.reaction-btn').forEach(b=>b.onclick=()=>{picker.classList.remove('show');toggleReaction(id,b.dataset.emoji)});d.querySelector('[data-comment]').onclick=()=>addComment(id);d.querySelector('[data-share]').onclick=()=>sharePost(id);d.querySelector('[data-copy]').onclick=()=>copyLink(id);d.querySelector('[data-comment-media]').onclick=()=>{pendingCommentMedia={postId:id,input:d.querySelector('#comment-'+id)};$('commentMediaPicker').click()};loadComments(id);setupEmojiRow('comment-emoji-'+id,e=>{const i=$('comment-'+id);i.value+=e;i.focus()});
- const cb=d.querySelector('[data-comment-media]');cb.insertAdjacentHTML('afterend',`<button data-comment-emoji title="Emoji">😊</button>`);d.querySelector('[data-comment-emoji]').onclick=()=>d.querySelector('#comment-emoji-'+id).classList.toggle('hidden');
+function startFeed(){
+ const u=db.collection("posts").orderBy("createdAt","desc").limit(50).onSnapshot(s=>{
+  $("feed").innerHTML="";if($("statPosts"))$("statPosts").textContent=s.size;
+  s.forEach(d=>renderPost(d.id,d.data(),$("feed")));
+ },e=>{console.error(e);$("feed").innerHTML=`<div class="card">${esc(e.message)}</div>`});
+ unsubs.push(u);
 }
-$('commentMediaPicker').onchange=e=>{if(e.target.files[0]&&pendingCommentMedia){pendingCommentMedia.file=e.target.files[0];toast('Comment image attached. Tap Send.')}};
-async function toggleReaction(postId,emoji){try{const ref=db.collection('posts').doc(postId),snap=await ref.get();if(!snap.exists)return;const data=snap.data(),r=data.reactions||{};Object.keys(r).forEach(e=>{r[e]=(r[e]||[]).filter(u=>u!==currentUser.uid);if(!r[e].length)delete r[e]});r[emoji]=r[emoji]||[];r[emoji].push(currentUser.uid);await ref.update({reactions:r});if(data.uid!==currentUser.uid)await notify(data.uid,'like',`${(await getMe()).displayName||'Someone'} liked your post.`,{actorUid:currentUser.uid,postId})}catch(e){toast(e.message)}}
-async function addComment(id){const i=$('comment-'+id),text=i.value.trim();if(!text&&!pendingCommentMedia?.file)return toast('Write a comment or attach an image.');try{const me=await getMe();let mediaURL='';if(pendingCommentMedia?.file)mediaURL=await uploadFile(pendingCommentMedia.file,'comments');await db.collection('posts').doc(id).collection('comments').add({uid:currentUser.uid,displayName:me.displayName||'User',username:me.username||'user',text,mediaURL,createdAt:firebase.firestore.FieldValue.serverTimestamp()});const p=await db.collection('posts').doc(id).get();if(p.exists&&p.data().uid!==currentUser.uid)await notify(p.data().uid,'comment',`${me.displayName||'Someone'} commented on your post.`,{actorUid:currentUser.uid,postId});i.value='';pendingCommentMedia=null;$('commentMediaPicker').value='';toast('Comment added.')}catch(e){toast(e.message)}}
-function loadComments(id){if(commentUnsubs[id])commentUnsubs[id]();commentUnsubs[id]=db.collection('posts').doc(id).collection('comments').orderBy('createdAt','asc').limit(100).onSnapshot(s=>{const box=$('comments-'+id);if(!box)return;box.innerHTML='';s.forEach(x=>{const c=x.data(),el=document.createElement('div');el.className='comment';el.innerHTML=`<b>${esc(c.displayName||'User')}:</b> ${esc(c.text||'')}${c.mediaURL?`<img class="comment-media" loading="lazy" src="${esc(c.mediaURL)}">`:''}`;box.appendChild(el)})},e=>console.error('comments',e))}
-async function sharePost(id){const url=location.href.split('#')[0]+'#post-'+id;if(navigator.share){try{await navigator.share({title:'ERYX0 post',url})}catch{}}else{await copyLink(id)}}async function copyLink(id){const url=location.href.split('#')[0]+'#post-'+id;try{await navigator.clipboard.writeText(url);toast('Post link copied.')}catch{toast(url)}}
-function startReels(){if(reelsUnsub)reelsUnsub();reelsUnsub=db.collection('posts').where('isReel','==',true).limit(30).onSnapshot(s=>{const b=$('reelsFeed');if(!b)return;b.innerHTML='';s.forEach(d=>renderPost(d.id,d.data(),b));if(s.empty)b.innerHTML='<div class="card empty">No reels yet.</div>'},e=>console.error(e))}
 
-// Status with text/image/video
-let statusFile=null;
-$('addStatusBtn').onclick=()=>{openModal('Add Status',`<div class="input-group"><label>Status Text / Caption</label><input id="statusText" placeholder="What's happening?"></div><div class="input-group"><label>Photo / Video</label><input id="statusFile" type="file" accept="image/*,video/*"></div><button class="btn full" id="saveStatus">Post Status</button>`);$('saveStatus').onclick=async()=>{const txt=$('statusText').value.trim(),f=$('statusFile').files[0];if(!txt&&!f)return toast('Add text or media.');try{const me=await getMe();let mediaURL='';let mediaType='';if(f){mediaURL=await uploadFile(f,'statuses');mediaType=f.type.startsWith('video/')?'video':'image'}await db.collection('statuses').add({uid:currentUser.uid,displayName:me.displayName||'User',photoURL:me.photoURL||'',text:txt,mediaURL,mediaType,createdAt:firebase.firestore.FieldValue.serverTimestamp()});closeModal();toast('Status posted.')}catch(e){toast(e.message)}}};
-function loadStatuses(){if(statusesUnsub)statusesUnsub();const u=db.collection('statuses').orderBy('createdAt','desc').limit(30).onSnapshot(s=>{const bar=$('statusBar');bar.innerHTML='<div class="status-item" id="addStatusBtn"><div class="status-ring"><div class="status-inner" style="background:var(--primary);color:#fff;font-size:22px">＋</div></div><div class="status-name">Add Status</div></div>';s.forEach(doc=>{const st=doc.data(),div=document.createElement('div');div.className='status-item';div.innerHTML=`<div class="status-ring"><div class="status-inner">${st.photoURL?`<img src="${esc(st.photoURL)}">`:esc(initials(st.displayName))}</div></div><div class="status-name">${esc(st.displayName)}</div>`;div.onclick=()=>openModal(`${esc(st.displayName)}'s Status`,`${st.mediaURL?(st.mediaType==='video'?`<video controls style="width:100%;max-height:55vh" src="${esc(st.mediaURL)}"></video>`:`<img style="width:100%;max-height:55vh;object-fit:contain" src="${esc(st.mediaURL)}">`):''}<div style="padding:15px;text-align:center;font-size:17px;font-weight:700">${esc(st.text||'')}</div>`);bar.appendChild(div)});$('addStatusBtn').onclick=()=>{openModal('Add Status',`<div class="input-group"><label>Status Text / Caption</label><input id="statusText" placeholder="What's happening?"></div><div class="input-group"><label>Photo / Video</label><input id="statusFile" type="file" accept="image/*,video/*"></div><button class="btn full" id="saveStatus">Post Status</button>`);$('saveStatus').onclick=async()=>{const txt=$('statusText').value.trim(),f=$('statusFile').files[0];if(!txt&&!f)return toast('Add text or media.');try{const me=await getMe();let url='',type='';if(f){url=await uploadFile(f,'statuses');type=f.type.startsWith('video/')?'video':'image'}await db.collection('statuses').add({uid:currentUser.uid,displayName:me.displayName||'User',photoURL:me.photoURL||'',text:txt,mediaURL:url,mediaType:type,createdAt:firebase.firestore.FieldValue.serverTimestamp()});closeModal();toast('Status posted.')}catch(e){toast(e.message)}}}});statusesUnsub=u}
+function renderPost(id,p,feed){const reactions=p.reactions||{};let totalReactions=0;Object.values(reactions).forEach(arr=>totalReactions+=(arr||[]).length);const userReaction=Object.keys(reactions).find(emoji=>reactions[emoji]?.includes(currentUser.uid))||"👍",isOwner=currentUser?.uid===p.uid;const d=document.createElement("article");d.className="post";d.id="post-"+id;d.dataset.postId=id;d.innerHTML=`<div class="post-head"><div class="avatar" data-profile="${p.uid}">${p.photoURL?`<img src="${esc(p.photoURL)}">`:esc(initials(p.displayName))}</div><div style="min-width:0;flex:1"><div class="post-name-row"><div class="post-name" data-profile="${p.uid}">${esc(p.displayName||"ERYX0 User")}</div>${p.verified?'<span class="verified" title="EryX0 Verified">✓</span>':""}${p.edited?'<span class="edited-label">Edited</span>':""}</div><div class="post-username">@${esc(p.username||"user")}</div><div class="post-time">${fmt(p.createdAt)}</div></div>${isOwner?`<div class="post-owner-tools"><button class="post-tool-btn" data-edit-post>✏️ Edit</button><button class="post-tool-btn" data-delete-post>🗑️ Delete</button></div>`:""}</div><div class="post-text">${esc(p.text||"")}</div>${p.mediaURL?`<div class="post-media">${p.mediaType==="video"?`<video src="${esc(p.mediaURL)}" controls playsinline preload="metadata"></video>`:`<img src="${esc(p.mediaURL)}" loading="lazy" alt="Post media">`}</div>`:""}<div class="post-actions" style="position:relative;"><button data-react-toggle style="color:${userReaction!=="👍"?'var(--primary)':''}">${userReaction} React (${totalReactions})</button><div class="reaction-picker" id="picker-${id}"><button class="reaction-btn" data-emoji="❤️">❤️</button><button class="reaction-btn" data-emoji="🫶">🫶</button><button class="reaction-btn" data-emoji="😂">😂</button><button class="reaction-btn" data-emoji="👍">👍</button></div><button data-share>🔗 Share</button><button data-copy>📋 Copy</button></div><div id="comments-${id}"></div><div class="commentbar"><div class="commentbar-main"><input id="comment-${id}" placeholder="Write a comment..."><button data-comment>Send</button></div><div class="comment-tools"><button class="comment-tool" data-comment-emoji title="3D emojis">😊</button><button class="comment-tool" data-comment-media title="Add picture">🖼️</button><input id="comment-media-${id}" type="file" accept="image/*" class="hidden"></div><div class="comment-emoji-panel" id="comment-emojis-${id}"></div></div>`;feed.appendChild(d);d.querySelectorAll("[data-profile]").forEach(el=>el.onclick=()=>openUserProfile(p.uid));const picker=$("picker-"+id);d.querySelector("[data-react-toggle]").onclick=()=>picker.classList.toggle("show");d.querySelectorAll(".reaction-btn").forEach(btn=>btn.onclick=async()=>{picker.classList.remove("show");await toggleReaction(id,btn.dataset.emoji)});d.querySelector("[data-comment]").onclick=()=>addComment(id);d.querySelector("[data-comment-emoji]").onclick=()=>showCommentEmojis(id);d.querySelector("[data-comment-media]").onclick=()=>$("comment-media-"+id).click();d.querySelector("[data-share]").onclick=()=>sharePost(id);d.querySelector("[data-copy]").onclick=()=>copyLink(id);if(isOwner){d.querySelector("[data-edit-post]").onclick=()=>editPost(id,p);d.querySelector("[data-delete-post]").onclick=()=>deletePost(id,p)}loadComments(id,p.uid);}
 
-// Network / friend request receiver system
-async function sendFriendRequest(to){if(!to||to===currentUser.uid)return;const id=currentUser.uid+'_'+to,ref=db.collection('friendRequests').doc(id),s=await ref.get();if(s.exists&&['pending','accepted'].includes(s.data().status))return toast(s.data().status==='pending'?'Request already sent.':'Already friends.');const me=await getMe();await ref.set({from:currentUser.uid,to,status:'pending',fromName:me.displayName||'User',fromPhotoURL:me.photoURL||'',createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await notify(to,'friend_request',`${me.displayName||'Someone'} sent you a friend request.`,{actorUid:currentUser.uid,requestId:id});toast('Friend request sent.');sound('notification')}
-function loadRequests(){if(requestsUnsub)requestsUnsub();const u=db.collection('friendRequests').where('to','==',currentUser.uid).onSnapshot(async s=>{const b=$('requests');const docs=s.docs.filter(d=>d.data().status==='pending');b.innerHTML=`<div class="card"><h3>📩 Friend Requests <span class="badge">${docs.length}</span></h3>${docs.length?'':'<p class="muted" style="margin-top:10px">No pending requests.</p>'}`;for(const d of docs){const r=d.data();let name=r.fromName||r.from;try{const us=await db.collection('users').doc(r.from).get();if(us.exists)name=us.data().displayName||name}catch{}const el=document.createElement('div');el.className='request-card';el.innerHTML=`<div class="user-info"><div class="avatar">${r.fromPhotoURL?`<img src="${esc(r.fromPhotoURL)}">`:esc(initials(name))}</div><div><b>${esc(name)}</b><div class="muted">wants to be your friend</div></div></div><div style="display:flex;gap:7px"><button class="btn small success">Accept</button><button class="btn small danger">Reject</button></div>`;el.querySelector('.success').onclick=()=>respondRequest(d.id,r,true);el.querySelector('.danger').onclick=()=>respondRequest(d.id,r,false);b.appendChild(el)}},e=>{console.error(e);$('requests').innerHTML=`<div class="card">Friend requests unavailable: ${esc(e.message)}</div>`});requestsUnsub=u}
-async function respondRequest(id,r,accept){try{if(accept){const batch=db.batch();batch.set(db.collection('friendships').doc(r.from+'_'+r.to),{uid:r.from,friendUid:r.to,createdAt:firebase.firestore.FieldValue.serverTimestamp()});batch.set(db.collection('friendships').doc(r.to+'_'+r.from),{uid:r.to,friendUid:r.from,createdAt:firebase.firestore.FieldValue.serverTimestamp()});batch.update(db.collection('friendRequests').doc(id),{status:'accepted',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});await batch.commit();await notify(r.from,'friend_accepted','Your friend request was accepted.',{actorUid:currentUser.uid});toast('Friend added.')}else{await db.collection('friendRequests').doc(id).update({status:'rejected',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});toast('Request rejected.')}}catch(e){toast(e.message)}}
-function loadNetwork(){loadRequests();loadFriends();loadFriendSuggestions()}
-function loadFriends(){if(friendsUnsub)friendsUnsub();const u=db.collection('friendships').where('uid','==',currentUser.uid).onSnapshot(async s=>{allFriends=s.docs.map(d=>d.data().friendUid);const list=$('friendsList'),chat=$('chatList');list.innerHTML='';chat.innerHTML='';if(!allFriends.length){list.innerHTML='<div class="empty">No friends yet.</div>';chat.innerHTML='<div class="empty">No friends yet.</div>';return}let online=0;for(const fid of allFriends){const snap=await db.collection('users').doc(fid).get();const u=snap.exists?snap.data():{};if(u.online)online++;renderFriend(list,u);renderChatPerson(chat,u)}loadProfile();const statOnline=$('statOnline');if(statOnline)statOnline.textContent=online},e=>console.error(e));friendsUnsub=u}
+async function toggleReaction(postId, emoji){const ref=db.collection("posts").doc(postId),snap=await ref.get();if(!snap.exists)return toast("Post not found.");const data=snap.data(),reactions=data.reactions||{},hadReaction=Object.values(reactions).some(arr=>(arr||[]).includes(currentUser.uid));Object.keys(reactions).forEach(em=>{reactions[em]=(reactions[em]||[]).filter(uid=>uid!==currentUser.uid);if(!reactions[em].length)delete reactions[em];});reactions[emoji]=reactions[emoji]||[];reactions[emoji].push(currentUser.uid);await ref.update({reactions,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});if(data.uid!==currentUser.uid&&!hadReaction)await createNotification(data.uid,"like","reacted to your post.",{targetType:"post",targetId:postId,postId});}
 
-// Realtime notifications with no composite-index dependency; deep links and unread badge.
-function loadNotifications(){if(notificationUnsub)notificationUnsub();notificationUnsub=db.collection('notifications').where('uid','==',currentUser.uid).limit(100).onSnapshot(s=>{const docs=s.docs.sort((a,b)=>{const x=a.data().createdAt?.toMillis?.()||0,y=b.data().createdAt?.toMillis?.()||0;return y-x});const b=$('notifications');if(!b)return;b.innerHTML='';let unread=0,messageUnread=0;docs.forEach(d=>{const n=d.data();if(!n.read){unread++;if(n.type==='message')messageUnread++;}const el=document.createElement('div');el.className='notification '+(!n.read?'unread':'');const icon=n.type==='message'?'💬':n.type==='like'?'❤️':n.type==='comment'?'💬':n.type==='friend_request'?'👥':n.type==='friend_accepted'?'🤝':'🔔';el.innerHTML=`<div class="notification-icon">${icon}</div><div class="notification-text"><b>${esc(n.text||'Activity')}</b><div class="muted">${fmt(n.createdAt)}</div></div>`;el.onclick=async()=>{await db.collection('notifications').doc(d.id).update({read:true});if(n.type==='message'&&n.actorUid){const u=await db.collection('users').doc(n.actorUid).get();if(u.exists){selectedFriend=u.data();page('messages');openChat(u.data())}}else if((n.type==='like'||n.type==='comment')&&n.postId){page('home');setTimeout(()=>document.getElementById('post-'+n.postId)?.scrollIntoView({behavior:'smooth'}),250)}else if(n.type==='friend_request'){page('network')}else if(n.actorUid){openUserProfile(n.actorUid)}};b.appendChild(el)});[$('alertBadge'),$('navAlertBadge')].forEach(x=>{if(x){x.textContent=unread;x.style.display=unread?'flex':'none'}});const mb=$('msgBadge');if(mb){mb.textContent=messageUnread;mb.style.display=messageUnread?'flex':'none'}if(unread)sound('notification')},e=>{console.error('notifications',e);const b=$('notifications');if(b)b.innerHTML=`<div class="empty">Notifications unavailable. Please check Firestore rules/indexes.</div>`});unsubs.push(notificationUnsub)}
-async function notify(uid,type,text,extra={}){if(!uid||uid===currentUser?.uid)return;try{await db.collection('notifications').add({uid,type,text,read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp(),...extra})}catch(e){console.error('notify failed',e)}}
+async function addComment(id){const i=$("comment-"+id),text=i?.value.trim()||"",file=$("comment-media-"+id)?.files?.[0];if(!text&&!file)return toast("Write a comment or choose a picture.");try{const me=await getMe();let mediaURL="",mediaType="",storagePath="";if(file){const up=await uploadMediaFile(file,"comments",8);mediaURL=up.url;mediaType=up.type;storagePath=up.storagePath;}const cref=await db.collection("posts").doc(id).collection("comments").add({uid:currentUser.uid,displayName:me.displayName||"ERYX0 User",username:me.username||"user",text,mediaURL,mediaType,storagePath,verified:me.verified===true,edited:false,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});i.value="";if($("comment-media-"+id))$("comment-media-"+id).value="";const p=await db.collection("posts").doc(id).get();if(p.exists&&p.data().uid!==currentUser.uid)await createNotification(p.data().uid,"comment","commented on your post.",{targetType:"post",targetId:id,postId:id,commentId:cref.id});}catch(e){toast(e.message)}}
 
-// Messenger media + notification + basic call invitation
-$('messageMediaBtn').onclick=()=>{if(!selectedFriend)return toast('Select a friend first.');$('messageMediaInput').click()};
-$('messageMediaInput').onchange=e=>{pendingMessageMedia=[...e.target.files];if(pendingMessageMedia.length)toast(pendingMessageMedia.length+' media file(s) ready to send.')};
-async function sendMessage(){if(!selectedFriend)return;const i=$('messageInput'),text=i.value.trim();if(!text&&!pendingMessageMedia.length)return;try{const cid=conversationId(currentUser.uid,selectedFriend.uid),media=[];for(const f of pendingMessageMedia)media.push({url:await uploadFile(f,'messages'),type:f.type.startsWith('video/')?'video':'image'});const me=await getMe();await db.collection('conversations').doc(cid).collection('messages').add({from:currentUser.uid,to:selectedFriend.uid,text,media,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection('conversations').doc(cid).set({members:[currentUser.uid,selectedFriend.uid],lastMessage:text||'📷 Media',lastSender:currentUser.uid,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await notify(selectedFriend.uid,'message',`${me.displayName||'Someone'} sent you a message.`,{actorUid:currentUser.uid,conversationId:cid});i.value='';pendingMessageMedia=[];$('messageMediaInput').value=''}catch(e){toast(e.message)}}
-$('sendMessageBtn').onclick=sendMessage;$('messageInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage()});
-function openChat(u){selectedFriend=u;$('chatHead').innerHTML=`<div class="avatar" style="margin-right:10px">${u.photoURL?`<img src="${esc(u.photoURL)}">`:esc(initials(u.displayName))}</div>${esc(u.displayName||'User')} <span class="muted" style="margin-left:8px">${u.online?'🟢 Online':'Offline'}</span>`;$('messageInput').disabled=false;$('sendMessageBtn').disabled=false;if(messageUnsub)messageUnsub();const cid=conversationId(currentUser.uid,u.uid);messageUnsub=db.collection('conversations').doc(cid).collection('messages').orderBy('createdAt','asc').limit(300).onSnapshot(s=>{$('messages').innerHTML='';s.forEach(d=>{const m=d.data(),el=document.createElement('div');el.className='bubble '+(m.from===currentUser.uid?'out':'in');el.innerHTML=`${esc(m.text||'')}${Array.isArray(m.media)&&m.media.length?`<div class="post-media">${m.media.map(x=>x.type==='video'?`<video controls src="${esc(x.url)}"></video>`:`<img loading="lazy" src="${esc(x.url)}">`).join('')}</div>`:''}<span class="bubble-time">${fmt(m.createdAt)}</span>`;$('messages').appendChild(el)});$('messages').scrollTop=$('messages').scrollHeight},e=>console.error(e))}
-function callInvite(kind){if(!selectedFriend)return toast('Select a friend first.');notify(selectedFriend.uid,'call',`${(currentUser.displayName||'A friend')} is requesting a ${kind} call.`,{actorUid:currentUser.uid,callType:kind});toast(kind+' call request sent. Receiver can accept from notifications.')}
-$('voiceCallBtn').onclick=()=>callInvite('voice');$('videoCallBtn').onclick=()=>callInvite('video');
+function showCommentEmojis(id){
+ const box=$("comment-emojis-"+id);if(!box)return;
+ if(!box.innerHTML){
+  const emojis=[["smile","#FFD166"],["love","#FF5C8A"],["laugh","#FFD166"],["wow","#8BE9FD"],["cool","#A78BFA"],["fire","#FF7A45"],["star","#F7C948"],["wave","#70E1F5"]];
+  box.innerHTML=emojis.map(([n,c])=>`<button class="emoji-tool" data-custom-emoji="${n}" title="${n}"><svg class="custom-emoji" viewBox="0 0 48 48"><defs><radialGradient id="eg-${id}-${n}"><stop stop-color="#fff" stop-opacity=".9"/><stop offset=".45" stop-color="${c}"/><stop offset="1" stop-color="#6b7280" stop-opacity=".45"/></radialGradient></defs><circle cx="24" cy="24" r="20" fill="url(#eg-${id}-${n})"/><circle cx="17" cy="20" r="2.5" fill="#172033"/><circle cx="31" cy="20" r="2.5" fill="#172033"/><path d="M17 29q7 5 14 0" fill="none" stroke="#172033" stroke-width="2.5" stroke-linecap="round"/></svg></button>`).join("");
+  box.querySelectorAll("[data-custom-emoji]").forEach(b=>b.onclick=()=>{$("comment-"+id).value+=` ${b.dataset.customEmoji==="love"?"❤️":b.dataset.customEmoji==="fire"?"🔥":b.dataset.customEmoji==="laugh"?"😂":"😊"} `;box.classList.remove("show");});
+ }
+ box.classList.toggle("show");
+}
+function loadComments(id,postUid=""){if(commentUnsubs[id])commentUnsubs[id]();commentUnsubs[id]=db.collection("posts").doc(id).collection("comments").orderBy("createdAt","asc").limit(100).onSnapshot(s=>{const box=$("comments-"+id);if(!box)return;box.innerHTML="";s.forEach(x=>{const c=x.data(),canEdit=c.uid===currentUser.uid,canDelete=canEdit||postUid===currentUser.uid,el=document.createElement("div");el.className="comment";el.innerHTML=`<div class="comment-head"><div><b>${esc(c.displayName||"User")}</b>${c.verified?'<span class="verified" style="width:14px;height:14px;font-size:8px">✓</span>':""}${c.edited?'<span class="edited-label">Edited</span>':""}: ${esc(c.text||"")}</div>${canDelete?`<div class="comment-actions">${canEdit?'<button data-edit-comment>Edit</button>':""}<button data-delete-comment>Delete</button></div>`:""}</div>${c.mediaURL?`<img class="comment-media" src="${esc(c.mediaURL)}" loading="lazy" alt="Comment image">`:""}`;box.appendChild(el);if(canEdit)el.querySelector("[data-edit-comment]").onclick=()=>editComment(id,x.id,c);if(canDelete)el.querySelector("[data-delete-comment]").onclick=()=>deleteComment(id,x.id,c);})},e=>{const box=$("comments-"+id);if(box)box.innerHTML=`<div class="comment">${esc(e.message)}</div>`});}
 
+async function sharePost(id){const url=location.href.split("#")[0]+"#post-"+id;if(navigator.share){try{await navigator.share({title:"ERYX0 post",url})}catch{}}else{await navigator.clipboard?.writeText(url);toast("Post link copied.")}}
+async function copyLink(id){const url=location.href.split("#")[0]+"#post-"+id;try{await navigator.clipboard.writeText(url);toast("Link copied.")}catch{toast(url)}}
+
+
+async function editPost(postId,p){if(p.uid!==currentUser.uid)return toast("You can edit only your own post.");openModal("Edit Post",`<div class="input-group"><label>Post Text</label><textarea id="editPostText" rows="4">${esc(p.text||"")}</textarea></div>${p.mediaURL?`<div class="post-media" style="margin-bottom:10px">${p.mediaType==="video"?`<video src="${esc(p.mediaURL)}" controls></video>`:`<img src="${esc(p.mediaURL)}" alt="Current media">`}</div><label style="display:flex;gap:8px;align-items:center;font-size:12px;margin-bottom:10px"><input id="removeExistingPostMedia" type="checkbox" style="width:auto"> Remove current media</label>`:""}<div class="input-group"><label>Replace Media Optional</label><input id="editPostFile" type="file" accept="image/*,video/*"></div><button class="btn full" id="saveEditedPostBtn">Save Changes</button>`);$("saveEditedPostBtn").onclick=async()=>{const text=$("editPostText").value.trim(),file=$("editPostFile").files[0],remove=$("removeExistingPostMedia")?.checked;if(!text&&!file&&!p.mediaURL&&!remove)return toast("Post cannot be empty.");try{const update={text,edited:true,editedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};if(remove||file){await deleteStoragePath(p.storagePath);update.mediaURL="";update.mediaType="";update.storagePath="";}if(file){const up=await uploadMediaFile(file,"posts",25);update.mediaURL=up.url;update.mediaType=up.type;update.storagePath=up.storagePath;}await db.collection("posts").doc(postId).update(update);closeModal();toast("Post updated.");}catch(e){toast(e.message)}}}
+async function deletePost(postId,p){if(p.uid!==currentUser.uid)return toast("You can delete only your own post.");if(!confirm("Delete this post permanently?"))return;try{const comments=await db.collection("posts").doc(postId).collection("comments").limit(200).get();const batch=db.batch();comments.forEach(c=>batch.delete(c.ref));await batch.commit();await deleteStoragePath(p.storagePath);await db.collection("posts").doc(postId).delete();toast("Post deleted.");}catch(e){toast(e.message)}}
+async function editComment(postId,commentId,c){if(c.uid!==currentUser.uid)return toast("You can edit only your own comment.");openModal("Edit Comment",`<div class="input-group"><label>Comment</label><textarea id="editCommentText" rows="3">${esc(c.text||"")}</textarea></div><button class="btn full" id="saveEditedCommentBtn">Save Comment</button>`);$("saveEditedCommentBtn").onclick=async()=>{const text=$("editCommentText").value.trim();if(!text&&!c.mediaURL)return toast("Comment cannot be empty.");await db.collection("posts").doc(postId).collection("comments").doc(commentId).update({text,edited:true,editedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});closeModal();toast("Comment updated.");}}
+async function deleteComment(postId,commentId,c){if(c.uid!==currentUser.uid){const ps=await db.collection("posts").doc(postId).get();if(!ps.exists||ps.data().uid!==currentUser.uid)return toast("You cannot delete this comment.");}if(!confirm("Delete this comment?"))return;await deleteStoragePath(c.storagePath);await db.collection("posts").doc(postId).collection("comments").doc(commentId).delete();toast("Comment deleted.");}
+// Status / Story Feature
+$("addStatusBtn").onclick=()=>{
+ openModal("Just Status", `
+  <div class="input-group"><label>Status / Story</label><input id="statusText" placeholder="What's happening?"></div>
+  <button class="btn full" id="saveStatus">Post Status</button>
+ `);
+ $("saveStatus").onclick=async()=>{
+  const txt=$("statusText").value.trim();if(!txt)return toast("Enter status text.");
+  const me=await getMe();
+  await db.collection("statuses").add({uid:currentUser.uid,displayName:me.displayName||"User",photoURL:me.photoURL||"",text:txt,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  closeModal();toast("Status uploaded!");
+ };
+};
+
+function loadStatuses(){
+ if(statusesUnsub) { try{statusesUnsub()}catch{} }
+ statusesUnsub=db.collection("statuses").orderBy("createdAt","desc").limit(20).onSnapshot(s=>{
+  const bar=$("statusBar"); if(!bar)return;
+  const addBtnHTML=bar.firstElementChild?.outerHTML || `<div class="status-item" id="addStatusBtn"><div class="status-ring"><div class="status-inner" style="background:var(--primary);color:#fff;font-size:22px;">＋</div></div><div class="status-name">Just Status</div></div>`;
+  bar.innerHTML=addBtnHTML;
+  $("addStatusBtn").onclick=()=>{
+   openModal("Just Status", `
+    <div class="input-group"><label>Status / Story</label><input id="statusText" placeholder="What's happening?"></div>
+    <button class="btn full" id="saveStatus">Post Status</button>
+   `);
+   $("saveStatus").onclick=async()=>{
+    const txt=$("statusText").value.trim();if(!txt)return toast("Enter status text.");
+    const me=await getMe();
+    await db.collection("statuses").add({uid:currentUser.uid,displayName:me.displayName||"User",photoURL:me.photoURL||"",text:txt,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    closeModal();toast("Status uploaded!");
+   };
+  };
+
+  s.forEach(doc=>{
+   const st=doc.data();
+   const div=document.createElement("div");
+   div.className="status-item";
+   div.innerHTML=`<div class="status-ring"><div class="status-inner">${st.photoURL?`<img src="${esc(st.photoURL)}">`:esc(initials(st.displayName))}</div></div><div class="status-name">${esc(st.displayName)}</div>`;
+   div.onclick=()=>openModal(st.displayName+"'s Status",`<div style="text-align:center;padding:20px;font-size:18px;font-weight:700;">${esc(st.text)}</div><p class="muted" style="text-align:center;">Posted at ${fmt(st.createdAt)}</p>`);
+   bar.appendChild(div);
+  });
+ });
+}
+
+$("searchUserBtn").onclick=searchUsers;
+async function searchUsers(){
+ const q=$("userSearch").value.trim().toLowerCase(),box=$("userResults");box.innerHTML="";if(!q)return;
+ try{
+  let snaps=[];
+  if(q.startsWith("@")){const s=await db.collection("users").where("username","==",q.slice(1)).limit(10).get();snaps=s.docs}
+  else{const s=await db.collection("users").orderBy("displayName").startAt(q).endAt(q+"\uf8ff").limit(10).get();snaps=s.docs}
+  if(!snaps.length){box.innerHTML='<div class="empty">No user found.</div>';return}
+  snaps.forEach(x=>{const u=x.data();if(u.uid===currentUser.uid)return;const el=document.createElement("div");el.className="user-result";el.innerHTML=`<div class="user-info"><div class="avatar">${u.photoURL?`<img src="${esc(u.photoURL)}">`:esc(initials(u.displayName))}</div><div><div class="user-name">${esc(u.displayName||"ERYX0 User")}</div><div class="username">@${esc(u.username||"user")}</div><div class="user-bio">${esc(u.bio||"")}</div></div></div><button class="btn small">＋ Add</button>`;el.querySelector(".user-info").onclick=()=>openUserProfile(u.uid);el.querySelector("button").onclick=()=>sendFriendRequest(u.uid);box.appendChild(el)})
+ }catch(e){box.innerHTML=`<div class="empty">${esc(e.message)}</div>`}
+}
+
+async function loadFriendSuggestions(){
+ const box=$("friendSuggestions");if(!box)return;
+ const snap=await db.collection("users").limit(15).get();
+ box.innerHTML="";
+ let count=0;
+ snap.forEach(doc=>{
+  const u=doc.data();
+  if(u.uid===currentUser.uid || allFriends.includes(u.uid))return;
+  count++;
+  const el=document.createElement("div");
+  el.className="user-result";
+  el.innerHTML=`<div class="user-info"><div class="avatar">${u.photoURL?`<img src="${esc(u.photoURL)}">`:esc(initials(u.displayName))}</div><div><div class="user-name">${esc(u.displayName||"User")}</div><div class="username">@${esc(u.username||"user")}</div><div class="user-bio">${esc(u.bio||"Suggested for you")}</div></div></div><button class="btn small">＋ Add Friend</button>`;
+  el.querySelector(".user-info").onclick=()=>openUserProfile(u.uid);
+  el.querySelector("button").onclick=()=>sendFriendRequest(u.uid);
+  box.appendChild(el);
+ });
+ if(count===0){box.innerHTML='<div class="empty">No new suggestions at the moment.</div>';}
+}
+
+async function sendFriendRequest(to){if(!to||to===currentUser.uid)return;const id=currentUser.uid+"_"+to,reverse=to+"_"+currentUser.uid,ref=db.collection("friendRequests").doc(id);if(allFriends.includes(to))return toast("Already friends.");const [a,b]=await Promise.all([ref.get(),db.collection("friendRequests").doc(reverse).get()]);if(a.exists&&a.data().status==="pending")return toast("Request already sent.");if(b.exists&&b.data().status==="pending")return toast("This user already sent you a request. Check Friend Requests.");await ref.set({from:currentUser.uid,to,status:"pending",createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await createNotification(to,"friend_request","sent you a friend request.",{targetType:"request",targetId:id,requestId:id});toast("Friend request sent.");}
+function loadNetwork(){loadRequests();loadFriends();loadFriendSuggestions();}
+function loadRequests(){if(requestsUnsub){try{requestsUnsub()}catch{}}requestsUnsub=db.collection("friendRequests").where("to","==",currentUser.uid).where("status","==","pending").onSnapshot(async s=>{const b=$("requests");b.innerHTML=`<div class="card"><h3>📩 Friend Requests</h3>${s.empty?'<p class="muted" style="margin-top:10px">No pending requests.</p>':""}</div>`;for(const d of s.docs){const r=d.data();let u={uid:r.from,displayName:r.from,username:"",photoURL:""};try{const us=await db.collection("users").doc(r.from).get();if(us.exists)u=us.data()}catch{}const el=document.createElement("div");el.className="request-card";el.innerHTML=`<div class="user-info"><div class="avatar">${u.photoURL?`<img src="${esc(u.photoURL)}">`:esc(initials(u.displayName))}</div><div><div class="user-name">${esc(u.displayName||"ERYX0 User")}</div><div class="username">@${esc(u.username||"user")}</div><div class="muted">Wants to connect with you</div></div></div><div style="display:flex;gap:7px"><button class="btn small success">Accept</button><button class="btn small danger">Reject</button></div>`;el.querySelector(".user-info").onclick=()=>openUserProfile(r.from);el.querySelector(".success").onclick=()=>respondRequest(d.id,r,true);el.querySelector(".danger").onclick=()=>respondRequest(d.id,r,false);b.appendChild(el)}} ,e=>{$("requests").innerHTML=`<div class="card empty">${esc(e.message)}</div>`});}
+async function respondRequest(id,r,accept){if(accept){const batch=db.batch(),a=db.collection("friendships").doc(r.to+"_"+r.from),b=db.collection("friendships").doc(r.from+"_"+r.to);batch.set(a,{uid:r.to,friendUid:r.from,createdAt:firebase.firestore.FieldValue.serverTimestamp()});batch.set(b,{uid:r.from,friendUid:r.to,createdAt:firebase.firestore.FieldValue.serverTimestamp()});batch.update(db.collection("friendRequests").doc(id),{status:"accepted",updatedAt:firebase.firestore.FieldValue.serverTimestamp()});await batch.commit();await createNotification(r.from,"friend_accepted","accepted your friend request.",{targetType:"profile",targetId:currentUser.uid});toast("Friend added.");}else{await db.collection("friendRequests").doc(id).update({status:"rejected",updatedAt:firebase.firestore.FieldValue.serverTimestamp()});toast("Request rejected.")}}
+function loadFriends(){if(friendsUnsub){try{friendsUnsub()}catch{}}friendsUnsub=db.collection("friendships").where("uid","==",currentUser.uid).onSnapshot(async s=>{allFriends=s.docs.map(d=>d.data().friendUid);if($("statFriends"))$("statFriends").textContent=allFriends.length;if($("profileFriendCount"))$("profileFriendCount").textContent=allFriends.length;const list=$("friendsList"),chat=$("chatList");if(list)list.innerHTML="";if(chat)chat.innerHTML="";if(!allFriends.length){if(list)list.innerHTML='<div class="empty">No friends yet.</div>';if(chat)chat.innerHTML='<div class="empty">No friends yet.</div>';return}const snaps=await Promise.all(allFriends.map(fid=>db.collection("users").doc(fid).get().catch(()=>null)));snaps.forEach(snap=>{if(!snap||!snap.exists)return;const u=snap.data();if(list)renderFriend(list,u);if(chat)renderChatPerson(chat,u)});const onlineCount=await getOnlineFriendCount();if($("statOnline"))$("statOnline").textContent=onlineCount;if($("profileOnlineCount"))$("profileOnlineCount").textContent=onlineCount;},e=>toast(e.message));}
+function renderFriend(box,u){const el=document.createElement("div");el.className="friend-card";el.innerHTML=`<div class="user-info"><div class="avatar">${u.photoURL?`<img src="${esc(u.photoURL)}">`:esc(initials(u.displayName))}</div><div><div class="user-name">${esc(u.displayName||"User")}</div><div class="username">@${esc(u.username||"user")}</div><div class="user-bio"><span class="online-dot ${u.online?"online":""}"></span> ${u.online?"Online":"Offline"}</div></div></div><div style="display:flex;gap:6px"><button class="btn small">Message</button><button class="btn small danger">Remove</button></div>`;el.querySelector(".user-info").onclick=()=>openUserProfile(u.uid);el.querySelector(".btn").onclick=()=>{selectedFriend=u;page("messages");openChat(u)};el.querySelector(".danger").onclick=()=>removeFriend(u.uid);box.appendChild(el)}
+function renderChatPerson(box,u){const el=document.createElement("div");el.className="person";el.innerHTML=`<div class="avatar">${u.photoURL?`<img src="${esc(u.photoURL)}">`:esc(initials(u.displayName))}</div><div class="person-info"><div class="person-name">${esc(u.displayName||"User")}</div><div class="person-status">${u.online?"🟢 Online":"Offline"}</div></div>`;el.onclick=()=>openChat(u);box.appendChild(el)}
+async function removeFriend(fid){
+ const batch=db.batch();batch.delete(db.collection("friendships").doc(currentUser.uid+"_"+fid));batch.delete(db.collection("friendships").doc(fid+"_"+currentUser.uid));await batch.commit();toast("Friend removed.");
+}
+function conversationId(a,b){return[a,b].sort().join("_")}
+function openChat(u){if(!u?.uid||!allFriends.includes(u.uid)){toast("You can only message accepted friends.");return;}selectedFriend=u;$("chatHead").innerHTML=`<div class="avatar" style="margin-right:10px">${u.photoURL?`<img src="${esc(u.photoURL)}">`:esc(initials(u.displayName))}</div>${esc(u.displayName||"User")} <span class="muted" style="margin-left:8px">${u.online?"Online":"Offline"}</span>`;$("messageInput").disabled=false;$("sendMessageBtn").disabled=false;if($("messageMediaBtn"))$("messageMediaBtn").disabled=false;if(messageUnsub)messageUnsub();const cid=conversationId(currentUser.uid,u.uid);db.collection("conversations").doc(cid).set({[`unread.${currentUser.uid}`]:0},{merge:true}).catch(()=>{});messageUnsub=db.collection("conversations").doc(cid).collection("messages").orderBy("createdAt","asc").limit(300).onSnapshot(s=>{$("messages").innerHTML="";s.forEach(d=>{const m=d.data(),el=document.createElement("div");el.className="bubble "+(m.from===currentUser.uid?"out":"in");el.innerHTML=`${esc(m.text||"")}${m.mediaURL?(m.mediaType==="video"?`<video class="message-media" src="${esc(m.mediaURL)}" controls playsinline></video>`:`<img class="message-media" src="${esc(m.mediaURL)}" alt="Message media">`):""}<span class="bubble-time">${fmt(m.createdAt)}</span>`;$("messages").appendChild(el)});$("messages").scrollTop=$("messages").scrollHeight},e=>{$("messages").innerHTML=`<div class="empty">${esc(e.message)}</div>`});}
+async function sendMessage(){if(!selectedFriend)return;const i=$("messageInput"),text=i.value.trim(),file=currentChatFile;if(!text&&!file)return;const cid=conversationId(currentUser.uid,selectedFriend.uid);$("sendMessageBtn").disabled=true;try{let mediaURL="",mediaType="",storagePath="";if(file){const up=await uploadMediaFile(file,`messages/${cid}`,25);mediaURL=up.url;mediaType=up.type;storagePath=up.storagePath;}await db.collection("conversations").doc(cid).collection("messages").add({from:currentUser.uid,to:selectedFriend.uid,text,mediaURL,mediaType,storagePath,read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection("conversations").doc(cid).set({members:[currentUser.uid,selectedFriend.uid],lastMessage:text||(mediaType==="video"?"🎬 Video":"🖼️ Photo"),lastMessageType:mediaType||"text",lastSender:currentUser.uid,[`unread.${selectedFriend.uid}`]:firebase.firestore.FieldValue.increment(1),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await createNotification(selectedFriend.uid,"message",text?`sent you a message: ${text.slice(0,60)}`:`sent you ${mediaType==="video"?"a video":"a photo"}.`,{targetType:"chat",targetId:selectedFriend.uid,conversationId:cid});i.value="";clearChatMedia();}catch(e){toast(e.message)}finally{$("sendMessageBtn").disabled=false;}}
+$("sendMessageBtn").onclick=sendMessage;$("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage()});function clearChatMedia(){currentChatFile=null;const f=$("messageMediaFile");if(f)f.value="";const b=$("chatMediaPreview");if(b){b.classList.remove("show");b.innerHTML="";}}if($("messageMediaBtn"))$("messageMediaBtn").onclick=()=>$("messageMediaFile").click();if($("messageMediaFile"))$("messageMediaFile").onchange=e=>{const file=e.target.files[0];if(!file){clearChatMedia();return}currentChatFile=file;const url=URL.createObjectURL(file),type=file.type.startsWith("video/")?"video":"image",box=$("chatMediaPreview");box.classList.add("show");box.innerHTML=`<div style="display:flex;align-items:center;gap:8px">${type==="video"?`<video src="${url}" muted></video>`:`<img src="${url}" alt="Message preview">`}<span class="muted">${esc(file.name)}</span></div><button class="btn small danger" type="button">Remove</button>`;box.querySelector("button").onclick=clearChatMedia;};
+async function notify(uid,type,text,extra={}){return createNotification(uid,type,text,extra)}
+function loadNotifications(){if(notificationUnsub)notificationUnsub();notificationUnsub=db.collection("notifications").where("uid","==",currentUser.uid).orderBy("createdAt","desc").limit(100).onSnapshot(s=>{const b=$("notifications");b.innerHTML="";let unread=0;if(s.empty)b.innerHTML='<div class="empty">No notifications.</div>';s.forEach(d=>{const n=d.data();if(!n.read)unread++;const el=document.createElement("div");el.className="notification "+(!n.read?"unread":"");const icon=n.type==="message"?"💬":n.type==="like"?"❤️":n.type==="comment"?"💬":n.type==="friend_request"?"👥":"🔔",actor=n.fromName?`<b>${esc(n.fromName)}</b> `:"";el.innerHTML=`<div class="notification-icon">${icon}</div><div class="notification-text">${actor}${esc(n.text)}<div class="muted">${fmt(n.createdAt)}</div></div>`;el.onclick=()=>handleNotificationClick(d.id,n);b.appendChild(el)});[$("alertBadge"),$("navAlertBadge")].forEach(x=>{if(x){x.textContent=unread;x.style.display=unread?"flex":"none"}});if($("statAlerts"))$("statAlerts").textContent=unread;},e=>{$("notifications").innerHTML=`<div class="empty">Notification query needs permission/index: ${esc(e.message)}</div>`});}
 // REVIEW ANALYZER
 $("analyzeBtn").onclick=()=>{
  const text=$("reviewText").value.trim(),url=$("reviewUrl").value.trim(),platform=$("reviewPlatformCat").value;
@@ -869,8 +1139,8 @@ $("analyzeBtn").onclick=()=>{
     <div style="margin:12px 0;">
       <b>Detected Categories:</b> ${isViolation? found.map(c=>`<span class="badge" style="background:#fee2e2;color:#991b1b;margin-right:5px;">${esc(c)}</span>`).join("") : '<span class="badge" style="background:#dcfce7;color:#166534;">No policy violation detected</span>'}
     </div>
-    <p style="line-height:1.6;font-size:13px;"><b>Recommended Action:</b> ${isViolation? "Content flagged as potentially violating terms of service. You may submit an official takedown request using the platform's support workflow." : "Content appears compliant with general community standards."}</p>
-    <button class="btn small" style="margin-top:12px;" onclick="toast('Takedown request generated for official review.')">Submit Takedown Notice</button>
+    <p style="line-height:1.6;font-size:13px;"><b>Recommended Action:</b> ${isViolation? "Potential policy signals were detected. Review the result against the platform's current policy and use the platform's official reporting workflow if appropriate." : "No matching signal was found by this built-in screening rule set; this does not prove that the content complies with platform policy."}</p>
+    <button class="btn small" style="margin-top:12px;" onclick="toast('Takedown request generated for official review.')">Prepare Report</button>
   </div>`;
  }, 1500);
 };
@@ -889,30 +1159,32 @@ $("publishGigBtn").onclick=async()=>{
  page("freelance-market");
 };
 
+async function loadFreelanceProfile(){
+ const box=$("freelanceProfileCard");if(!box||!currentUser)return;
+ const me=await getMe();
+ const myGigs=await db.collection("gigs").where("uid","==",currentUser.uid).get();
+ const myOrders=await db.collection("orders").where("freelancerUid","==",currentUser.uid).get();
+ const photo=me.photoURL?`<img src="${esc(me.photoURL)}">`:esc(initials(me.displayName));
+ box.innerHTML=`<div class="freelance-profile"><div class="freelance-profile-avatar">${photo}</div><div><div style="font-size:18px;font-weight:950">${esc(me.displayName||"Freelancer")}${me.verified?'<span class="verified">✓</span>':""}</div><div class="username">@${esc(me.username||"user")}</div><div class="freelance-mini-stats"><div><b>${myGigs.size}</b> <span>Gigs</span></div><div><b>${myOrders.size}</b> <span>Orders</span></div><div><b>${me.online?"Online":"Offline"}</b> <span>Status</span></div></div></div><button class="btn" id="freelanceProfileEditBtn">Edit Profile</button></div>`;
+ $("freelanceProfileEditBtn").onclick=()=>page("profile");
+}
 function loadFreelanceGigs(){
- db.collection("gigs").orderBy("createdAt","desc").limit(50).onSnapshot(s=>{
+ loadFreelanceProfile();
+ if(gigsUnsub) { try{gigsUnsub()}catch{} }
+ gigsUnsub=db.collection("gigs").orderBy("createdAt","desc").limit(50).onSnapshot(s=>{
   const g=$("freelanceGigsGrid");if(!g)return;
   g.innerHTML="";
-  if(s.empty){g.innerHTML='<div class="card empty">No gigs available yet. Be the first to publish!</div>';return}
+  if(s.empty){g.innerHTML='<div class="card empty">No gigs available yet. Tap ＋ Post Gig to publish your first service.</div>';return}
   s.forEach(doc=>{
-   const x=doc.data();
-   const el=document.createElement("div");
-   el.className="freelance-card";
-   el.innerHTML=`
-     <span class="badge">${esc(x.category)}</span>
-     <h3 style="margin-top:8px;">${esc(x.title)}</h3>
-     <p class="muted" style="margin:8px 0;line-height:1.5;font-size:13px;">${esc(x.description.slice(0,120))}...</p>
-     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
-       <div><div class="service-price">$${x.price}</div><span class="muted">Delivery: ${esc(x.delivery)}</span></div>
-       <button class="btn small">Order Now</button>
-     </div>`;
-   el.querySelector("button").onclick=()=>openCheckoutModal(doc.id, x);
-   g.appendChild(el);
+   const x=doc.data(),el=document.createElement("div");el.className="freelance-card";
+   el.innerHTML=`<span class="badge">${esc(x.category)}</span><h3 style="margin-top:8px;">${esc(x.title)}</h3><p class="muted" style="margin:8px 0;line-height:1.5;font-size:13px;">${esc((x.description||"").slice(0,150))}${(x.description||"").length>150?"…":""}</p><div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;"><div><div class="service-price">$${Number(x.price||0).toFixed(2)}</div><span class="muted">Delivery: ${esc(x.delivery||"3 Days")}</span></div><button class="btn small">Order Now</button></div>`;
+   el.querySelector("button").onclick=()=>openCheckoutModal(doc.id,x);g.appendChild(el);
   });
  });
 }
 
 function openCheckoutModal(gigId, gig){
+ if(gig.uid===currentUser.uid)return toast("You cannot order your own gig.");
  openModal("Secure Escrow Checkout", `
   <p class="muted" style="margin-bottom:12px;">You are hiring <b>@${esc(gig.username)}</b> for <b>${esc(gig.title)}</b>.</p>
   <div style="background:var(--surface2);padding:14px;border-radius:12px;margin-bottom:15px;">
@@ -962,7 +1234,8 @@ function openCheckoutModal(gigId, gig){
 }
 
 function loadMyOrders(){
- db.collection("orders").onSnapshot(s=>{
+ if(ordersUnsub) { try{ordersUnsub()}catch{} }
+ ordersUnsub=db.collection("orders").onSnapshot(s=>{
   const l=$("ordersList");if(!l)return;
   l.innerHTML="";
   let count=0;
@@ -1036,7 +1309,8 @@ async function loadPayouts(){
  $("freelanceTotalWithdrawn").textContent="$"+withdrawn.toFixed(2);
 
  const wList=$("withdrawalHistoryList");
- db.collection("withdrawals").where("uid","==",currentUser.uid).onSnapshot(s=>{
+ if(withdrawalsUnsub) { try{withdrawalsUnsub()}catch{} }
+ withdrawalsUnsub=db.collection("withdrawals").where("uid","==",currentUser.uid).onSnapshot(s=>{
   wList.innerHTML="";
   if(s.empty){wList.innerHTML='<div class="empty">No withdrawal requests yet.</div>';return;}
   s.forEach(doc=>{
@@ -1084,7 +1358,8 @@ function loadAdminPanel(){
  if(currentUser?.email !== ADMIN_EMAIL) return;
 
  const pOrders=$("adminPendingOrdersList");
- db.collection("orders").where("status","==","Pending Verification").onSnapshot(s=>{
+ if(adminOrdersUnsub) { try{adminOrdersUnsub()}catch{} }
+ adminOrdersUnsub=db.collection("orders").where("status","==","Pending Verification").onSnapshot(s=>{
   pOrders.innerHTML="";
   if(s.empty){pOrders.innerHTML='<div class="empty">No pending orders.</div>';return;}
   s.forEach(doc=>{
@@ -1098,7 +1373,8 @@ function loadAdminPanel(){
  });
 
  const pWith=$("adminPendingWithdrawalsList");
- db.collection("withdrawals").where("status","==","Pending").onSnapshot(s=>{
+ if(adminWithdrawalsUnsub) { try{adminWithdrawalsUnsub()}catch{} }
+ adminWithdrawalsUnsub=db.collection("withdrawals").where("status","==","Pending").onSnapshot(s=>{
   pWith.innerHTML="";
   if(s.empty){pWith.innerHTML='<div class="empty">No pending withdrawals.</div>';return;}
   s.forEach(doc=>{
@@ -1134,11 +1410,8 @@ function applyTheme(){
 $("darkToggle").onchange=e=>{localStorage.setItem("eryx0-theme",e.target.checked?"dark":"light");applyTheme()};
 applyTheme();
 
-
-setInterval(()=>{if(currentUser)db.collection('users').doc(currentUser.uid).set({online:true,lastSeen:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(()=>{})},45000);
-window.addEventListener('beforeunload',()=>{if(currentUser)db.collection('users').doc(currentUser.uid).set({online:false,lastSeen:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(()=>{})});
-setTimeout(()=>$("intro").classList.add("hide"),800);
+setTimeout(()=>$("intro").classList.add("hide"),900);
 </script>
 
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e45f4f693f2704',t:'MTc4NzI2MDA5NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
