@@ -1112,49 +1112,70 @@ const reactionsMap = {
   fire: { emoji: "🔥", name: "Fire", class: "reacted-fire" }
 };
 
+let isRegisterMode = false;
 function switchAuthTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));
-  const tabBtn = document.querySelector('[data-tab="'+tab+'"]');
-  if(tabBtn) tabBtn.classList.add('active');
-  const form = document.getElementById(tab+'-form');
-  if(form) form.classList.add('active');
+  const loginTab = document.getElementById('tabLogin');
+  const regTab = document.getElementById('tabRegister');
+  const nameGroup = document.getElementById('groupName');
+  const submitBtn = document.getElementById('authSubmitBtn');
+  if(tab==='register'){
+    isRegisterMode = true;
+    if(loginTab) loginTab.classList.remove('active');
+    if(regTab) regTab.classList.add('active');
+    if(nameGroup) nameGroup.style.display='block';
+    if(submitBtn) submitBtn.innerText='Create Account';
+  } else {
+    isRegisterMode = false;
+    if(regTab) regTab.classList.remove('active');
+    if(loginTab) loginTab.classList.add('active');
+    if(nameGroup) nameGroup.style.display='none';
+    if(submitBtn) submitBtn.innerText='Continue';
+  }
 }
-
-async function handleAuthSubmit(type) {
-  const email = document.getElementById(type+'-email').value.trim();
-  const pass = document.getElementById(type+'-pass').value.trim();
-  const nameInput = document.getElementById(type+'-name');
-  const name = nameInput ? nameInput.value.trim() : "";
-  const msg = document.getElementById("authMessage");
-  if(!email || !pass){ msg.textContent="Email & password required"; return; }
+async function handleAuthSubmit(){
+  const emailEl = document.getElementById('authEmail');
+  const passEl = document.getElementById('authPassword');
+  const nameEl = document.getElementById('authName');
+  const msg = document.getElementById('authMessage');
+  const email = emailEl ? emailEl.value.trim() : '';
+  const pass = passEl ? passEl.value.trim() : '';
+  const name = nameEl ? nameEl.value.trim() : '';
+  if(!email || !pass){ if(msg) msg.textContent='Email & password required'; return; }
+  if(msg) msg.textContent='Please wait...';
   try {
-    if(type==='register'){
+    if(isRegisterMode){
       const cred = await auth.createUserWithEmailAndPassword(email, pass);
-      await db.collection("eryx0_users").doc(cred.user.uid).set({
+      await db.collection('eryx0_users').doc(cred.user.uid).set({
         id: cred.user.uid,
         name: name || email.split('@')[0],
         email: email,
         username: email.split('@')[0],
-        avatar: "https://i.pravatar.cc/300?u="+email,
-        bio: "",
+        avatar: 'https://i.pravatar.cc/300?u='+email,
+        bio: '',
         verified: false,
-        role: "user",
+        role: 'user',
         balance: 0,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       if(name) await cred.user.updateProfile({displayName: name});
+      showToast('Account created!');
     } else {
       await auth.signInWithEmailAndPassword(email, pass);
+      showToast('Logged in!');
     }
-  } catch(e){ msg.textContent=e.message; showToast(e.message); }
+  } catch(e){ if(msg) msg.textContent=e.message; showToast(e.message); }
+}
+function quickDemoLogin(){
+  const emailEl = document.getElementById('authEmail');
+  const passEl = document.getElementById('authPassword');
+  if(emailEl) emailEl.value='demo@eryx0.com';
+  if(passEl) passEl.value='demo123';
+  isRegisterMode = false;
+  switchAuthTab('login');
+  handleAuthSubmit();
 }
 
-function quickDemoLogin(){
-  document.getElementById('login-email').value="demo@eryx0.com";
-  document.getElementById('login-pass').value="demo123";
-  handleAuthSubmit('login');
-}
+
 
 async function handleLogout(){
   await auth.signOut();
