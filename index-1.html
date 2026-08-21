@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090b16">
+  <meta name="description" content="ERYX0 — social, reviews and intelligence in one modern platform.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>ERYX0 — Social Intelligence</title>
+  <style>
+    :root{
+      --bg:#070913;--panel:rgba(16,19,35,.72);--panel2:rgba(23,27,48,.72);
+      --text:#f7f8ff;--muted:#a9aec5;--line:rgba(255,255,255,.10);
+      --a:#8b7cff;--b:#4fd8ff;--ok:#6ee7b7;--radius:24px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(800px 500px at 10% -10%,rgba(139,124,255,.22),transparent 60%),
+        radial-gradient(700px 500px at 100% 10%,rgba(79,216,255,.14),transparent 60%),var(--bg);
+      min-height:100vh;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}.wrap{width:min(1120px,92%);margin:auto}
+    .nav{position:sticky;top:0;z-index:20;background:rgba(7,9,19,.72);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .navin{height:72px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.08em}
+    .mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-weight:1000;
+      background:linear-gradient(145deg,#a89cff,#5d53dc 55%,#28275f);box-shadow:0 12px 30px rgba(104,91,255,.35),inset 0 1px 1px #fff8}
+    .links{display:flex;gap:24px;color:var(--muted);font-size:14px}.links a:hover{color:#fff}
+    .hero{padding:90px 0 70px;display:grid;grid-template-columns:1.05fr .95fr;gap:55px;align-items:center}
+    .eyebrow{display:inline-flex;padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:#ffffff08;color:#cfd2e8;font-size:12px}
+    h1{font-size:clamp(48px,7vw,86px);line-height:.95;margin:18px 0;letter-spacing:-.065em}
+    .grad{background:linear-gradient(100deg,#fff 5%,#9b8dff 48%,#62dcff);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{font-size:18px;line-height:1.7;color:var(--muted);max-width:650px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .btn{border:1px solid var(--line);padding:13px 18px;border-radius:14px;font-weight:800;display:inline-flex;align-items:center;gap:8px}
+    .primary{background:linear-gradient(135deg,#897cff,#5e56e7);border-color:#9d93ff;color:#fff;box-shadow:0 12px 35px #675bed33}
+    .secondary{background:#ffffff08}.btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
+    .preview{position:relative;border:1px solid var(--line);border-radius:30px;padding:15px;background:linear-gradient(145deg,#ffffff0c,#ffffff03);
+      box-shadow:0 30px 80px #0008;transform:perspective(900px) rotateY(-5deg) rotateX(2deg)}
+    .screen{border-radius:21px;overflow:hidden;background:#0e1120;border:1px solid #ffffff12}
+    .top{height:48px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;padding:0 16px}
+    .dot{width:8px;height:8px;border-radius:50%;background:#ffffff33}.screenbody{padding:22px}
+    .fake-title{height:16px;width:48%;border-radius:8px;background:#ffffff18;margin-bottom:18px}
+    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .card{height:120px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#ffffff09,#ffffff03);padding:14px}
+    .bar{height:9px;border-radius:9px;background:#ffffff13;margin:7px 0}.bar.short{width:58%}.bar.blue{background:linear-gradient(90deg,#8b7cff,#4fd8ff);width:72%}
+    section{padding:72px 0}.sectionhead{max-width:720px;margin-bottom:30px}.kicker{color:#8f86ff;font-weight:900;font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+    h2{font-size:clamp(30px,5vw,48px);margin:10px 0;letter-spacing:-.04em}.sub{color:var(--muted);line-height:1.7}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .feature{padding:25px;border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);box-shadow:0 15px 50px #0002}
+    .icon{font-size:25px;margin-bottom:18px}.feature h3{margin:0 0 8px}.feature p{margin:0;color:var(--muted);line-height:1.65;font-size:14px}
+    .status{display:grid;grid-template-columns:1fr 1fr;gap:16px}.statusbox{padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
+    .pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#b9f7dc}.pulse{width:7px;height:7px;background:#6ee7b7;border-radius:50%;box-shadow:0 0 0 5px #6ee7b71a}
+    footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    @media(max-width:820px){.hero{grid-template-columns:1fr;padding-top:55px}.preview{transform:none}.grid{grid-template-columns:1fr 1fr}.links{display:none}}
+    @media(max-width:560px){.grid,.status{grid-template-columns:1fr}section{padding:55px 0}.hero{padding-bottom:30px}.preview{margin-top:10px}h1{font-size:54px}}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap navin">
+      <a class="brand" href="#"><span class="mark">E</span><span>ERYX0</span></a>
+      <nav class="links" aria-label="Main navigation">
+        <a href="#features">Features</a><a href="#platform">Platform</a><a href="#github">GitHub</a>
+      </nav>
+      <a class="btn primary" href="#github">Get Started</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div>
+        <span class="eyebrow">NEXT-GEN SOCIAL & REVIEW INTELLIGENCE</span>
+        <h1>Think.<br><span class="grad">Connect.</span><br>Discover.</h1>
+        <p class="lead">ERYX0 brings social interaction, reviews, messaging and intelligent insights into one clean, responsive experience.</p>
+        <div class="actions">
+          <a class="btn primary" href="#features">Explore ERYX0 →</a>
+          <a class="btn secondary" href="#platform">View platform</a>
+        </div>
+      </div>
+      <div class="preview" aria-label="ERYX0 application preview">
+        <div class="screen">
+          <div class="top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="screenbody">
+            <div class="fake-title"></div>
+            <div class="cards">
+              <div class="card"><div class="bar blue"></div><div class="bar"></div><div class="bar short"></div></div>
+              <div class="card"><div class="bar"></div><div class="bar blue"></div><div class="bar short"></div></div>
+              <div class="card"><div class="bar blue"></div><div class="bar short"></div><div class="bar"></div></div>
+              <div class="card"><div class="bar"></div><div class="bar short"></div><div class="bar blue"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="wrap">
+      <div class="sectionhead"><div class="kicker">Core experience</div><h2>Everything in one place.</h2><p class="sub">A GitHub-ready front page with a lightweight, dependency-free design that works on desktop and mobile.</p></div>
+      <div class="grid">
+        <article class="feature"><div class="icon">✦</div><h3>Social Feed</h3><p>Create, discover and interact with posts, likes and comments through a focused feed experience.</p></article>
+        <article class="feature"><div class="icon">◈</div><h3>Reviews</h3><p>Organize review content and surface useful signals for better decisions and discovery.</p></article>
+        <article class="feature"><div class="icon">⌁</div><h3>Smart Insights</h3><p>Designed to connect review intelligence and AI-assisted analysis with the social layer.</p></article>
+        <article class="feature"><div class="icon">◎</div><h3>Messaging</h3><p>Keep conversations, notifications and social connections inside the same platform.</p></article>
+        <article class="feature"><div class="icon">◆</div><h3>Profiles</h3><p>Public profiles, usernames, bios and user content give the platform a personal identity.</p></article>
+        <article class="feature"><div class="icon">⚡</div><h3>Responsive</h3><p>Mobile-first layout, smooth interactions and no external CSS framework required.</p></article>
+      </div>
+    </section>
+
+    <section id="platform" class="wrap">
+      <div class="sectionhead"><div class="kicker">Platform</div><h2>Frontend now. Backend when deployed.</h2><p class="sub">This page is intentionally static so GitHub Pages can serve it directly. API-powered features need the ERYX0 backend running separately.</p></div>
+      <div class="status">
+        <div class="statusbox"><span class="pill"><span class="pulse"></span> GitHub Pages ready</span><h3>Static frontend</h3><p class="sub">Upload this file as <strong>index.html</strong> to a GitHub repository and enable Pages.</p></div>
+        <div class="statusbox"><span class="pill"><span class="pulse"></span> API compatible</span><h3>Backend architecture</h3><p class="sub">The accompanying project can provide authentication, users, posts, reviews, messages, notifications and AI routes.</p></div>
+      </div>
+    </section>
+
+    <section id="github" class="wrap">
+      <div class="feature" style="text-align:center;padding:42px">
+        <div class="kicker">Ready to publish</div>
+        <h2>Make ERYX0 live on GitHub.</h2>
+        <p class="sub">Save this file as <strong>index.html</strong> in the root of your repository. Then enable GitHub Pages from the repository's Pages settings.</p>
+        <div class="actions" style="justify-content:center">
+          <a class="btn primary" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">Back to top ↑</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot"><span>© <span id="year"></span> ERYX0</span><span>Built as a lightweight GitHub-ready web app.</span></div>
+  </footer>
+  <script>document.getElementById("year").textContent=new Date().getFullYear();</script>
+</body>
+</html>
