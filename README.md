@@ -43,6 +43,7 @@ npm test
 | `JWT_EXPIRES_IN`  | `7d`                     | Token lifetime                       |
 | `DB_PATH`         | `./data/xeere.db`        | SQLite file location                 |
 | `CORS_ORIGIN`     | `*`                      | Comma-separated origins or `*`       |
+| `FIREBASE_PROJECT_ID` | _(unset)_            | Enables Firebase/Google ID-token auth |
 
 ## Authentication
 
@@ -62,6 +63,7 @@ Tokens are returned by `POST /api/auth/register` and `POST /api/auth/login`.
 | ------ | --------------------------- | ---- | ------------------------------------ |
 | POST   | `/api/auth/register`        | —    | Create account (`email`, `password`, `displayName`, `username`) |
 | POST   | `/api/auth/login`           | —    | Log in (`email`, `password`)         |
+| POST   | `/api/auth/firebase`        | —    | Sign in/up with a Firebase/Google ID token (`idToken`) |
 | GET    | `/api/auth/me`              | ✅   | Current user                         |
 | PUT    | `/api/auth/me`              | ✅   | Update profile (`displayName`, `username`, `bio`, `photoUrl`) |
 | POST   | `/api/auth/change-password` | ✅   | Change password                      |
@@ -175,12 +177,27 @@ test/
   api.test.js                # end-to-end API tests (node:test, isolated DB)
 ```
 
+## Firebase / Google sign-in
+
+The existing frontend signs users in with Firebase Auth (Google popup, etc.).
+To let those users authenticate against this API, send the Firebase ID token to:
+
+```
+POST /api/auth/firebase
+{ "idToken": "<firebase id token>" }
+```
+
+The server verifies the token against Google's public keys, upserts the user,
+and returns `{ token, user, isNew }` (a JWT you then use with every other
+endpoint).
+
+Only `FIREBASE_PROJECT_ID` is required — token verification doesn't need a
+service account. When Firebase isn't configured the endpoint returns `503`, so
+you can ship the code without Firebase and enable it later.
+
 ## Notes
 
 - The database file (`data/xeere.db`) is git-ignored and created automatically
   on first run.
-- Google / Firebase auth from the existing frontend isn't wired in yet; the
-  current API uses email + password. Firebase ID-token verification can be added
-  via `firebase-admin` without changing the client contract.
 - Set `JWT_SECRET` to a long random value and `CORS_ORIGIN` to your frontend
   origin before deploying.

@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { signToken } = require('../utils/jwt');
 const { requireAuth } = require('../middleware/auth');
+const { verifyIdToken } = require('../services/firebase');
 const { uuid, now, asyncHandler, toUser, httpError } = require('../utils/helpers');
 
 const router = express.Router();
@@ -70,6 +71,64 @@ router.post('/login', asyncHandler(async (req, res) => {
 
   const token = signToken(user);
   res.json({ token, user: toUser(user) });
+}));
+
+/**
+ * POST /api/auth/firebase — sign in / sign up with a Firebase (or Google) ID token.
+ * Body: { idToken: string }
+ * Verifies the token against Google, then upserts the user and issues a JWT.
+ */
+router.post('/firebase', asyncHandler(async (req, res) => {
+  const { idToken } = req.body || {};
+  if (!idToken || typeof idToken !== 'string') {
+    throw httpError(400, 'idToken is required');
+  }
+
+  let decoded;
+  try {
+    decoded = await verifyIdToken(idToken);
+  } catch (err) {
+    if (err.status === 503) throw err; // not configured — surface clearly
+    throw httpError(401, 'Invalid or expired Firebase token');
+  }
+
+  const uid = decoded.uid;
+  const email = decoded.email ? String(decoded.email).toLowerCase() : `fb-${uid}@firebase.local`;
+  const displayName = decoded.name || email.split('@')[0];
+  const photoUrl = decoded.picture || null;
+
+  // Find an existing user by Firebase UID or email.
+  let user = db.prepare('SELECT * FROM users WHERE firebase_uid = ?').get(uid)
+    || db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+  const isNew = !user;
+
+  if (user) {
+    db.prepare(`
+      UPDATE users
+      SET firebase_uid = ?, provider = 'firebase',
+          display_name = CASE WHEN display_name = '' THEN ? ELSE display_name END,
+          photo_url = COALESCE(?, photo_url)
+      WHERE id = ?
+    `).run(uid, displayName, photoUrl, user.id);
+  } else {
+    const id = uuid();
+    const baseUsername = (displayName || 'user').replace(/[^a-zA-Z0-9_]/g, '').toLowerCase() || 'user';
+    let username = baseUsername;
+    let n = 1;
+    while (db.prepare('SELECT 1 FROM users WHERE username = ?').get(username)) {
+      username = `${baseUsername}${n++}`;
+    }
+    db.prepare(`
+      INSERT INTO users (id, email, password_hash, firebase_uid, display_name, username, photo_url, provider, created_at)
+      VALUES (?, ?, NULL, ?, ?, ?, ?, 'firebase', ?)
+    `).run(id, email, uid, displayName, username, photoUrl, now());
+  }
+
+  user = db.prepare('SELECT * FROM users WHERE firebase_uid = ?').get(uid)
+    || db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+
+  const token = signToken(user);
+  res.json({ token, user: toUser(user), isNew });
 }));
 
 /** GET /api/auth/me — current authenticated user. */

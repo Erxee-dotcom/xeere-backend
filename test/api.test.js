@@ -273,6 +273,17 @@ test('ai: analyze-review endpoint', async () => {
   assert.equal(empty.status, 400);
 });
 
+test('auth: firebase endpoint requires an idToken', async () => {
+  const r = await req('POST', '/api/auth/firebase', { body: {} });
+  assert.equal(r.status, 400);
+});
+
+test('auth: firebase endpoint returns 503 when not configured', async () => {
+  // FIREBASE_PROJECT_ID is intentionally unset for this test environment.
+  const r = await req('POST', '/api/auth/firebase', { body: { idToken: 'fake-token' } });
+  assert.equal(r.status, 503);
+});
+
 test('unknown routes return 404', async () => {
   const r = await req('GET', '/api/does-not-exist');
   assert.equal(r.status, 404);

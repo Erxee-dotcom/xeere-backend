@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
   id            TEXT PRIMARY KEY,
   email         TEXT UNIQUE NOT NULL,
   password_hash TEXT,
+  firebase_uid  TEXT UNIQUE,
   display_name  TEXT NOT NULL DEFAULT '',
   username      TEXT UNIQUE,
   photo_url     TEXT,
@@ -139,5 +140,12 @@ CREATE TABLE IF NOT EXISTS reviews (
 );
 CREATE INDEX IF NOT EXISTS idx_reviews_author ON reviews(author_id);
 `);
+
+// Lightweight migrations for databases created before a column was added.
+const userCols = db.prepare('PRAGMA table_info(users)').all().map((c) => c.name);
+if (!userCols.includes('firebase_uid')) {
+  db.exec('ALTER TABLE users ADD COLUMN firebase_uid TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_firebase_uid ON users(firebase_uid)');
+}
 
 module.exports = db;
