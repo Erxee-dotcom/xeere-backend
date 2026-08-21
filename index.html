@@ -7,9 +7,210 @@
 <title>ERYX0 — By EryX Zee • Social & Intelligence</title>
 
 <!-- Firebase SDKs (Optional Background Sync) -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js">
+async function signInWithGoogle(){
+  const msg = document.getElementById("authMessage");
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    // save to eryx0_users if new
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email,
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.email}`,
+        verified: true,
+        provider: "google",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Google login success!");
+  }catch(e){
+    console.error(e);
+    document.getElementById("authMessage").textContent = e.message;
+    if(e.code === "auth/unauthorized-domain"){ document.getElementById("authMessage").textContent = "Add erxee-dotcom.github.io to Firebase Authorized domains"; }
+    if(e.code === "auth/popup-blocked"){ document.getElementById("authMessage").textContent = "Popup blocked! Allow popups for this site"; }
+    showToast(e.message);
+  }
+}
+
+
+async function signInWithFacebook(){
+  const msgEl = document.getElementById("authMessage");
+  // Check if FB provider enabled in Firebase
+  try{
+    const provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('email');
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email || "",
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.uid}`,
+        verified: true,
+        provider: "facebook",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Facebook login success!");
+  }catch(e){
+    console.error("FB Login Error:", e);
+    let txt = e.message;
+    if(e.code === "auth/operation-not-allowed" || e.code === "auth/configuration-not-found"){
+      txt = "Facebook Login abhi Firebase me enable nahi hai. Firebase Console > Authentication > Facebook ON karo aur App ID/Secret dalo. Net sahi hone par kar lena.";
+    }
+    if(e.code === "auth/unauthorized-domain"){
+      txt = "erxee-dotcom.github.io ko Firebase Authorized domains me add karo";
+    }
+    document.getElementById("authMessage").textContent = txt;
+    showToast(txt);
+  }
+}
+
+
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js">
+async function signInWithGoogle(){
+  const msg = document.getElementById("authMessage");
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    // save to eryx0_users if new
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email,
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.email}`,
+        verified: true,
+        provider: "google",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Google login success!");
+  }catch(e){
+    console.error(e);
+    document.getElementById("authMessage").textContent = e.message;
+    if(e.code === "auth/unauthorized-domain"){ document.getElementById("authMessage").textContent = "Add erxee-dotcom.github.io to Firebase Authorized domains"; }
+    if(e.code === "auth/popup-blocked"){ document.getElementById("authMessage").textContent = "Popup blocked! Allow popups for this site"; }
+    showToast(e.message);
+  }
+}
+
+
+async function signInWithFacebook(){
+  const msgEl = document.getElementById("authMessage");
+  // Check if FB provider enabled in Firebase
+  try{
+    const provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('email');
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email || "",
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.uid}`,
+        verified: true,
+        provider: "facebook",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Facebook login success!");
+  }catch(e){
+    console.error("FB Login Error:", e);
+    let txt = e.message;
+    if(e.code === "auth/operation-not-allowed" || e.code === "auth/configuration-not-found"){
+      txt = "Facebook Login abhi Firebase me enable nahi hai. Firebase Console > Authentication > Facebook ON karo aur App ID/Secret dalo. Net sahi hone par kar lena.";
+    }
+    if(e.code === "auth/unauthorized-domain"){
+      txt = "erxee-dotcom.github.io ko Firebase Authorized domains me add karo";
+    }
+    document.getElementById("authMessage").textContent = txt;
+    showToast(txt);
+  }
+}
+
+
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js">
+async function signInWithGoogle(){
+  const msg = document.getElementById("authMessage");
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    // save to eryx0_users if new
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email,
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.email}`,
+        verified: true,
+        provider: "google",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Google login success!");
+  }catch(e){
+    console.error(e);
+    document.getElementById("authMessage").textContent = e.message;
+    if(e.code === "auth/unauthorized-domain"){ document.getElementById("authMessage").textContent = "Add erxee-dotcom.github.io to Firebase Authorized domains"; }
+    if(e.code === "auth/popup-blocked"){ document.getElementById("authMessage").textContent = "Popup blocked! Allow popups for this site"; }
+    showToast(e.message);
+  }
+}
+
+
+async function signInWithFacebook(){
+  const msgEl = document.getElementById("authMessage");
+  // Check if FB provider enabled in Firebase
+  try{
+    const provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('email');
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email || "",
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.uid}`,
+        verified: true,
+        provider: "facebook",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Facebook login success!");
+  }catch(e){
+    console.error("FB Login Error:", e);
+    let txt = e.message;
+    if(e.code === "auth/operation-not-allowed" || e.code === "auth/configuration-not-found"){
+      txt = "Facebook Login abhi Firebase me enable nahi hai. Firebase Console > Authentication > Facebook ON karo aur App ID/Secret dalo. Net sahi hone par kar lena.";
+    }
+    if(e.code === "auth/unauthorized-domain"){
+      txt = "erxee-dotcom.github.io ko Firebase Authorized domains me add karo";
+    }
+    document.getElementById("authMessage").textContent = txt;
+    showToast(txt);
+  }
+}
+
+
+</script>
 
 <script>
   const firebaseConfig = {
@@ -32,27 +233,93 @@
 const CLOUDINARY_CLOUD_NAME = "ydbfc3qx"; // <-- apna cloud name yahan daal dena agar ye galat ho, dashboard se milega
 const CLOUDINARY_UPLOAD_PRESET = "qwddnter";
 
+
 async function uploadToCloudinary(file){
-  if(!file) return null;
-  const isVideo = file.type.startsWith("video");
-  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${isVideo ? "video" : "image"}/upload`;
+  const CLOUD_NAME = "ydbfc3qx";
+  const UPLOAD_PRESET = "qwddnter";
+  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-  formData.append("folder", "eryx0");
+  formData.append("upload_preset", UPLOAD_PRESET);
   try{
-    showToast("Uploading to Cloudinary...");
     const res = await fetch(url, { method: "POST", body: formData });
     const data = await res.json();
-    if(data.error) throw new Error(data.error.message);
-    console.log("Cloudinary uploaded:", data.secure_url);
-    return data.secure_url;
+    if(data.secure_url) return data.secure_url;
+    else { throw new Error(data.error?.message || "Upload failed"); }
   }catch(e){
     console.error("Cloudinary error", e);
-    showToast("Upload failed: " + e.message);
+    showToast("Photo upload failed: " + e.message);
     return null;
   }
 }
+
+
+
+async function signInWithGoogle(){
+  const msg = document.getElementById("authMessage");
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    // save to eryx0_users if new
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email,
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.email}`,
+        verified: true,
+        provider: "google",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Google login success!");
+  }catch(e){
+    console.error(e);
+    document.getElementById("authMessage").textContent = e.message;
+    if(e.code === "auth/unauthorized-domain"){ document.getElementById("authMessage").textContent = "Add erxee-dotcom.github.io to Firebase Authorized domains"; }
+    if(e.code === "auth/popup-blocked"){ document.getElementById("authMessage").textContent = "Popup blocked! Allow popups for this site"; }
+    showToast(e.message);
+  }
+}
+
+
+async function signInWithFacebook(){
+  const msgEl = document.getElementById("authMessage");
+  // Check if FB provider enabled in Firebase
+  try{
+    const provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('email');
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email || "",
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.uid}`,
+        verified: true,
+        provider: "facebook",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Facebook login success!");
+  }catch(e){
+    console.error("FB Login Error:", e);
+    let txt = e.message;
+    if(e.code === "auth/operation-not-allowed" || e.code === "auth/configuration-not-found"){
+      txt = "Facebook Login abhi Firebase me enable nahi hai. Firebase Console > Authentication > Facebook ON karo aur App ID/Secret dalo. Net sahi hone par kar lena.";
+    }
+    if(e.code === "auth/unauthorized-domain"){
+      txt = "erxee-dotcom.github.io ko Firebase Authorized domains me add karo";
+    }
+    document.getElementById("authMessage").textContent = txt;
+    showToast(txt);
+  }
+}
+
 
 </script>
 
@@ -534,6 +801,236 @@ body.dark #intro { background: #0b0f19; }
 #auth-screen .intro-brand span:nth-child(4) { animation-delay: 0.35s; }
 #auth-screen .intro-brand span:nth-child(5) { animation-delay: 0.45s; }
 
+
+
+/* ==========================================================================
+   PREMIUM DESIGN MERGE — Freelance Hub + Cute 3D Loading Runner
+   ========================================================================== */
+.freelance-hub-switch{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  height:40px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:5px 9px 5px 14px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--text);
+  box-shadow:0 6px 18px rgba(15,23,42,.08);
+  transition:all .22s ease;
+  z-index:3;
+}
+.freelance-hub-switch:hover{
+  transform:translateX(-50%) translateY(-1px);
+  border-color:var(--primary);
+  box-shadow:0 9px 24px var(--primary-glow);
+}
+.freelance-hub-label{
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:.15px;
+  white-space:nowrap;
+}
+.freelance-toggle{
+  width:35px;
+  height:21px;
+  padding:3px;
+  border-radius:999px;
+  background:#cbd5e1;
+  display:flex;
+  align-items:center;
+  transition:background .25s ease;
+}
+.freelance-toggle span{
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 5px rgba(0,0,0,.18);
+  transition:transform .25s cubic-bezier(.16,1,.3,1);
+}
+.freelance-hub-switch.active{
+  border-color:transparent;
+  background:linear-gradient(135deg,#111827,#000);
+  color:#fff;
+}
+.freelance-hub-switch.active .freelance-toggle{
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+}
+.freelance-hub-switch.active .freelance-toggle span{
+  transform:translateX(14px);
+}
+body.dark .freelance-hub-switch{
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+body.dark .freelance-toggle{background:#374151}
+
+/* Keep the two-level navigation feel from the design file on small screens. */
+@media (max-width:900px){
+  .freelance-hub-switch{height:38px;padding-left:11px;padding-right:8px}
+  .freelance-hub-label{font-size:11px}
+}
+@media (max-width:600px){
+  .topbar{padding:0 10px}
+  .freelance-hub-switch{
+    height:34px;
+    gap:6px;
+    padding:4px 7px 4px 10px;
+  }
+  .freelance-hub-label{font-size:10px}
+  .freelance-toggle{width:31px;height:19px}
+  .freelance-toggle span{width:13px;height:13px}
+  .freelance-hub-switch.active .freelance-toggle span{transform:translateX(12px)}
+}
+
+/* Cute, lightweight CSS-only 3D cartoon runner — no external image required. */
+.intro-runner{
+  position:relative;
+  width:112px;
+  height:92px;
+  margin-top:22px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.runner-shadow{
+  position:absolute;
+  left:15px;
+  right:15px;
+  bottom:7px;
+  height:12px;
+  border-radius:50%;
+  background:rgba(15,23,42,.14);
+  filter:blur(5px);
+  animation:runnerShadow .42s ease-in-out infinite alternate;
+}
+.runner-3d{
+  position:relative;
+  width:72px;
+  height:78px;
+  transform:translateX(-4px);
+  animation:runnerBob .42s ease-in-out infinite alternate;
+  filter:drop-shadow(0 9px 8px rgba(15,23,42,.18));
+}
+.runner-head{
+  position:absolute;
+  left:18px;
+  top:1px;
+  width:39px;
+  height:35px;
+  border-radius:45% 48% 45% 48%;
+  background:linear-gradient(145deg,#fff 0%,#f4f7ff 48%,#cbd5e1 100%);
+  border:2px solid rgba(91,92,226,.25);
+  box-shadow:inset -5px -5px 9px rgba(99,102,241,.12), inset 4px 4px 8px #fff;
+  z-index:4;
+}
+.runner-ear{
+  position:absolute;
+  top:0;
+  width:12px;
+  height:16px;
+  border-radius:60% 60% 45% 45%;
+  background:linear-gradient(145deg,#fda4af,#fb7185);
+  z-index:3;
+  transform-origin:bottom center;
+}
+.runner-ear-left{left:16px;transform:rotate(-25deg)}
+.runner-ear-right{right:14px;transform:rotate(25deg)}
+.runner-eye{
+  position:absolute;
+  top:13px;
+  width:5px;
+  height:7px;
+  border-radius:50%;
+  background:#111827;
+  box-shadow:0 1px 0 #fff;
+}
+.runner-eye-left{left:9px}
+.runner-eye-right{right:9px}
+.runner-mouth{
+  position:absolute;
+  left:15px;
+  top:23px;
+  width:9px;
+  height:5px;
+  border-bottom:2px solid #475569;
+  border-radius:0 0 10px 10px;
+}
+.runner-cheek{
+  position:absolute;
+  top:22px;
+  width:7px;
+  height:4px;
+  border-radius:50%;
+  background:#fda4af;
+  opacity:.75;
+}
+.runner-cheek-left{left:3px}.runner-cheek-right{right:3px}
+.runner-body{
+  position:absolute;
+  left:20px;
+  top:32px;
+  width:35px;
+  height:32px;
+  border-radius:15px 15px 13px 13px;
+  background:linear-gradient(145deg,#7c83ff 0%,#5b5ce2 55%,#3b3eb7 100%);
+  border:2px solid rgba(255,255,255,.35);
+  box-shadow:inset 5px 4px 8px rgba(255,255,255,.3),inset -6px -6px 10px rgba(24,29,115,.3);
+  z-index:3;
+}
+.runner-arm,.runner-leg{
+  position:absolute;
+  border-radius:999px;
+  transform-origin:top center;
+  z-index:2;
+}
+.runner-arm{
+  top:36px;
+  width:10px;
+  height:27px;
+  background:linear-gradient(145deg,#a5b4fc,#5b5ce2);
+}
+.runner-arm-left{left:14px;transform:rotate(48deg);animation:armLeft .42s ease-in-out infinite alternate}
+.runner-arm-right{right:12px;transform:rotate(-48deg);animation:armRight .42s ease-in-out infinite alternate}
+.runner-leg{
+  top:58px;
+  width:11px;
+  height:23px;
+  background:linear-gradient(145deg,#6366f1,#3730a3);
+}
+.runner-leg-left{left:23px;transform:rotate(30deg);animation:legLeft .42s ease-in-out infinite alternate}
+.runner-leg-right{right:22px;transform:rotate(-32deg);animation:legRight .42s ease-in-out infinite alternate}
+.runner-leg-left:after,.runner-leg-right:after{
+  content:'';
+  position:absolute;
+  bottom:-3px;
+  width:18px;
+  height:8px;
+  border-radius:999px;
+  background:linear-gradient(145deg,#fff,#cbd5e1);
+  box-shadow:0 2px 4px rgba(15,23,42,.18);
+}
+.runner-leg-left:after{left:-5px}.runner-leg-right:after{right:-5px}
+@keyframes runnerBob{from{transform:translate(-4px,1px) rotate(-2deg)}to{transform:translate(3px,-3px) rotate(2deg)}}
+@keyframes runnerShadow{from{transform:scaleX(1)}to{transform:scaleX(.72);opacity:.08}}
+@keyframes armLeft{from{transform:rotate(62deg)}to{transform:rotate(12deg)}}
+@keyframes armRight{from{transform:rotate(-62deg)}to{transform:rotate(-12deg)}}
+@keyframes legLeft{from{transform:rotate(48deg)}to{transform:rotate(-12deg)}}
+@keyframes legRight{from{transform:rotate(-48deg)}to{transform:rotate(12deg)}}
+@media (prefers-reduced-motion:reduce){
+  .runner-3d,.runner-shadow,.runner-arm,.runner-leg{animation:none!important}
+}
+
+/* Restore the design's lower navigation on phones, while keeping the desktop
+   application uncluttered. */
+@media (max-width:768px){
+  .mobile-nav{display:flex!important}
+  body{padding-bottom:76px!important}
+}
+
 </style>
 </head>
 <body>
@@ -545,7 +1042,25 @@ body.dark #intro { background: #0b0f19; }
   </div>
   <div class="intro-byline">By EryX Zee</div>
   <div class="intro-tagline">Social • Marketplace • Intelligence</div>
-  <div class="intro-spinner"></div>
+  <div class="intro-runner" aria-label="Loading">
+    <div class="runner-shadow"></div>
+    <div class="runner-3d">
+      <div class="runner-ear runner-ear-left"></div>
+      <div class="runner-ear runner-ear-right"></div>
+      <div class="runner-head">
+        <div class="runner-eye runner-eye-left"></div>
+        <div class="runner-eye runner-eye-right"></div>
+        <div class="runner-mouth"></div>
+        <div class="runner-cheek runner-cheek-left"></div>
+        <div class="runner-cheek runner-cheek-right"></div>
+      </div>
+      <div class="runner-body"></div>
+      <div class="runner-arm runner-arm-left"></div>
+      <div class="runner-arm runner-arm-right"></div>
+      <div class="runner-leg runner-leg-left"></div>
+      <div class="runner-leg runner-leg-right"></div>
+    </div>
+  </div>
 </div>
 
 <!-- AUTH SCREEN -->
@@ -581,7 +1096,20 @@ body.dark #intro { background: #0b0f19; }
 
       <div class="auth-divider"><span>OR</span></div>
 
-      <button class="btn btn-secondary btn-block" onclick="quickDemoLogin()" style="border-color:var(--primary); color:var(--primary); font-weight:800;">⚡ 1-Click Instant Demo Login</button>
+      
+    <div style="display:flex; align-items:center; gap:12px; margin:18px 0;">
+      <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+      <span style="font-size:11px; color:#9ca3af; font-weight:800; letter-spacing:1px;">OR CONTINUE WITH</span>
+      <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    </div>
+    <button style="width:100%; background:#ffffff; border:1.5px solid #dadce0; color:#3c4043; border-radius:14px; padding:13px; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:800; font-size:14px; cursor:pointer;" onclick="signInWithGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;"> Log in with Google
+    </button>
+    <button style="width:100%; background:#1877F2; color:#fff; border:none; border-radius:14px; padding:13px; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:800; font-size:14px; cursor:pointer; margin-top:10px;" onclick="signInWithFacebook()">
+      <svg style="width:20px;height:20px;fill:white" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      Log in with Facebook
+    </button>
+
       <div id="authMessage" style="margin-top: 12px; font-size: 13px; text-align: center;"></div>
     </div>
   </div>
@@ -601,6 +1129,13 @@ body.dark #intro { background: #0b0f19; }
           <span class="brand-byline">By EryX Zee</span>
         </div>
       </div>
+
+      <!-- CENTER FREELANCE HUB SWITCH -->
+      <button class="freelance-hub-switch" id="freelanceHubSwitch" onclick="toggleFreelanceHub()" aria-pressed="false" title="Switch to Freelance Hub">
+        <span class="freelance-hub-label">Freelance Hub</span>
+        <span class="freelance-toggle" aria-hidden="true"><span></span></span>
+      </button>
+
       <div class="search-box">
         <svg viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/></svg>
         <input type="text" id="globalSearchInput" placeholder="Search Eryx0..." oninput="handleGlobalSearch(this.value)">
@@ -965,28 +1500,7 @@ body.dark #intro { background: #0b0f19; }
   </div>
 
   <!-- MOBILE BOTTOM NAVIGATION -->
-  <nav class="mobile-nav">
-    <div class="mobile-nav-item active" data-page="home" onclick="navigateTo('home')">
-      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      <span>Feed</span>
-    </div>
-    <div class="mobile-nav-item" data-page="reels" onclick="navigateTo('reels')">
-      <svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4zM8 17v-6l5 3-5 3z"/></svg>
-      <span>Reels</span>
-    </div>
-    <div class="mobile-nav-item" data-page="messages" onclick="navigateTo('messages')">
-      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-      <span>Chat</span>
-    </div>
-    <div class="mobile-nav-item" data-page="alerts" onclick="navigateTo('alerts')">
-      <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-      <span>Alerts</span>
-    </div>
-    <div class="mobile-nav-item" data-page="profile" onclick="navigateTo('profile')">
-      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-      <span>Profile</span>
-    </div>
-  </nav>
+  
 
 </div>
 
@@ -1126,7 +1640,7 @@ let postsData = [];
 const REACTION_TYPES = {
   like: { emoji: "👍", name: "Like", class: "reacted-like" },
   love: { emoji: "❤️", name: "Love", class: "reacted-love" },
-  vibe: { emoji: "⚡", name: "Vibe", class: "reacted-vibe" },
+  vibe: { emoji: "", name: "Vibe", class: "reacted-vibe" },
   haha: { emoji: "😆", name: "Haha", class: "reacted-haha" },
   wow: { emoji: "😮", name: "Wow", class: "reacted-wow" },
   care: { emoji: "🥰", name: "Care", class: "reacted-care" },
@@ -1227,9 +1741,32 @@ function updateUserUI(){
   if(topImg){ topImg.src = currentUser.avatar; topImg.style.display='block'; document.getElementById("topAvatarLetter").style.display='none'; }
 }
 
+// FREELANCE HUB SWITCH
+function toggleFreelanceHub(){
+  const btn=document.getElementById("freelanceHubSwitch");
+  if(!btn) return;
+  const active=btn.classList.toggle("active");
+  btn.setAttribute("aria-pressed", String(active));
+  btn.title=active ? "Return to Social Feed" : "Open Freelance Hub";
+  if(typeof navigateTo==="function"){
+    navigateTo(active ? "marketplace" : "home");
+  }
+  if(typeof showToast==="function"){
+    showToast(active ? "Freelance Hub • Marketplace & Gigs" : "Social Feed");
+  }
+}
+function syncFreelanceHub(pageId){
+  const btn=document.getElementById("freelanceHubSwitch");
+  if(!btn) return;
+  const active=["marketplace","escrow-orders","payouts","analyzer"].includes(pageId);
+  btn.classList.toggle("active",active);
+  btn.setAttribute("aria-pressed",String(active));
+}
+
 // NAV + DARK
 function navigateTo(pageId){
   activePage = pageId;
+  if(typeof syncFreelanceHub==="function") syncFreelanceHub(pageId);
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   const t=document.getElementById("page-"+pageId); if(t) t.classList.add("active");
   document.querySelectorAll(".nav-tab-btn, .mobile-nav-item, .side-menu-item").forEach(btn=>{
@@ -1423,6 +1960,73 @@ function showToast(msg){ const toast=document.getElementById("toast"); toast.que
 
 // Intro hide
 window.addEventListener("DOMContentLoaded",()=>{ setTimeout(()=>{ document.getElementById("intro").classList.add("hide"); },1200); });
+
+
+async function signInWithGoogle(){
+  const msg = document.getElementById("authMessage");
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    // save to eryx0_users if new
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email,
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.email}`,
+        verified: true,
+        provider: "google",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Google login success!");
+  }catch(e){
+    console.error(e);
+    document.getElementById("authMessage").textContent = e.message;
+    if(e.code === "auth/unauthorized-domain"){ document.getElementById("authMessage").textContent = "Add erxee-dotcom.github.io to Firebase Authorized domains"; }
+    if(e.code === "auth/popup-blocked"){ document.getElementById("authMessage").textContent = "Popup blocked! Allow popups for this site"; }
+    showToast(e.message);
+  }
+}
+
+
+async function signInWithFacebook(){
+  const msgEl = document.getElementById("authMessage");
+  // Check if FB provider enabled in Firebase
+  try{
+    const provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('email');
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    const doc = await db.collection("eryx0_users").doc(user.uid).get();
+    if(!doc.exists){
+      await db.collection("eryx0_users").doc(user.uid).set({
+        id: user.uid,
+        name: user.displayName || "EryX User",
+        email: user.email || "",
+        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.uid}`,
+        verified: true,
+        provider: "facebook",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    showToast("Facebook login success!");
+  }catch(e){
+    console.error("FB Login Error:", e);
+    let txt = e.message;
+    if(e.code === "auth/operation-not-allowed" || e.code === "auth/configuration-not-found"){
+      txt = "Facebook Login abhi Firebase me enable nahi hai. Firebase Console > Authentication > Facebook ON karo aur App ID/Secret dalo. Net sahi hone par kar lena.";
+    }
+    if(e.code === "auth/unauthorized-domain"){
+      txt = "erxee-dotcom.github.io ko Firebase Authorized domains me add karo";
+    }
+    document.getElementById("authMessage").textContent = txt;
+    showToast(txt);
+  }
+}
+
 
 </script>
 </body>
