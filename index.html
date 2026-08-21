@@ -7,210 +7,9 @@
 <title>ERYX0 — By EryX Zee • Social & Intelligence</title>
 
 <!-- Firebase SDKs (Optional Background Sync) -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js">
-async function signInWithGoogle(){
-  const msg = document.getElementById("authMessage");
-  try{
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const result = await auth.signInWithPopup(provider);
-    const user = result.user;
-    // save to eryx0_users if new
-    const doc = await db.collection("eryx0_users").doc(user.uid).get();
-    if(!doc.exists){
-      await db.collection("eryx0_users").doc(user.uid).set({
-        id: user.uid,
-        name: user.displayName || "EryX User",
-        email: user.email,
-        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.email}`,
-        verified: true,
-        provider: "google",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-    showToast("Google login success!");
-  }catch(e){
-    console.error(e);
-    document.getElementById("authMessage").textContent = e.message;
-    if(e.code === "auth/unauthorized-domain"){ document.getElementById("authMessage").textContent = "Add erxee-dotcom.github.io to Firebase Authorized domains"; }
-    if(e.code === "auth/popup-blocked"){ document.getElementById("authMessage").textContent = "Popup blocked! Allow popups for this site"; }
-    showToast(e.message);
-  }
-}
-
-
-async function signInWithFacebook(){
-  const msgEl = document.getElementById("authMessage");
-  // Check if FB provider enabled in Firebase
-  try{
-    const provider = new firebase.auth.FacebookAuthProvider();
-    provider.addScope('email');
-    const result = await auth.signInWithPopup(provider);
-    const user = result.user;
-    const doc = await db.collection("eryx0_users").doc(user.uid).get();
-    if(!doc.exists){
-      await db.collection("eryx0_users").doc(user.uid).set({
-        id: user.uid,
-        name: user.displayName || "EryX User",
-        email: user.email || "",
-        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.uid}`,
-        verified: true,
-        provider: "facebook",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-    showToast("Facebook login success!");
-  }catch(e){
-    console.error("FB Login Error:", e);
-    let txt = e.message;
-    if(e.code === "auth/operation-not-allowed" || e.code === "auth/configuration-not-found"){
-      txt = "Facebook Login abhi Firebase me enable nahi hai. Firebase Console > Authentication > Facebook ON karo aur App ID/Secret dalo. Net sahi hone par kar lena.";
-    }
-    if(e.code === "auth/unauthorized-domain"){
-      txt = "erxee-dotcom.github.io ko Firebase Authorized domains me add karo";
-    }
-    document.getElementById("authMessage").textContent = txt;
-    showToast(txt);
-  }
-}
-
-
-</script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js">
-async function signInWithGoogle(){
-  const msg = document.getElementById("authMessage");
-  try{
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const result = await auth.signInWithPopup(provider);
-    const user = result.user;
-    // save to eryx0_users if new
-    const doc = await db.collection("eryx0_users").doc(user.uid).get();
-    if(!doc.exists){
-      await db.collection("eryx0_users").doc(user.uid).set({
-        id: user.uid,
-        name: user.displayName || "EryX User",
-        email: user.email,
-        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.email}`,
-        verified: true,
-        provider: "google",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-    showToast("Google login success!");
-  }catch(e){
-    console.error(e);
-    document.getElementById("authMessage").textContent = e.message;
-    if(e.code === "auth/unauthorized-domain"){ document.getElementById("authMessage").textContent = "Add erxee-dotcom.github.io to Firebase Authorized domains"; }
-    if(e.code === "auth/popup-blocked"){ document.getElementById("authMessage").textContent = "Popup blocked! Allow popups for this site"; }
-    showToast(e.message);
-  }
-}
-
-
-async function signInWithFacebook(){
-  const msgEl = document.getElementById("authMessage");
-  // Check if FB provider enabled in Firebase
-  try{
-    const provider = new firebase.auth.FacebookAuthProvider();
-    provider.addScope('email');
-    const result = await auth.signInWithPopup(provider);
-    const user = result.user;
-    const doc = await db.collection("eryx0_users").doc(user.uid).get();
-    if(!doc.exists){
-      await db.collection("eryx0_users").doc(user.uid).set({
-        id: user.uid,
-        name: user.displayName || "EryX User",
-        email: user.email || "",
-        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.uid}`,
-        verified: true,
-        provider: "facebook",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-    showToast("Facebook login success!");
-  }catch(e){
-    console.error("FB Login Error:", e);
-    let txt = e.message;
-    if(e.code === "auth/operation-not-allowed" || e.code === "auth/configuration-not-found"){
-      txt = "Facebook Login abhi Firebase me enable nahi hai. Firebase Console > Authentication > Facebook ON karo aur App ID/Secret dalo. Net sahi hone par kar lena.";
-    }
-    if(e.code === "auth/unauthorized-domain"){
-      txt = "erxee-dotcom.github.io ko Firebase Authorized domains me add karo";
-    }
-    document.getElementById("authMessage").textContent = txt;
-    showToast(txt);
-  }
-}
-
-
-</script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js">
-async function signInWithGoogle(){
-  const msg = document.getElementById("authMessage");
-  try{
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const result = await auth.signInWithPopup(provider);
-    const user = result.user;
-    // save to eryx0_users if new
-    const doc = await db.collection("eryx0_users").doc(user.uid).get();
-    if(!doc.exists){
-      await db.collection("eryx0_users").doc(user.uid).set({
-        id: user.uid,
-        name: user.displayName || "EryX User",
-        email: user.email,
-        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.email}`,
-        verified: true,
-        provider: "google",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-    showToast("Google login success!");
-  }catch(e){
-    console.error(e);
-    document.getElementById("authMessage").textContent = e.message;
-    if(e.code === "auth/unauthorized-domain"){ document.getElementById("authMessage").textContent = "Add erxee-dotcom.github.io to Firebase Authorized domains"; }
-    if(e.code === "auth/popup-blocked"){ document.getElementById("authMessage").textContent = "Popup blocked! Allow popups for this site"; }
-    showToast(e.message);
-  }
-}
-
-
-async function signInWithFacebook(){
-  const msgEl = document.getElementById("authMessage");
-  // Check if FB provider enabled in Firebase
-  try{
-    const provider = new firebase.auth.FacebookAuthProvider();
-    provider.addScope('email');
-    const result = await auth.signInWithPopup(provider);
-    const user = result.user;
-    const doc = await db.collection("eryx0_users").doc(user.uid).get();
-    if(!doc.exists){
-      await db.collection("eryx0_users").doc(user.uid).set({
-        id: user.uid,
-        name: user.displayName || "EryX User",
-        email: user.email || "",
-        avatar: user.photoURL || `https://i.pravatar.cc/300?u=${user.uid}`,
-        verified: true,
-        provider: "facebook",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-    showToast("Facebook login success!");
-  }catch(e){
-    console.error("FB Login Error:", e);
-    let txt = e.message;
-    if(e.code === "auth/operation-not-allowed" || e.code === "auth/configuration-not-found"){
-      txt = "Facebook Login abhi Firebase me enable nahi hai. Firebase Console > Authentication > Facebook ON karo aur App ID/Secret dalo. Net sahi hone par kar lena.";
-    }
-    if(e.code === "auth/unauthorized-domain"){
-      txt = "erxee-dotcom.github.io ko Firebase Authorized domains me add karo";
-    }
-    document.getElementById("authMessage").textContent = txt;
-    showToast(txt);
-  }
-}
-
-
-</script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <script>
   const firebaseConfig = {
@@ -856,7 +655,7 @@ body.dark #intro { background: #0b0f19; }
         <input type="password" id="authPassword" placeholder="••••••••">
       </div>
 
-      <button class="btn btn-primary btn-block" id="authSubmitBtn" onclick="handleAuthSubmit()">Continue</button>
+      <div id="profileEditBtns" style="display:flex;gap:10px;"><button class="btn btn-primary btn-block" id="authSubmitBtn" onclick="handleAuthSubmit()">Continue</button>
 
       <div class="auth-divider"><span>OR</span></div>
 
@@ -1144,14 +943,13 @@ body.dark #intro { background: #0b0f19; }
         <div class="profile-cover-section" id="profileCoverBg">
           <button class="btn btn-sm btn-secondary" onclick="changeProfileCover()" style="position:absolute; bottom:14px; right:14px; background:rgba(0,0,0,0.6); color:#fff; border:none;">📷 Edit Cover</button>
         </div>
-        <div class="profile-header-card">
+        <div id="profileHeaderCard" class="profile-header-card">
           <div class="profile-avatar-row">
             <div class="avatar avatar-xl" id="myProfileAvatar" style="cursor:pointer;" onclick="changeProfilePhoto()">
               <span id="myProfileAvatarLetter">U</span>
             </div>
             <div style="display:flex; gap:8px;">
-              <button class="btn btn-primary" onclick="openEditProfileModal()">✏️ Edit Profile</button>
-              <button class="btn btn-secondary" onclick="openVerificationModal()">🛡️ Get Verified</button>
+              <button class="btn btn-primary" onclick="openEditProfileModal()">✏️ Edit Profile</button> <button class="btn btn-secondary" onclick="openVerificationModal()">🛡️ Get Verified</button></div><div id="profileOtherBtns" style="display:none;gap:10px;"><button class="btn btn-primary" onclick="showToast(\'Follow feature coming in backend\')">Follow</button><button class="btn btn-secondary" onclick="showToast(\'Message feature\')">Message</button></div>
             </div>
           </div>
           <div class="profile-name-title">
@@ -1406,11 +1204,7 @@ const REACTION_TYPES = {
   fire: { emoji: "🔥", name: "Fire", class: "reacted-fire" }
 };
 
-// Sample stories still dummy
-let storiesData = [
-  { id: "s1", author: "Sara Ahmed", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150", bg: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=600" },
-  { id: "s2", author: "Hamza Malik", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150", bg: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600" }
-];
+let storiesData = []; // REAL - Clean; // REAL - No dummy stories, loaded from Firestore eryx0_stories;
 
 // AUTH REAL
 let authMode = 'login';
@@ -1470,12 +1264,12 @@ auth.onAuthStateChanged(async (user)=>{
       email: user.email,
       avatar: user.photoURL || extra.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
       verified: extra.verified || false,
-      bio: extra.bio || "Founder & Creator of ERYX0"
+      bio: extra.bio || ""
     };
     document.getElementById("auth-screen").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
     updateUserUI();
-    initRealListeners();
+    initRealListeners(); initRealStoriesListener();;
     showToast("Welcome " + currentUser.name);
   } else {
     document.getElementById("auth-screen").classList.remove("hidden");
@@ -1517,7 +1311,17 @@ function toggleFreelanceHub(){
 let viewingProfileUserId=null;
 function hideGlobalSearch(){const el=document.getElementById('globalSearchResults');if(el)el.style.display='none';}
 async function handleGlobalSearch(value){const box=document.getElementById('globalSearchResults');if(!box)return;const q=(value||'').trim().toLowerCase();if(!q){box.style.display='none';box.innerHTML='';return;}try{const snap=await db.collection('eryx0_users').limit(50).get();const users=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>(u.name||'').toLowerCase().includes(q)||(u.username||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q));box.innerHTML=users.length?users.map(u=>`<div class="search-result-item" onclick="openUserProfile('${u.id}')"><img src="${u.avatar||''}"><div><div class="search-result-name">${u.name||'EryX User'} ${u.verified?'✓':''}</div><div class="search-result-email">${u.username?('@'+u.username):(u.email||'')}</div></div></div>`).join(''):`<div style="padding:14px;color:var(--muted);font-size:13px">No users found</div>`;box.style.display='block';}catch(e){console.error(e);box.innerHTML='<div style="padding:14px;color:var(--danger);font-size:13px">Search failed</div>';box.style.display='block';}}
-async function openUserProfile(userId){if(!userId)return;hideGlobalSearch();if(userId===currentUser.id){viewingProfileUserId=null;updateCurrentUserUI();navigateTo('profile');return;}try{const snap=await db.collection('eryx0_users').doc(userId).get();if(!snap.exists){showToast('Profile not found');return;}const u={id:snap.id,...snap.data()};viewingProfileUserId=userId;document.getElementById('myProfileName').innerText=u.name||'EryX User';document.getElementById('myProfileUsername').innerText=u.username?('@'+u.username):(u.email||'');document.getElementById('myProfileBio').innerText=u.bio||'Welcome to Eryx0!';document.getElementById('myProfileVerified').style.display=u.verified?'inline-flex':'none';const cover=document.getElementById('profileCoverBg');if(cover)cover.style.backgroundImage=`url('${u.cover||''}')`;const av=document.getElementById('myProfileAvatar');if(av)av.innerHTML=`<img src="${u.avatar||''}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;document.querySelectorAll('#page-profile .profile-header-card .btn').forEach(b=>b.style.display='none');const feed=document.getElementById('myProfilePostsFeed');feed.innerHTML='<div class="side-card">Loading posts...</div>';const ps=await db.collection('eryx0_posts').where('authorId','==',userId).limit(50).get();const arr=ps.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));feed.innerHTML=arr.length?arr.map(p=>`<div class="post"><div class="post-header"><div class="post-author-info"><div class="avatar"><img src="${p.authorAvatar||u.avatar||''}"></div><div class="post-author-meta"><div class="name">${p.author||u.name}</div><div class="post-timestamp-row"><span>${p.createdAt?.toDate?p.createdAt.toDate().toLocaleString():'Just now'}</span></div></div></div></div><div class="post-content-text">${p.content||''}</div></div>`).join(''):'<div class="side-card" style="text-align:center;color:var(--muted)">No posts yet.</div>';navigateTo('profile');}catch(e){console.error(e);showToast('Could not open profile: '+e.message);}}
+async function openUserProfile(userId){if(!userId)return;hideGlobalSearch();if(userId===currentUser.id){viewingProfileUserId=null;updateCurrentUserUI();navigateTo('profile');return;}try{const snap=await db.collection('eryx0_users').doc(userId).get();if(!snap.exists){showToast('Profile not found');return;}const u={id:snap.id,...snap.data()};viewingProfileUserId=userId;document.getElementById('myProfileName').innerText=u.name||'EryX User';document.getElementById('myProfileUsername').innerText=u.username?('@'+u.username):(u.email||'');document.getElementById('myProfileBio').innerText=u.bio||'';document.getElementById('myProfileVerified').style.display=u.verified?'inline-flex':'none';const cover=document.getElementById('profileCoverBg');if(cover)cover.style.backgroundImage=`url('${u.cover||''}')`;const av=document.getElementById('myProfileAvatar');if(av)av.innerHTML=`<img src="${u.avatar||''}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    const isOwnProfile = userId===currentUser.id;
+    document.getElementById('profileEditBtns').style.display = isOwnProfile ? 'flex' : 'none';
+    document.getElementById('profileOtherBtns').style.display = isOwnProfile ? 'none' : 'flex';
+    document.getElementById('myProfileBio').style.display = u.bio ? 'block' : 'none';
+    // Hide founder text completely if empty
+    if(!u.bio){
+      document.getElementById('myProfileBio').innerText='';
+      document.getElementById('myProfileBio').style.display='none';
+    }
+const feed=document.getElementById('myProfilePostsFeed');feed.innerHTML='<div class="side-card">Loading posts...</div>';const ps=await db.collection('eryx0_posts').where('authorId','==',userId).limit(50).get();const arr=ps.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));feed.innerHTML=arr.length?arr.map(p=>`<div class="post"><div class="post-header"><div class="post-author-info"><div class="avatar"><img src="${p.authorAvatar||u.avatar||''}"></div><div class="post-author-meta"><div class="name">${p.author||u.name}</div><div class="post-timestamp-row"><span>${p.createdAt?.toDate?p.createdAt.toDate().toLocaleString():'Just now'}</span></div></div></div></div><div class="post-content-text">${p.content||''}</div></div>`).join(''):'<div class="side-card" style="text-align:center;color:var(--muted)">No posts yet.</div>';navigateTo('profile');}catch(e){console.error(e);showToast('Could not open profile: '+e.message);}}
 
 // NAV + DARK
 function navigateTo(pageId){
@@ -1538,16 +1342,76 @@ if(localStorage.getItem("eryx0_dark")==="true") document.body.classList.add("dar
 function renderStoriesTray(){
   const container=document.getElementById("storiesTray");
   if(!container) return;
-  let html = `<div class="story-card create-story-card" onclick="triggerStoryUpload()"><div class="create-story-top"><img src="${currentUser?.avatar||''}"></div><div class="create-story-bottom"><div class="create-story-btn-icon">+</div><span>Create Story</span></div></div>`;
-  storiesData.forEach((s,idx)=>{ html+=`<div class="story-card" onclick="openStoryViewer(${idx})"><img src="${s.bg}" class="story-bg"><div class="story-overlay"><div class="story-avatar"><img src="${s.avatar}"></div><div class="story-name">${s.author}</div></div></div>`; });
+  let html = `<div class="story-card create-story-card" onclick="triggerStoryUpload()"><div class="create-story-top"><img src="${currentUser?.avatar||'https://i.pravatar.cc/300'}"></div><div class="create-story-bottom"><div class="create-story-btn-icon">+</div><span>Create Story</span></div></div>`;
+  if(storiesData.length===0){
+    html += `<div style="padding:16px;color:var(--muted);font-size:13px;display:flex;align-items:center;">No stories yet - Real stories from Firestore will appear here</div>`;
+  } else {
+    storiesData.forEach((s,idx)=>{ 
+      html+=`<div class="story-card" onclick="openStoryViewer(${idx})"><img src="${s.mediaUrl||s.bg}" class="story-bg"><div class="story-overlay"><div class="story-avatar"><img src="${s.avatar}"></div><div class="story-name">${s.authorName||s.author||'User'}</div></div></div>`; 
+    });
+  }
   container.innerHTML=html;
+}
+
+// REAL STORIES LISTENER - NO INDEX NEEDED VERSION
+async function initRealStoriesListener(){
+  if(!db || !currentUser) return;
+  // Simple query without orderBy - no composite index needed
+  db.collection("eryx0_stories").where("expiresAt", ">", new Date()).onSnapshot(snap=>{
+    let arr = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    // Sort client-side instead of server
+    arr.sort((a,b)=>{
+      const at = a.expiresAt?.toDate ? a.expiresAt.toDate() : new Date(a.expiresAt);
+      const bt = b.expiresAt?.toDate ? b.expiresAt.toDate() : new Date(b.expiresAt);
+      return bt - at;
+    });
+    storiesData = arr;
+    renderStoriesTray();
+  }, err=>{
+    console.log("Stories listener:", err);
+    // If even where fails, load all and filter client side
+    db.collection("eryx0_stories").limit(20).onSnapshot(snap2=>{
+      const now = new Date();
+      storiesData = snap2.docs.map(d=>({id:d.id, ...d.data()})).filter(s=>{
+        const exp = s.expiresAt?.toDate ? s.expiresAt.toDate() : new Date(s.expiresAt);
+        return exp > now;
+      });
+      renderStoriesTray();
+    });
+  });
 }
 let activeStoryIdx=0, storyProgressTimer=null;
 function openStoryViewer(idx){ activeStoryIdx=idx; document.getElementById("storyViewerModal").classList.add("active"); loadStoryIndex(idx); }
 function loadStoryIndex(idx){ const story=storiesData[idx]; if(!story) return closeStoryViewer(); document.getElementById("storyViewerAvatar").innerHTML=`<img src="${story.avatar}" style="width:100%;height:100%;object-fit:cover;">`; document.getElementById("storyViewerAuthor").innerText=story.author; document.getElementById("storyViewerContent").innerHTML=`<img src="${story.bg}">`; const progressBox=document.getElementById("storyProgressContainer"); progressBox.innerHTML=storiesData.map((_,i)=>`<div class="story-progress-segment"><div class="story-progress-fill" id="storyFill_${i}" style="width:${i<idx?'100%':'0%'}"></div></div>`).join(""); clearInterval(storyProgressTimer); let progress=0; const currentFill=document.getElementById(`storyFill_${idx}`); storyProgressTimer=setInterval(()=>{ progress+=2; if(currentFill) currentFill.style.width=progress+"%"; if(progress>=100){ clearInterval(storyProgressTimer); if(activeStoryIdx+1<storiesData.length) loadStoryIndex(activeStoryIdx+1); else closeStoryViewer(); } },100); }
 function closeStoryViewer(){ clearInterval(storyProgressTimer); document.getElementById("storyViewerModal").classList.remove("active"); }
 function handleStoryTap(e){ const rect=e.currentTarget.getBoundingClientRect(); const x=e.clientX-rect.left; if(x<rect.width/2){ if(activeStoryIdx>0) loadStoryIndex(activeStoryIdx-1); } else { if(activeStoryIdx+1<storiesData.length) loadStoryIndex(activeStoryIdx+1); else closeStoryViewer(); } }
-function triggerStoryUpload(){ showToast("Story upload coming - Firestore storage ready!"); }
+async function triggerStoryUpload(){
+  const input = document.createElement('input');
+  input.type='file';
+  input.accept='image/*,video/*';
+  input.onchange = async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    showToast("Uploading story...");
+    try{
+      const url = await uploadToCloudinary(file);
+      await db.collection("eryx0_stories").add({
+        authorId: currentUser.id,
+        authorName: currentUser.name,
+        avatar: currentUser.avatar,
+        mediaUrl: url,
+        mediaType: file.type.startsWith('video') ? 'video' : 'image',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        expiresAt: new Date(Date.now() + 24*60*60*1000), // 24h expiry REAL
+        views: [],
+        privacy: "public"
+      });
+      showToast("Story uploaded! 24h expiry");
+    }catch(err){ showToast("Story upload failed: "+err.message); }
+  };
+  input.click();
+}
+function old_triggerStoryUpload(){ showToast("Story upload coming - Firestore storage ready!"); }
 function sendStoryReaction(emoji){ showToast(`Sent ${emoji}`); }
 function sendStoryReply(){ const text=document.getElementById("storyReplyInput").value; if(!text) return; showToast("Reply sent!"); document.getElementById("storyReplyInput").value=""; }
 
@@ -1601,7 +1465,7 @@ async function publishNewPost(){
 }
 
 // REAL LISTENERS
-function initRealListeners(){
+function initRealListeners(); initRealStoriesListener();{
   renderStoriesTray();
   renderActiveFriends();
   renderFriendRequests();
@@ -1696,9 +1560,98 @@ async function changeProfilePhoto(){
 function changeProfileCover(){ showToast("Cover upload - Cloudinary ready, same function use hogi"); }
 
 function renderActiveFriends(){ const friends=[{name:"Ali Khan", avatar:"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"}, {name:"Ayesha Omer", avatar:"https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150"}]; const container=document.getElementById("activeFriendsList"); if(!container) return; container.innerHTML=friends.map(f=>`<div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="navigateTo('messages')"><div class="avatar online" style="width:34px;height:34px;"><img src="${f.avatar}"></div><span style="font-size:13px;font-weight:700;">${f.name}</span></div>`).join(""); }
-function renderFriendRequests(){ const container=document.getElementById("friendRequestsGrid"); if(!container) return; container.innerHTML=`<div class="side-card" style="text-align:center;"><div class="avatar avatar-lg" style="margin:0 auto 10px;"><img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150"></div><div style="font-weight:800;">Bilal Hassan</div><div style="font-size:12px;color:var(--muted);margin-bottom:12px;">4 mutual friends</div><div style="display:flex;gap:6px;"><button class="btn btn-primary btn-sm btn-block" onclick="showToast('Accepted')">Confirm</button><button class="btn btn-secondary btn-sm btn-block">Remove</button></div></div>`; }
-function renderMarketplaceGigs(){ const container=document.getElementById("marketGigsGrid"); if(!container) return; container.innerHTML=`<div class="side-card" style="padding:0;overflow:hidden;"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500" style="width:100%;height:140px;object-fit:cover;"><div style="padding:14px;"><div style="font-weight:800;">Full-Stack Web App</div><div style="color:var(--primary);font-weight:900;">Rs. 35,000</div><button class="btn btn-primary btn-sm btn-block" style="margin-top:10px;" onclick="showToast('Escrow Order!')">Order via Escrow</button></div></div>`; }
-function renderNotifications(){ const container=document.getElementById("notificationsList"); if(!container) return; container.innerHTML=`<div class="notif-item unread"><div class="notif-avatar-wrapper"><div class="avatar">S</div><div class="notif-icon-badge like">❤️</div></div><div class="notif-body"><b>Sara Ahmed</b> reacted to your post<div class="notif-time">10m ago</div></div></div>`; }
+function renderFriendRequests(){ 
+  const container=document.getElementById("friendRequestsGrid"); 
+  if(!container) return; 
+  container.innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);">Loading real users...</div>`;
+  if(!db) return;
+  db.collection("eryx0_users").limit(6).get().then(snap=>{
+    if(snap.empty){
+      container.innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);">No users found yet</div>`;
+      return;
+    }
+    container.innerHTML = snap.docs.filter(d=>d.id!==currentUser?.id).map(d=>{
+      const u=d.data();
+      return `<div class="side-card" style="text-align:center;"><div class="avatar avatar-lg" style="margin:0 auto 10px;cursor:pointer;" onclick="openUserProfile('${d.id}')"><img src="${u.avatar||''}"></div><div style="font-weight:800;cursor:pointer;" onclick="openUserProfile('${d.id}')">${u.name||'User'}</div><div style="font-size:12px;color:var(--muted);margin-bottom:12px;">@${(u.email||'').split('@')[0]}</div><div style="display:flex;gap:6px;"><button class="btn btn-primary btn-sm btn-block" onclick="openUserProfile('${d.id}')">View Profile</button><button class="btn btn-secondary btn-sm btn-block" onclick="startChatWith('${d.id}')">Message</button></div></div>`;
+    }).join('');
+  });
+}
+function startChatWith(userId){
+  showToast("Opening chat with "+userId);
+  navigateTo('messages');
+}
+function renderMarketplaceGigs(){ 
+  const container=document.getElementById("marketGigsGrid"); 
+  if(!container) return; 
+  container.innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);">Loading marketplace...</div>`;
+  if(!db){ container.innerHTML=`<div class="side-card" style="padding:20px;text-align:center;">No gigs yet - Backend will load real gigs from Firestore</div>`; return; }
+  db.collection("eryx0_gigs").limit(12).onSnapshot(snap=>{
+    if(snap.empty){
+      container.innerHTML=`<div class="side-card" style="padding:20px;text-align:center;color:var(--muted);"><div style="font-weight:700;">No gigs yet</div><div style="font-size:12px;margin-top:4px;">Be first to post a service!</div><button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="navigateTo('marketplace')">Post a Gig</button></div>`;
+      return;
+    }
+    container.innerHTML = snap.docs.map(d=>{
+      const g=d.data();
+      return `<div class="side-card" style="padding:0;overflow:hidden;"><img src="${g.mediaUrls?.[0]||'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500'}" style="width:100%;height:140px;object-fit:cover;"><div style="padding:14px;"><div style="font-weight:800;">${g.title||'Gig'}</div><div style="font-size:12px;color:var(--muted);">${g.category||''}</div><div style="color:var(--primary);font-weight:900;">Rs. ${g.price||0}</div><button class="btn btn-primary btn-sm btn-block" style="margin-top:10px;" onclick="showToast('Order via Escrow - Backend will verify payment')">Order via Escrow</button></div></div>`;
+    }).join('');
+  });
+}
+
+
+function renderNotifications(){ 
+  const container=document.getElementById("notificationsList"); 
+  if(!container) return; 
+  container.innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);"><div style="font-size:32px;">🔔</div><div style="margin-top:8px;font-weight:600;">Loading notifications...</div></div>`;
+  if(db && currentUser){
+    // INDEX-FREE QUERY - no orderBy, so no composite index needed
+    db.collection("eryx0_notifications").where("toUserId","==",currentUser.id).onSnapshot(snap=>{
+      if(snap.empty){
+        container.innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);"><div style="font-size:32px;">🔔</div><div style="margin-top:8px;font-weight:600;">No notifications yet</div><div style="font-size:12px;">When someone likes/comments on your post, you'll see it here</div></div>`;
+        const b = document.getElementById("notifBadge");
+        if(b) b.style.display="none";
+        return;
+      }
+      let docs = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      docs.sort((a,b)=>{
+        const at = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
+        const bt = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+        return bt - at;
+      });
+      docs = docs.slice(0,20);
+      let unread = 0;
+      container.innerHTML = docs.map(n=>{
+        if(!n.read) unread++;
+        return `<div class="notif-item ${n.read?'':'unread'}" onclick="markNotifRead('${n.id}')"><div class="notif-avatar-wrapper"><div class="avatar"><img src="${n.fromAvatar||''}" style="width:100%;height:100%;object-fit:cover"></div><div class="notif-icon-badge ${n.type}">${n.type==='like'?'❤️':n.type==='comment'?'💬':'🔔'}</div></div><div class="notif-body"><b>${n.fromName||'Someone'}</b> ${n.text||'reacted to your post'}<div class="notif-time">${n.createdAt?.toDate? n.createdAt.toDate().toLocaleString() : 'Just now'}</div></div></div>`;
+      }).join('');
+      const badge = document.getElementById("notifBadge");
+      if(badge){
+        if(unread>0){ badge.innerText=unread; badge.style.display="flex"; }
+        else badge.style.display="none";
+      }
+    }, err=>{
+      console.log("Notif error", err);
+      container.innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);">Error loading notifications</div>`;
+    });
+  } else {
+    container.innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted);"><div style="font-size:32px;">🔔</div><div style="font-weight:600;">No notifications yet</div></div>`;
+  }
+}
+function markNotifRead(id){
+  if(db) db.collection("eryx0_notifications").doc(id).update({read:true});
+}
+function createNotification(toUserId, data){
+  if(!db || !currentUser || toUserId===currentUser.id) return;
+  db.collection("eryx0_notifications").add({
+    toUserId,
+    fromUserId: currentUser.id,
+    fromName: currentUser.name,
+    fromAvatar: currentUser.avatar,
+    ...data,
+    read:false,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+}
+
 function renderChatList(){ const container=document.getElementById("messengerChatList"); if(!container) return; container.innerHTML=`<div class="chat-user-item active"><div class="avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"></div><div><div class="chat-user-name">Global Chat</div><div class="chat-user-preview">Real-time Firebase chat</div></div></div>`; }
 function openChat(name,avatar){ document.getElementById("activeChatName").innerText=name; }
 async function sendChatMessage(){
