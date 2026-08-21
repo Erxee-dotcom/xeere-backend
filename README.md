@@ -21,6 +21,9 @@ npm run seed           # create demo users + sample data
 npm start              # http://localhost:4000
 # or, for auto-reload during development:
 npm run dev
+
+# run the test suite (uses an isolated temp database)
+npm test
 ```
 
 ### Demo accounts (after `npm run seed`)
@@ -157,6 +160,7 @@ changing the API contract.
 ## Project layout
 
 ```
+```
 src/
   server.js                  # entrypoint + graceful shutdown
   app.js                     # Express app + route mounting
@@ -167,6 +171,8 @@ src/
   services/reviewAnalyzer.js # AI review authenticity engine
   routes/                    # one file per resource
   utils/                     # jwt, helpers
+test/
+  api.test.js                # end-to-end API tests (node:test, isolated DB)
 ```
 
 ## Notes
