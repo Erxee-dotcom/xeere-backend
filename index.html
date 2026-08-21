@@ -425,6 +425,17 @@ body.dark #intro { background: #0b0f19; }
 .intro-tagline { margin-top: 10px; font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; }
 .intro-spinner { width: 34px; height: 34px; border: 3px solid rgba(91,92,226,0.15); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-top: 24px; }
 @keyframes spin { to { transform: rotate(360deg); } }
+/* Cute 3D runner loading character */
+.runner-loader{position:relative;width:86px;height:70px;margin-top:20px;filter:drop-shadow(0 8px 10px rgba(91,92,226,.16));}
+.runner-shadow{position:absolute;left:14px;bottom:2px;width:58px;height:10px;border-radius:50%;background:rgba(20,25,40,.16);animation:shadowRun .42s ease-in-out infinite alternate;}
+.runner-body{position:absolute;left:24px;top:20px;width:38px;height:34px;border-radius:18px 18px 14px 14px;background:linear-gradient(145deg,#fff,#dfe5ff);box-shadow:inset -4px -5px 0 rgba(91,92,226,.12),0 4px 10px rgba(91,92,226,.18);animation:bodyRun .42s ease-in-out infinite alternate;}
+.runner-head{position:absolute;left:4px;top:-15px;width:40px;height:34px;border-radius:50% 50% 46% 46%;background:linear-gradient(145deg,#fff,#e8edff);box-shadow:inset -4px -4px 0 rgba(91,92,226,.12),0 3px 8px rgba(91,92,226,.15);}
+.runner-head i{position:absolute;top:13px;width:5px;height:7px;border-radius:50%;background:#27304d;} .runner-head i:first-child{left:11px}.runner-head i:nth-child(2){right:11px}.runner-head b{position:absolute;left:16px;top:22px;width:9px;height:4px;border-bottom:2px solid #ec6b8a;border-radius:0 0 10px 10px;}
+.runner-ear{position:absolute;top:-20px;width:12px;height:18px;border-radius:8px 8px 3px 3px;background:#dfe5ff;z-index:-1;}.runner-ear.left{left:5px;transform:rotate(-18deg)}.runner-ear.right{right:5px;transform:rotate(18deg)}
+.runner-arm{position:absolute;top:8px;width:8px;height:24px;border-radius:8px;background:#dfe5ff;transform-origin:top center;}.arm-a{left:-5px;animation:armA .42s ease-in-out infinite alternate}.arm-b{right:-5px;animation:armB .42s ease-in-out infinite alternate}
+.runner-leg{position:absolute;bottom:-14px;width:9px;height:22px;border-radius:8px;background:#b9c3ee;transform-origin:top center;}.leg-a{left:7px;animation:legA .42s ease-in-out infinite alternate}.leg-b{right:7px;animation:legB .42s ease-in-out infinite alternate}
+@keyframes bodyRun{from{transform:translateY(1px)}to{transform:translateY(-4px)}} @keyframes armA{from{transform:rotate(35deg)}to{transform:rotate(-35deg)}} @keyframes armB{from{transform:rotate(-35deg)}to{transform:rotate(35deg)}} @keyframes legA{from{transform:rotate(35deg)}to{transform:rotate(-28deg)}} @keyframes legB{from{transform:rotate(-28deg)}to{transform:rotate(35deg)}} @keyframes shadowRun{from{transform:scaleX(.85);opacity:.12}to{transform:scaleX(1);opacity:.2}}
+
 
 /* Auth Screen */
 #auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(circle at 10% 20%, rgba(91, 92, 226, 0.15), transparent 45%), radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15), transparent 45%), var(--bg); }
@@ -471,13 +482,6 @@ body.dark #intro { background: #0b0f19; }
 .icon-circle-btn:hover { background: var(--surface-hover); transform: translateY(-1px); }
 .badge-count { position: absolute; top: -3px; right: -3px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 10px; background: var(--danger); color: #fff; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid var(--surface); animation: pulseBadge 1.5s infinite; }
 @keyframes pulseBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
-
-/* Mobile Bottom Navigation */
-.mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: var(--surface); border-top: 1px solid var(--border); z-index: 1000; justify-content: space-around; align-items: center; box-shadow: 0 -4px 16px rgba(0,0,0,0.06); }
-@media (max-width: 768px) { .mobile-nav { display: flex; } body { padding-bottom: 66px; } }
-.mobile-nav-item { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--muted); font-size: 10px; font-weight: 700; position: relative; cursor: pointer; }
-.mobile-nav-item svg { width: 22px; height: 22px; fill: currentColor; }
-.mobile-nav-item.active { color: var(--primary); }
 
 /* Main Layout Container */
 .main-container { max-width: 1280px; margin: 0 auto; padding: 20px 16px; display: grid; grid-template-columns: 270px 1fr 310px; gap: 24px; }
@@ -779,13 +783,15 @@ body.dark #intro { background: #0b0f19; }
   .post-action-btn { font-size: 12px; padding: 6px 4px; }
 }
 
-/* FEED ONLY MODE - By User Request */
+/* Clean single-column app mode */
 .topbar-center { display: none !important; }
 .main-container { grid-template-columns: 1fr !important; max-width: 680px !important; }
 .sidebar-left, .sidebar-right { display: none !important; }
 .mobile-nav { display: none !important; }
 .topbar { justify-content: space-between; }
 .hamburger-btn { display: grid !important; }
+.drawer-hub-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 12px;margin-bottom:16px;border:1px solid var(--border);border-radius:14px;background:var(--surface2);box-shadow:var(--shadow-sm)}
+.drawer-hub-title{font-weight:900;font-size:14px}.drawer-hub-sub{font-size:11px;color:var(--muted);margin-top:2px;font-weight:700}.hub-switch{width:50px;height:28px;border-radius:999px;background:#cbd5e1;padding:3px;transition:.25s;position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.12)}.hub-switch span{display:block;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:.25s}.hub-switch.active{background:var(--primary-gradient)}.hub-switch.active span{transform:translateX(22px)}
 .side-drawer { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: var(--surface); border-right: 1px solid var(--border); z-index: 9999; transition: left 0.3s ease; padding: 20px; overflow-y: auto; box-shadow: var(--shadow-lg); }
 .side-drawer.open { left: 0; }
 .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; display: none; }
@@ -801,236 +807,6 @@ body.dark #intro { background: #0b0f19; }
 #auth-screen .intro-brand span:nth-child(4) { animation-delay: 0.35s; }
 #auth-screen .intro-brand span:nth-child(5) { animation-delay: 0.45s; }
 
-
-
-/* ==========================================================================
-   PREMIUM DESIGN MERGE — Freelance Hub + Cute 3D Loading Runner
-   ========================================================================== */
-.freelance-hub-switch{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  height:40px;
-  display:flex;
-  align-items:center;
-  gap:9px;
-  padding:5px 9px 5px 14px;
-  border:1px solid var(--border);
-  border-radius:999px;
-  background:var(--surface);
-  color:var(--text);
-  box-shadow:0 6px 18px rgba(15,23,42,.08);
-  transition:all .22s ease;
-  z-index:3;
-}
-.freelance-hub-switch:hover{
-  transform:translateX(-50%) translateY(-1px);
-  border-color:var(--primary);
-  box-shadow:0 9px 24px var(--primary-glow);
-}
-.freelance-hub-label{
-  font-size:12px;
-  font-weight:850;
-  letter-spacing:.15px;
-  white-space:nowrap;
-}
-.freelance-toggle{
-  width:35px;
-  height:21px;
-  padding:3px;
-  border-radius:999px;
-  background:#cbd5e1;
-  display:flex;
-  align-items:center;
-  transition:background .25s ease;
-}
-.freelance-toggle span{
-  width:15px;
-  height:15px;
-  border-radius:50%;
-  background:#fff;
-  box-shadow:0 2px 5px rgba(0,0,0,.18);
-  transition:transform .25s cubic-bezier(.16,1,.3,1);
-}
-.freelance-hub-switch.active{
-  border-color:transparent;
-  background:linear-gradient(135deg,#111827,#000);
-  color:#fff;
-}
-.freelance-hub-switch.active .freelance-toggle{
-  background:linear-gradient(135deg,#7c3aed,#ec4899);
-}
-.freelance-hub-switch.active .freelance-toggle span{
-  transform:translateX(14px);
-}
-body.dark .freelance-hub-switch{
-  box-shadow:0 8px 24px rgba(0,0,0,.35);
-}
-body.dark .freelance-toggle{background:#374151}
-
-/* Keep the two-level navigation feel from the design file on small screens. */
-@media (max-width:900px){
-  .freelance-hub-switch{height:38px;padding-left:11px;padding-right:8px}
-  .freelance-hub-label{font-size:11px}
-}
-@media (max-width:600px){
-  .topbar{padding:0 10px}
-  .freelance-hub-switch{
-    height:34px;
-    gap:6px;
-    padding:4px 7px 4px 10px;
-  }
-  .freelance-hub-label{font-size:10px}
-  .freelance-toggle{width:31px;height:19px}
-  .freelance-toggle span{width:13px;height:13px}
-  .freelance-hub-switch.active .freelance-toggle span{transform:translateX(12px)}
-}
-
-/* Cute, lightweight CSS-only 3D cartoon runner — no external image required. */
-.intro-runner{
-  position:relative;
-  width:112px;
-  height:92px;
-  margin-top:22px;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-}
-.runner-shadow{
-  position:absolute;
-  left:15px;
-  right:15px;
-  bottom:7px;
-  height:12px;
-  border-radius:50%;
-  background:rgba(15,23,42,.14);
-  filter:blur(5px);
-  animation:runnerShadow .42s ease-in-out infinite alternate;
-}
-.runner-3d{
-  position:relative;
-  width:72px;
-  height:78px;
-  transform:translateX(-4px);
-  animation:runnerBob .42s ease-in-out infinite alternate;
-  filter:drop-shadow(0 9px 8px rgba(15,23,42,.18));
-}
-.runner-head{
-  position:absolute;
-  left:18px;
-  top:1px;
-  width:39px;
-  height:35px;
-  border-radius:45% 48% 45% 48%;
-  background:linear-gradient(145deg,#fff 0%,#f4f7ff 48%,#cbd5e1 100%);
-  border:2px solid rgba(91,92,226,.25);
-  box-shadow:inset -5px -5px 9px rgba(99,102,241,.12), inset 4px 4px 8px #fff;
-  z-index:4;
-}
-.runner-ear{
-  position:absolute;
-  top:0;
-  width:12px;
-  height:16px;
-  border-radius:60% 60% 45% 45%;
-  background:linear-gradient(145deg,#fda4af,#fb7185);
-  z-index:3;
-  transform-origin:bottom center;
-}
-.runner-ear-left{left:16px;transform:rotate(-25deg)}
-.runner-ear-right{right:14px;transform:rotate(25deg)}
-.runner-eye{
-  position:absolute;
-  top:13px;
-  width:5px;
-  height:7px;
-  border-radius:50%;
-  background:#111827;
-  box-shadow:0 1px 0 #fff;
-}
-.runner-eye-left{left:9px}
-.runner-eye-right{right:9px}
-.runner-mouth{
-  position:absolute;
-  left:15px;
-  top:23px;
-  width:9px;
-  height:5px;
-  border-bottom:2px solid #475569;
-  border-radius:0 0 10px 10px;
-}
-.runner-cheek{
-  position:absolute;
-  top:22px;
-  width:7px;
-  height:4px;
-  border-radius:50%;
-  background:#fda4af;
-  opacity:.75;
-}
-.runner-cheek-left{left:3px}.runner-cheek-right{right:3px}
-.runner-body{
-  position:absolute;
-  left:20px;
-  top:32px;
-  width:35px;
-  height:32px;
-  border-radius:15px 15px 13px 13px;
-  background:linear-gradient(145deg,#7c83ff 0%,#5b5ce2 55%,#3b3eb7 100%);
-  border:2px solid rgba(255,255,255,.35);
-  box-shadow:inset 5px 4px 8px rgba(255,255,255,.3),inset -6px -6px 10px rgba(24,29,115,.3);
-  z-index:3;
-}
-.runner-arm,.runner-leg{
-  position:absolute;
-  border-radius:999px;
-  transform-origin:top center;
-  z-index:2;
-}
-.runner-arm{
-  top:36px;
-  width:10px;
-  height:27px;
-  background:linear-gradient(145deg,#a5b4fc,#5b5ce2);
-}
-.runner-arm-left{left:14px;transform:rotate(48deg);animation:armLeft .42s ease-in-out infinite alternate}
-.runner-arm-right{right:12px;transform:rotate(-48deg);animation:armRight .42s ease-in-out infinite alternate}
-.runner-leg{
-  top:58px;
-  width:11px;
-  height:23px;
-  background:linear-gradient(145deg,#6366f1,#3730a3);
-}
-.runner-leg-left{left:23px;transform:rotate(30deg);animation:legLeft .42s ease-in-out infinite alternate}
-.runner-leg-right{right:22px;transform:rotate(-32deg);animation:legRight .42s ease-in-out infinite alternate}
-.runner-leg-left:after,.runner-leg-right:after{
-  content:'';
-  position:absolute;
-  bottom:-3px;
-  width:18px;
-  height:8px;
-  border-radius:999px;
-  background:linear-gradient(145deg,#fff,#cbd5e1);
-  box-shadow:0 2px 4px rgba(15,23,42,.18);
-}
-.runner-leg-left:after{left:-5px}.runner-leg-right:after{right:-5px}
-@keyframes runnerBob{from{transform:translate(-4px,1px) rotate(-2deg)}to{transform:translate(3px,-3px) rotate(2deg)}}
-@keyframes runnerShadow{from{transform:scaleX(1)}to{transform:scaleX(.72);opacity:.08}}
-@keyframes armLeft{from{transform:rotate(62deg)}to{transform:rotate(12deg)}}
-@keyframes armRight{from{transform:rotate(-62deg)}to{transform:rotate(-12deg)}}
-@keyframes legLeft{from{transform:rotate(48deg)}to{transform:rotate(-12deg)}}
-@keyframes legRight{from{transform:rotate(-48deg)}to{transform:rotate(12deg)}}
-@media (prefers-reduced-motion:reduce){
-  .runner-3d,.runner-shadow,.runner-arm,.runner-leg{animation:none!important}
-}
-
-/* Restore the design's lower navigation on phones, while keeping the desktop
-   application uncluttered. */
-@media (max-width:768px){
-  .mobile-nav{display:flex!important}
-  body{padding-bottom:76px!important}
-}
-
 </style>
 </head>
 <body>
@@ -1042,24 +818,9 @@ body.dark .freelance-toggle{background:#374151}
   </div>
   <div class="intro-byline">By EryX Zee</div>
   <div class="intro-tagline">Social • Marketplace • Intelligence</div>
-  <div class="intro-runner" aria-label="Loading">
+  <div class="runner-loader" aria-label="Loading">
     <div class="runner-shadow"></div>
-    <div class="runner-3d">
-      <div class="runner-ear runner-ear-left"></div>
-      <div class="runner-ear runner-ear-right"></div>
-      <div class="runner-head">
-        <div class="runner-eye runner-eye-left"></div>
-        <div class="runner-eye runner-eye-right"></div>
-        <div class="runner-mouth"></div>
-        <div class="runner-cheek runner-cheek-left"></div>
-        <div class="runner-cheek runner-cheek-right"></div>
-      </div>
-      <div class="runner-body"></div>
-      <div class="runner-arm runner-arm-left"></div>
-      <div class="runner-arm runner-arm-right"></div>
-      <div class="runner-leg runner-leg-left"></div>
-      <div class="runner-leg runner-leg-right"></div>
-    </div>
+    <div class="runner-body"><div class="runner-head"><i></i><i></i><b></b></div><div class="runner-ear left"></div><div class="runner-ear right"></div><div class="runner-arm arm-a"></div><div class="runner-arm arm-b"></div><div class="runner-leg leg-a"></div><div class="runner-leg leg-b"></div></div>
   </div>
 </div>
 
@@ -1084,12 +845,12 @@ body.dark .freelance-toggle{background:#374151}
 
       <div class="auth-group">
         <label>Email Address</label>
-        <input type="email" id="authEmail" placeholder="name@domain.com" value="user@eryx0.com">
+        <input type="email" id="authEmail" placeholder="name@domain.com">
       </div>
 
       <div class="auth-group">
         <label>Password</label>
-        <input type="password" id="authPassword" placeholder="••••••••" value="password123">
+        <input type="password" id="authPassword" placeholder="••••••••">
       </div>
 
       <button class="btn btn-primary btn-block" id="authSubmitBtn" onclick="handleAuthSubmit()">Continue</button>
@@ -1120,8 +881,8 @@ body.dark .freelance-toggle{background:#374151}
 
   <!-- TOPBAR HEADER (FRONT SOCIAL TABS ONLY) -->
   <header class="topbar">
-<button class="icon-circle-btn hamburger-btn" onclick="toggleDrawer()" style="display:grid; margin-right:10px;">☰</button>
     <div class="topbar-left">
+      <button class="icon-circle-btn hamburger-btn" onclick="toggleDrawer()" title="Menu">☰</button>
       <div class="logo-btn" onclick="navigateTo('home')">
         <div class="logo-icon">E</div>
         <div style="display: flex; flex-direction: column; line-height: 1.1;">
@@ -1129,13 +890,6 @@ body.dark .freelance-toggle{background:#374151}
           <span class="brand-byline">By EryX Zee</span>
         </div>
       </div>
-
-      <!-- CENTER FREELANCE HUB SWITCH -->
-      <button class="freelance-hub-switch" id="freelanceHubSwitch" onclick="toggleFreelanceHub()" aria-pressed="false" title="Switch to Freelance Hub">
-        <span class="freelance-hub-label">Freelance Hub</span>
-        <span class="freelance-toggle" aria-hidden="true"><span></span></span>
-      </button>
-
       <div class="search-box">
         <svg viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/></svg>
         <input type="text" id="globalSearchInput" placeholder="Search Eryx0..." oninput="handleGlobalSearch(this.value)">
@@ -1186,6 +940,10 @@ body.dark .freelance-toggle{background:#374151}
 
   <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
   <div class="side-drawer" id="sideDrawer">
+    <div class="drawer-hub-card">
+      <div><div class="drawer-hub-title">Freelance Hub</div><div class="drawer-hub-sub" id="hubModeLabel">Social Mode</div></div>
+      <button class="hub-switch" id="hubSwitch" type="button" onclick="toggleFreelanceHub()" aria-label="Toggle Freelance Hub"><span></span></button>
+    </div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
       <div style="display:flex; align-items:center; gap:10px;"><div class="logo-icon">E</div><span class="brand-name">eryx0</span></div>
       <button onclick="toggleDrawer()" style="background:var(--surface2); width:32px; height:32px; border-radius:50%;">✕</button>
@@ -1499,9 +1257,6 @@ body.dark .freelance-toggle{background:#374151}
 
   </div>
 
-  <!-- MOBILE BOTTOM NAVIGATION -->
-  
-
 </div>
 
 <!-- MODALS -->
@@ -1741,37 +1496,28 @@ function updateUserUI(){
   if(topImg){ topImg.src = currentUser.avatar; topImg.style.display='block'; document.getElementById("topAvatarLetter").style.display='none'; }
 }
 
-// FREELANCE HUB SWITCH
-function toggleFreelanceHub(){
-  const btn=document.getElementById("freelanceHubSwitch");
-  if(!btn) return;
-  const active=btn.classList.toggle("active");
-  btn.setAttribute("aria-pressed", String(active));
-  btn.title=active ? "Return to Social Feed" : "Open Freelance Hub";
-  if(typeof navigateTo==="function"){
-    navigateTo(active ? "marketplace" : "home");
-  }
-  if(typeof showToast==="function"){
-    showToast(active ? "Freelance Hub • Marketplace & Gigs" : "Social Feed");
-  }
+let freelanceHubMode = localStorage.getItem("eryx0_hub_mode") === "true";
+function syncFreelanceHubSwitch(){
+  const sw=document.getElementById("hubSwitch"), label=document.getElementById("hubModeLabel");
+  if(sw) sw.classList.toggle("active", freelanceHubMode);
+  if(label) label.innerText=freelanceHubMode ? "Freelance Mode" : "Social Mode";
 }
-function syncFreelanceHub(pageId){
-  const btn=document.getElementById("freelanceHubSwitch");
-  if(!btn) return;
-  const active=["marketplace","escrow-orders","payouts","analyzer"].includes(pageId);
-  btn.classList.toggle("active",active);
-  btn.setAttribute("aria-pressed",String(active));
+function toggleFreelanceHub(){
+  freelanceHubMode=!freelanceHubMode; localStorage.setItem("eryx0_hub_mode", freelanceHubMode); syncFreelanceHubSwitch();
+  showToast(freelanceHubMode ? "Freelance Hub ON" : "Social Mode ON");
+  if(freelanceHubMode) navigateTo("marketplace"); else navigateTo("home");
+  toggleDrawer();
 }
 
 // NAV + DARK
 function navigateTo(pageId){
   activePage = pageId;
-  if(typeof syncFreelanceHub==="function") syncFreelanceHub(pageId);
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   const t=document.getElementById("page-"+pageId); if(t) t.classList.add("active");
-  document.querySelectorAll(".nav-tab-btn, .mobile-nav-item, .side-menu-item").forEach(btn=>{
+  document.querySelectorAll(".nav-tab-btn, .side-menu-item").forEach(btn=>{
     btn.classList.toggle("active", btn.getAttribute("data-page")===pageId);
   });
+  if(["marketplace","escrow-orders","payouts"].includes(pageId)){ freelanceHubMode=true; localStorage.setItem("eryx0_hub_mode","true"); syncFreelanceHubSwitch(); }
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function toggleDarkMode(){ document.body.classList.toggle("dark"); localStorage.setItem("eryx0_dark", document.body.classList.contains("dark")); showToast("Theme toggled"); }
@@ -1817,9 +1563,7 @@ async function publishNewPost(){
       // Real Cloudinary upload
       const uploadedUrl = await uploadToCloudinary(attachedMediaFiles[0].file);
       if(uploadedUrl){ mediaUrl = uploadedUrl; mediaType = attachedMediaFiles[0].type; } else { return; }
-      // For now use base64 upload via Firestore (small demo) - in prod use Storage
-      // We'll store as DataURL temporarily
-      mediaUrl = attachedMediaFiles[0].url;
+      // Keep the real Cloudinary URL returned by the upload.
       mediaType = attachedMediaFiles[0].type;
     }
     await db.collection("eryx0_posts").add({
@@ -1910,7 +1654,12 @@ async function submitComment(postId){
 }
 function togglePostMenu(postId){ const menu=document.getElementById(`menu_${postId}`); if(menu) menu.classList.toggle("active"); }
 async function deletePost(postId){ if(!confirm("Delete post?")) return; await db.collection("eryx0_posts").doc(postId).delete(); showToast("Post deleted"); }
-function savePost(postId){ showToast("Saved!"); }
+function savePost(postId){
+  const saved=JSON.parse(localStorage.getItem("eryx0_saved_posts")||"[]");
+  if(!saved.includes(postId)) saved.push(postId);
+  localStorage.setItem("eryx0_saved_posts",JSON.stringify(saved));
+  showToast("Post saved");
+}
 function sharePost(postId){ navigator.clipboard.writeText(location.href+"#post_"+postId); showToast("Link copied!"); }
 function focusCommentInput(postId){ const input=document.getElementById(`commentInput_${postId}`); if(input) input.focus(); }
 
@@ -1953,13 +1702,25 @@ function askEryxAI(){
 function startSimulatedCall(type){ document.getElementById("callModal").classList.add("active"); document.getElementById("callStatusText").innerText=`Ringing ${type} call...`; }
 function endSimulatedCall(){ document.getElementById("callModal").classList.remove("active"); showToast("Call ended"); }
 function toggleCallMute(){ showToast("Muted"); }
-function toggleVoiceRecording(){ const btn=document.getElementById("voiceRecordBtn"); btn.classList.toggle("recording"); showToast(btn.classList.contains("recording")?"Recording...":"Voice attached!"); }
+let voiceRecorder=null, voiceChunks=[];
+async function toggleVoiceRecording(){
+  const btn=document.getElementById("voiceRecordBtn");
+  if(voiceRecorder && voiceRecorder.state==="recording"){ voiceRecorder.stop(); return; }
+  if(!navigator.mediaDevices?.getUserMedia){ return showToast("Voice recording is not supported on this device/browser"); }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    voiceChunks=[]; voiceRecorder=new MediaRecorder(stream);
+    voiceRecorder.ondataavailable=e=>{if(e.data.size) voiceChunks.push(e.data)};
+    voiceRecorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop()); btn.classList.remove("recording"); showToast("Voice note recorded");};
+    voiceRecorder.start(); btn.classList.add("recording"); showToast("Recording...");
+  }catch(e){showToast("Microphone permission denied");}
+}
 function analyzeReviewText(){ const text=document.getElementById("analyzerReviewText").value; if(!text) return showToast("Paste review first"); const box=document.getElementById("analyzerResultBox"); box.style.display="block"; box.innerHTML=`<div style="background:var(--primary-light);padding:14px;border-radius:var(--radius);border:1px solid var(--primary);"><div style="font-weight:800;color:var(--primary);">Authenticity: 94% Genuine (Real Analyzer Ready)</div><p style="font-size:13px;margin-top:4px;">Stored to Firebase for future AI model.</p></div>`; db.collection("eryx0_reviews").add({text, result:"94% Genuine", createdAt: firebase.firestore.FieldValue.serverTimestamp(), userId: currentUser.id}); }
 function toggleDrawer(){ document.getElementById('sideDrawer').classList.toggle('open'); document.getElementById('drawerOverlay').classList.toggle('open'); }
 function showToast(msg){ const toast=document.getElementById("toast"); toast.querySelector("span").innerText=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),2500); }
 
 // Intro hide
-window.addEventListener("DOMContentLoaded",()=>{ setTimeout(()=>{ document.getElementById("intro").classList.add("hide"); },1200); });
+window.addEventListener("DOMContentLoaded",()=>{ syncFreelanceHubSwitch(); setTimeout(()=>{ document.getElementById("intro").classList.add("hide"); },1200); });
 
 
 async function signInWithGoogle(){
