@@ -483,6 +483,16 @@ input:focus,textarea:focus{border-color:rgba(91,92,226,0.3);background:#fff;box-
 .no-scrollbar::-webkit-scrollbar{display:none}
 .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
 </style>
+<style>
+/* ERYX0 Profile — Essential Menus Only */
+.eryx0-menu{position:fixed!important;background:#fff!important;border-radius:16px!important;border:1px solid #f4f4f5!important;box-shadow:0 12px 32px rgba(0,0,0,.08)!important;padding:8px!important;min-width:200px!important;z-index:10000!important;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.eryx0-menu-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:600;font-size:12px;color:#18181b}
+.eryx0-menu-item:hover{background:#f5f5ff}
+.eryx0-menu-icon{width:28px;height:28px;background:#eef0ff;border:1px solid rgba(91,92,226,.12);border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;color:#5b5ce2;box-shadow:0 4px 12px rgba(91,92,226,.15),inset 0 1px 2px rgba(255,255,255,.8);flex:none}
+.eryx0-profile-menu-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.eryx0-profile-menu-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:5px 9px;border:1px solid #f4f4f5;background:#fff;border-radius:10px;font-size:11px;font-weight:700;color:#18181b;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.04)}
+.eryx0-profile-menu-btn .eryx0-menu-icon{width:24px;height:24px;font-size:12px}
+</style>
 </head>
 <body>
 
@@ -1561,6 +1571,85 @@ window.changeProfileCover = function(){
     const m=document.getElementById("eryxoEditProfileModal");
     if(m)m.addEventListener("click",e=>{if(e.target===m)closeEditProfileModal();});
   });
+})();
+</script>
+
+
+<script>
+(function(){
+  const essentialMenus={
+    addFriendBtn:['Add Friend','Unfollow','Block User'],
+    messageBtn:['Text Message','Voice Call','Video Call'],
+    followBtn:['Follow','Close Friends','Mute'],
+    postsTab:['Recent','Popular','Saved'],
+    aboutTab:['Work','Education','Location'],
+    friendsTab:['All Friends','Mutual','Requests'],
+    photosTab:['All Photos','Albums','Tagged'],
+    moreDropdown:['Groups','Events','Settings'],
+    postActions:['Like','Comment','Share']
+  };
+  const icons=['＋','↶','⛔','✉','☎','◉','♥','▣','↗'];
+
+  function icon(s){return '<span class="eryx0-menu-icon">'+s+'</span>'}
+  function closeMenus(){document.querySelectorAll('.eryx0-menu').forEach(x=>x.remove())}
+
+  window.openEssentialMenu=function(id,anchor){
+    const items=essentialMenus[id]; if(!items)return;
+    closeMenus();
+    const m=document.createElement('div');
+    m.className='eryx0-menu';
+    m.innerHTML=items.map((x,i)=>
+      '<div class="eryx0-menu-item" data-action="'+x.replace(/"/g,'&quot;')+'">'+
+      icon(icons[i%icons.length])+'<span>'+x+'</span></div>'
+    ).join('');
+    document.body.appendChild(m);
+    const r=anchor&&anchor.getBoundingClientRect?anchor.getBoundingClientRect():null;
+    if(r){
+      m.style.left=Math.max(10,Math.min(r.left,innerWidth-m.offsetWidth-10))+'px';
+      m.style.top=Math.max(10,Math.min(r.bottom+7,innerHeight-m.offsetHeight-10))+'px';
+    }else{m.style.left='20px';m.style.top='80px'}
+    m.querySelectorAll('.eryx0-menu-item').forEach(item=>{
+      item.onclick=function(){
+        const action=item.dataset.action;
+        closeMenus();
+        if(action==='Settings'&&typeof navigateTo==='function')return navigateTo('settings');
+        if(action==='Text Message'&&typeof navigateTo==='function')return navigateTo('messages');
+        if(typeof showToast==='function')showToast(action);
+      };
+    });
+  };
+
+  function addProfileMenus(){
+    const profile=document.getElementById('page-profile');
+    if(!profile||profile.querySelector('.eryx0-profile-menu-row'))return;
+    const row=document.createElement('div');
+    row.className='eryx0-profile-menu-row';
+    [
+      ['addFriendBtn','Add Friend','＋'],
+      ['messageBtn','Message','✉'],
+      ['followBtn','Follow','◉'],
+      ['postsTab','Posts','▣'],
+      ['aboutTab','About','ⓘ'],
+      ['friendsTab','Friends','♟'],
+      ['photosTab','Photos','▧'],
+      ['moreDropdown','More','⋯']
+    ].forEach(c=>{
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='eryx0-profile-menu-btn';
+      b.innerHTML=icon(c[2])+'<span>'+c[1]+'</span>';
+      b.onclick=()=>openEssentialMenu(c[0],b);
+      row.appendChild(b);
+    });
+    const anchor=profile.querySelector('.profile-header-card')||profile.firstElementChild;
+    if(anchor)anchor.appendChild(row);
+  }
+
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.eryx0-menu')&&!e.target.closest('.eryx0-profile-menu-btn'))closeMenus();
+  });
+  document.addEventListener('DOMContentLoaded',addProfileMenus);
+  window.addEventListener('load',addProfileMenus);
 })();
 </script>
 
