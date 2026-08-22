@@ -265,12 +265,27 @@ body{overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 .bNav{height:var(--nav);padding:2px 2px env(safe-area-inset-bottom,2px);z-index:999}.bNavItem{min-height:0;height:100%;gap:1px;font-size:7px}.bNavItem svg{width:17px;height:17px}.bNavItem>span:first-of-type{line-height:1}.bNavItem.on:after{bottom:2px;width:12px;height:2px}.navBadge{position:absolute;top:5px;right:calc(50% - 16px);background:#ef4444;color:#fff;border-radius:999px;display:none;place-items:center}
 /* freelance bottom nav */
 #bNavFreelance .bNavItem>span:first-child{font-size:16px!important}
-/* every modal is a contained bottom sheet on mobile */
-.modal{padding:7px;align-items:flex-end;justify-content:center;background:rgba(10,10,18,.48);backdrop-filter:blur(3px);overscroll-behavior:contain}
-.modalBox,.sheet{width:100%;max-width:560px;max-height:calc(100dvh - 14px);overflow-y:auto;overflow-x:hidden;border-radius:20px 20px 12px 12px;padding:13px;animation:sheetIn .18s ease;box-sizing:border-box}
-.modalBox.wide{max-width:620px}.modal.sheetModal{align-items:flex-end}.modal.sheetModal .sheet{max-height:82dvh}
-#userProfileModal .sheet,#gigDetailModal .sheet,#searchModal .sheet{max-height:80dvh}
-#createGigModal .sheet,#editProfileModal .modalBox,#jobModal .sheet,#proposalModal .sheet,#paymentRequiredModal .sheet{max-height:78dvh}
+/* ===== TOP-OPENING MOBILE SHEETS ===== */
+.modal{padding:calc(var(--header) + 7px) 7px 7px;align-items:flex-start;justify-content:center;background:rgba(10,10,18,.48);backdrop-filter:blur(3px);overscroll-behavior:contain}
+.modalBox,.sheet{width:100%;max-width:560px;max-height:calc(100dvh - var(--header) - 14px);overflow-y:auto;overflow-x:hidden;border-radius:20px;padding:13px;animation:sheetTopIn .16s ease;box-sizing:border-box;overscroll-behavior:contain}
+.modalBox.wide{max-width:620px}
+.modal.sheetModal{align-items:flex-start}
+.modal.sheetModal .sheet{max-height:calc(100dvh - var(--header) - 14px)}
+#userProfileModal .sheet,#gigDetailModal .sheet,#searchModal .sheet{max-height:calc(100dvh - var(--header) - 14px)}
+#createGigModal .sheet,#editProfileModal .modalBox,#jobModal .sheet,#proposalModal .sheet,#paymentRequiredModal .sheet{max-height:calc(100dvh - var(--header) - 14px)}
+@keyframes sheetTopIn{from{transform:translateY(-10px);opacity:.75}to{transform:translateY(0);opacity:1}}
+.commentTabs{display:flex;gap:5px;padding:5px;background:var(--s2);border-radius:12px;margin:4px 0 7px}
+.commentTab{flex:1;border:0;background:transparent;border-radius:9px;height:30px;font-size:10px;font-weight:700;color:var(--m)}
+.commentTab.on{background:var(--s);color:var(--p);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.commentActions{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:10px;color:var(--m)}
+.commentActions button{border:0;background:transparent;padding:2px 0;font-weight:700;color:var(--m)}
+.commentLike.on{color:var(--p)!important}
+.replyLike{color:var(--m)}
+.replyLike.on{color:var(--p)}
+.reactionTray{bottom:42px;padding:5px 7px;gap:3px}
+.reactionTray button{border:0;background:transparent;width:34px;height:34px;border-radius:50%;font-size:20px;transition:transform .12s}
+.reactionTray button:active{transform:scale(1.22)}
+.reactionHint{font-size:9px;color:var(--m);text-align:center;margin-top:2px}
 .fieldLabel{font-size:9px;margin-top:9px;margin-bottom:4px}.input{height:43px;min-height:43px;font-size:12px;padding:0 11px;border-radius:12px}.sheet textarea.input{min-height:82px}
 /* modal header stays visible while content scrolls */
 .modalBox>div:first-child,.sheet>div:first-child{position:sticky;top:-13px;background:var(--s);z-index:3;padding-bottom:8px}
@@ -283,7 +298,21 @@ body{overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 #masterLoading:before{content:'🦊';font-size:15px;line-height:20px;animation:tinyFox .8s ease-in-out infinite;display:block;text-align:center}@keyframes tinyFox{0%,100%{transform:translateY(0) scale(.9)}50%{transform:translateY(-2px) scale(1)}}
 @media(max-width:380px){.modeBtn{padding:0 6px}.brand{font-size:14px}.sub{padding:0 10px}.pActs{overflow-x:auto}.pill{flex:0 0 auto}.bNavItem{font-size:6.5px}.bNavItem svg{width:16px;height:16px}}
 
-<style>.requestRow,.notificationItem{display:flex;gap:8px;align-items:center;padding:8px;border:1px solid var(--bl);background:var(--s);border-radius:12px;margin-bottom:6px}.notificationItem.unread{border-left:3px solid var(--p)}.requestRow .avatar{flex:none}</style>
+<style>.requestRow,.notificationItem{display:flex;gap:8px;align-items:center;padding:8px;border:1px solid var(--bl);background:var(--s);border-radius:12px;margin-bottom:6px}.notificationItem.unread{border-left:3px solid var(--p)}.requestRow .avatar{flex:none}
+/* ===== V2 MICRO-UI ===== */
+.page>.subs{position:sticky;top:var(--header);z-index:65;background:var(--bg);box-shadow:0 1px 0 var(--bl)}
+.pActs{overflow-x:auto;scrollbar-width:none}.pActs::-webkit-scrollbar{display:none}
+.commentTabs{position:sticky;top:0;z-index:2}
+@media(max-width:520px){
+  .modal{padding-top:calc(var(--header) + 5px)}
+  .modalBox,.sheet{max-height:calc(100dvh - var(--header) - 10px);padding:11px}
+  .modalBox>div:first-child,.sheet>div:first-child{top:-11px}
+  .reactionTray{bottom:40px}
+  .reactionTray button{width:32px;height:32px;font-size:18px}
+  .commentActions{font-size:9px}
+}
+
+</style>
 </head>
 <body>
 
@@ -563,7 +592,8 @@ function cyclePrivacySetting(){const opts=['public','friends','private'];const i
 window.cyclePrivacySetting=cyclePrivacySetting;
 async function publishNewPost(){const text=document.getElementById('postText').value.trim();if(!text&&!window._postFile){showToast('Add text or media first');return}masterLoading(true);try{let mediaUrl='';if(window._postFile)mediaUrl=await uploadToCloudinary(window._postFile);const ref=db.collection('eryx0_posts').doc();const post={id:ref.id,authorId:currentUser.id,authorName:currentUser.name||'Profile',authorAvatar:currentUser.avatar||'',authorHandle:currentUser.handle||'',text,mediaUrl,theme:composerTheme,feeling:currentFeeling,privacy:currentPrivacy,createdAt:firebase.firestore.FieldValue.serverTimestamp(),likes:[],likesCount:0,commentsCount:0,mode:masterMode};await ref.set(post);closeCreatePostModal();clearPostPreview();showToast('Post published')}catch(e){showToast('Post was not published. Check your connection and try again.')}finally{masterLoading(false)}}
 window.publishNewPost=publishNewPost;
-function updateMessageBadge(){if(!currentUser)return;Promise.all([db.collection('eryx0_messages').where('receiverId','==',currentUser.id).limit(100).get(),db.collection('eryx0_friend_requests').where('toUserId','==',currentUser.id).limit(100).get(),db.collection('eryx0_notifications').where('userId','==',currentUser.id).limit(100).get()]).then(([m,r,n])=>{const mc=m.docs.filter(d=>!d.data().read).length,rc=r.docs.filter(d=>d.data().status==='pending').length,nc=n.docs.filter(d=>!d.data().read).length;[['msgBdg',mc],['netBdg',rc],['bdg',nc]].forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.textContent=v;e.style.display=v?'grid':'none'}})}).catch(()=>{})}
+let badgeTimer=0;
+function updateMessageBadge(){if(!currentUser)return;clearTimeout(badgeTimer);badgeTimer=setTimeout(()=>{Promise.all([db.collection('eryx0_messages').where('receiverId','==',currentUser.id).limit(100).get(),db.collection('eryx0_friend_requests').where('toUserId','==',currentUser.id).limit(100).get(),db.collection('eryx0_notifications').where('userId','==',currentUser.id).limit(100).get()]).then(([m,r,n])=>{const mc=m.docs.filter(d=>!d.data().read).length,rc=r.docs.filter(d=>d.data().status==='pending').length,nc=n.docs.filter(d=>!d.data().read).length;[['msgBdg',mc],['netBdg',rc],['bdg',nc]].forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.textContent=v;e.style.display=v?'grid':'none'}})}).catch(()=>{})},120)}
 window.updateMessageBadge=updateMessageBadge;
 function initRealListeners(){
  try{db.collection('eryx0_posts').orderBy('createdAt','desc').limit(50).onSnapshot(s=>{const remote=s.docs.map(d=>({id:d.id,...d.data(),createdAt:d.data().createdAt?.toMillis?.()||Date.now()}));let local=JSON.parse(localStorage.getItem('eryx0_posts')||'[]');const ids=new Set(remote.map(r=>r.id));postsData=[...remote,...local.filter(l=>!ids.has(l.id))].sort((a,b)=>b.createdAt-a.createdAt);renderPostsFeed();renderStoriesTray()},()=>{})}catch(e){}
@@ -573,27 +603,133 @@ function initRealListeners(){
  renderMarketplaceGigs();renderFriendRequests();renderNotifications();renderActiveFriends();updateMessageBadge();loadEscrowTab('orders');loadPayoutsTab();loadReels()
 }
 window.initRealListeners=initRealListeners;
-function renderPostsFeed(){const feed=document.getElementById('postsFeed');if(!postsData.length){feed.innerHTML='<div style="padding:40px;text-align:center;background:var(--s);border-radius:16px;border:1px solid var(--bl)"><div style="font-size:32px">📝</div><b>No posts yet</b><div style="font-size:12px;color:var(--m)">Be first to post</div><button class="btnP" style="margin-top:12px;height:44px" onclick="openCreatePostModal()">Create Post</button></div>';return}feed.innerHTML=postsData.map(p=>{const liked=(p.likes||[]).includes(currentUser?.id);const themeBg=p.theme==='gradient'?'linear-gradient(135deg,#6366ff,#ec4899)':p.theme==='warm'?'#fef3c7':'';const feelingHtml=p.feeling?`<span style="color:var(--m)"> — ${escapeHtml(p.feeling.label||p.feeling)}</span>`:'';return `<div class="pCard"><div class="pHead"><div class="avatar ${p.authorId===currentUser?.id?'online':''}">${(p.authorName||'E')[0].toUpperCase()}${p.authorAvatar?`<img src="${p.authorAvatar}">`:''}</div><div class="pInfo"><div class="pName">${escapeHtml(p.authorName)}${feelingHtml}</div><div class="pMeta">@${escapeHtml(p.authorId===currentUser?.id?currentUser.handle:p.authorId)} • ${ago(p.createdAt)} • ${p.privacy==='public'?'🌍':p.privacy==='friends'?'👥':'🔒'}</div></div><button class="iBtn" onclick="togglePostMenu('${p.id}')">⋯</button></div>${p.theme&&p.theme!=='default'?`<div style="height:160px;background:${themeBg};display:grid;place-items:center;color:${p.theme==='warm'?'#111':'#fff'};font-weight:800;padding:16px;text-align:center">${escapeHtml(p.text)}</div>`:`<div class="pText">${escapeHtml(p.text)}</div>`}${p.mediaUrl?`${p.mediaUrl.includes('.mp4')||p.mediaUrl.includes('video')?`<video class="pMedia" src="${p.mediaUrl}" controls></video>`:`<img class="pMedia" src="${p.mediaUrl}" loading="lazy">`}`:''}<div class="pActs"><button class="pill ${liked?'on':''}" onclick="toggleDefaultLike('${p.id}')"><span>👍</span> Like ${p.likesCount||0}</button><button class="pill" onclick="focusCommentInput('${p.id}')"><span>💬</span> Comment ${p.commentsCount||0}</button><button class="pill" onclick="sharePost('${p.id}')"><span>↗</span> Share</button><button class="pill" onclick="savePost('${p.id}')"><span>🔖</span> Save</button><button class="pill" onclick="showReactionTray('${p.id}')">😊 React</button></div><div style="padding:0 12px 12px;display:flex;gap:8px"><div class="avatar" style="width:32px;height:32px">${(currentUser?.name||'P')[0]}</div><input class="input" id="comment-${p.id}" style="height:40px;border-radius:999px" placeholder="Write a comment..." onkeypress="if(event.key==='Enter')submitComment('${p.id}')"><button class="actBtn p" style="width:60px;height:36px;flex:none" onclick="submitComment('${p.id}')">Post</button></div><div id="comments-${p.id}" style="padding:0 12px 12px"></div><div id="reactions-${p.id}" style="position:relative"></div></div>`}).join('');postsData.forEach(p=>renderComments(p.id))}
+function renderPostsFeed(){const feed=document.getElementById('postsFeed');if(!postsData.length){feed.innerHTML='<div style="padding:40px;text-align:center;background:var(--s);border-radius:16px;border:1px solid var(--bl)"><div style="font-size:32px">📝</div><b>No posts yet</b><div style="font-size:12px;color:var(--m)">Be first to post</div><button class="btnP" style="margin-top:12px;height:44px" onclick="openCreatePostModal()">Create Post</button></div>';return}feed.innerHTML=postsData.map(p=>{const liked=(p.reactionUsers?.[currentUser?.id]==='👍')||(p.likes||[]).includes(currentUser?.id);const themeBg=p.theme==='gradient'?'linear-gradient(135deg,#6366ff,#ec4899)':p.theme==='warm'?'#fef3c7':'';const feelingHtml=p.feeling?`<span style="color:var(--m)"> — ${escapeHtml(p.feeling.label||p.feeling)}</span>`:'';return `<div class="pCard"><div class="pHead"><div class="avatar ${p.authorId===currentUser?.id?'online':''}">${(p.authorName||'E')[0].toUpperCase()}${p.authorAvatar?`<img src="${p.authorAvatar}">`:''}</div><div class="pInfo"><div class="pName">${escapeHtml(p.authorName)}${feelingHtml}</div><div class="pMeta">@${escapeHtml(p.authorId===currentUser?.id?currentUser.handle:p.authorId)} • ${ago(p.createdAt)} • ${p.privacy==='public'?'🌍':p.privacy==='friends'?'👥':'🔒'}</div></div><button class="iBtn" onclick="togglePostMenu('${p.id}')">⋯</button></div>${p.theme&&p.theme!=='default'?`<div style="height:160px;background:${themeBg};display:grid;place-items:center;color:${p.theme==='warm'?'#111':'#fff'};font-weight:800;padding:16px;text-align:center">${escapeHtml(p.text)}</div>`:`<div class="pText">${escapeHtml(p.text)}</div>`}${p.mediaUrl?`${p.mediaUrl.includes('.mp4')||p.mediaUrl.includes('video')?`<video class="pMedia" src="${p.mediaUrl}" controls></video>`:`<img class="pMedia" src="${p.mediaUrl}" loading="lazy">`}`:''}<div class="pActs"><button class="pill ${liked?'on':''}" onclick="showReactionTray('${p.id}')"><span>👍</span> Like ${p.likesCount||0}</button><button class="pill" onclick="focusCommentInput('${p.id}')"><span>💬</span> Comment ${p.commentsCount||0}</button><button class="pill" onclick="sharePost('${p.id}')"><span>↗</span> Share</button><button class="pill" onclick="savePost('${p.id}')"><span>🔖</span> Save</button><button class="pill" onclick="showReactionTray('${p.id}')">😊 React</button></div><div style="padding:0 12px 12px;display:flex;gap:8px"><div class="avatar" style="width:32px;height:32px">${(currentUser?.name||'P')[0]}</div><input class="input" id="comment-${p.id}" style="height:40px;border-radius:999px" placeholder="Write a comment..." onkeypress="if(event.key==='Enter')submitComment('${p.id}')"><button class="actBtn p" style="width:60px;height:36px;flex:none" onclick="submitComment('${p.id}')">Post</button></div><div id="comments-${p.id}" style="padding:0 12px 12px"></div><div id="reactions-${p.id}" style="position:relative"></div></div>`}).join('');}
 window.renderPostsFeed=renderPostsFeed;
-function showReactionTray(pid){const el=document.getElementById('reactions-'+pid);if(el.innerHTML){el.innerHTML='';return}el.innerHTML=`<div class="reactionTray"><button onclick="reactToPost('${pid}','❤️')">❤️</button><button onclick="reactToPost('${pid}','😂')">😂</button><button onclick="reactToPost('${pid}','😮')">😮</button><button onclick="reactToPost('${pid}','😢')">😢</button><button onclick="reactToPost('${pid}','👏')">👏</button><button onclick="reactToPost('${pid}','🔥')">🔥</button></div>`}
+function showReactionTray(pid){const el=document.getElementById('reactions-'+pid);if(el.innerHTML){el.innerHTML='';return}el.innerHTML=`<div class="reactionTray"><button aria-label="Love" onclick="reactToPost('${pid}','❤️')">❤️</button><button aria-label="Haha" onclick="reactToPost('${pid}','😂')">😂</button><button aria-label="Wow" onclick="reactToPost('${pid}','😮')">😮</button><button aria-label="Sad" onclick="reactToPost('${pid}','😢')">😢</button><button aria-label="Angry" onclick="reactToPost('${pid}','😡')">😡</button></div><div class="reactionHint">Choose a reaction</div>`}
 window.showReactionTray=showReactionTray;
-async function reactToPost(pid,emoji){document.getElementById('reactions-'+pid).innerHTML='';await toggleDefaultLike(pid)}
+async function reactToPost(pid,emoji){document.getElementById('reactions-'+pid).innerHTML='';await setPostReaction(pid,emoji)}
 window.reactToPost=reactToPost;
 async function createNotification(userId,title,text,type,actorId){
  if(!userId||userId===currentUser?.id)return;
  try{await db.collection('eryx0_notifications').add({userId,title,text,type:type||'system',actorId:actorId||currentUser?.id||'',read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()})}catch(e){}
 }
 window.createNotification=createNotification;
-async function toggleDefaultLike(pid){let p=postsData.find(x=>x.id===pid);if(!p)return;p.likes=p.likes||[];const has=p.likes.includes(currentUser.id);p.likes=has?p.likes.filter(x=>x!==currentUser.id):[...p.likes,currentUser.id];p.likesCount=p.likes.length;localStorage.setItem('eryx0_posts',JSON.stringify(postsData));renderPostsFeed();try{await db.collection('eryx0_posts').doc(pid).update({likes:p.likes,likesCount:p.likesCount});if(!has&&p.authorId!==currentUser.id)await createNotification(p.authorId,`${currentUser.name||'Someone'} liked your post`,'Your post received a like.','like',currentUser.id)}catch(e){}}
+
+async function setPostReaction(pid,emoji){
+ const p=postsData.find(x=>x.id===pid);if(!p||!currentUser)return;
+ const ref=db.collection('eryx0_posts').doc(pid);let notify=false;
+ try{
+   await db.runTransaction(async tx=>{
+     const snap=await tx.get(ref);const d=snap.data()||{};
+     const users={...(d.reactionUsers||{})};const old=users[currentUser.id];
+     if(old===emoji){delete users[currentUser.id]}else{users[currentUser.id]=emoji}
+     const counts={...(d.reactionCounts||{})};
+     if(old){counts[old]=Math.max(0,(counts[old]||0)-1);if(!counts[old])delete counts[old]}
+     if(users[currentUser.id]){counts[emoji]=(counts[emoji]||0)+1;notify=!old}
+     const total=Object.keys(users).length;
+     tx.update(ref,{reactionUsers:users,reactionCounts:counts,likesCount:total,likes:users[currentUser.id]==='👍'?[...new Set([...(d.likes||[]),currentUser.id])]:((d.likes||[]).filter(x=>x!==currentUser.id))});
+   });
+   if(!p.reactionUsers)p.reactionUsers={};if(emoji===p.reactionUsers[currentUser.id])delete p.reactionUsers[currentUser.id];else p.reactionUsers[currentUser.id]=emoji;
+   p.likesCount=Object.keys(p.reactionUsers).length;
+   if(p.authorId!==currentUser.id&&notify)await createNotification(p.authorId,`${currentUser.name||'Someone'} reacted to your post`,`${emoji} reaction`,'reaction',currentUser.id);
+   renderPostsFeed();
+ }catch(e){showToast('Reaction was not saved. Please try again.')}
+}
+window.setPostReaction=setPostReaction;
+async function toggleDefaultLike(pid){await setPostReaction(pid,'👍')}
 window.toggleDefaultLike=toggleDefaultLike;
-function focusCommentInput(pid){document.getElementById('comment-'+pid)?.focus()}
+function focusCommentInput(pid){renderComments(pid,'comments');setTimeout(()=>document.getElementById('comment-'+pid)?.focus(),40)}
 window.focusCommentInput=focusCommentInput;
-async function submitComment(pid){const input=document.getElementById('comment-'+pid),t=input?.value.trim();if(!t)return;masterLoading(true);try{const p=postsData.find(x=>x.id===pid);await db.collection('eryx0_comments').add({postId:pid,text:t,author:currentUser.name,authorId:currentUser.id,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection('eryx0_posts').doc(pid).update({commentsCount:firebase.firestore.FieldValue.increment(1)});if(p?.authorId&&p.authorId!==currentUser.id)await createNotification(p.authorId,`${currentUser.name||'Someone'} commented on your post`,t.slice(0,80),'comment',currentUser.id);input.value='';showToast('Comment added');renderComments(pid)}catch(e){showToast('Comment was not sent. Nothing was saved.')}finally{masterLoading(false)}}
+async function submitComment(pid){const input=document.getElementById('comment-'+pid),t=input?.value.trim();if(!t)return;try{const p=postsData.find(x=>x.id===pid);await Promise.all([db.collection('eryx0_comments').add({postId:pid,text:t,author:currentUser.name,authorId:currentUser.id,likes:[],likesCount:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()}),db.collection('eryx0_posts').doc(pid).update({commentsCount:firebase.firestore.FieldValue.increment(1)})]);if(p?.authorId&&p.authorId!==currentUser.id)createNotification(p.authorId,`${currentUser.name||'Someone'} commented on your post`,t.slice(0,80),'comment',currentUser.id);input.value='';renderComments(pid,'comments')}catch(e){showToast('Comment was not sent. Nothing was saved.')}}
 window.submitComment=submitComment;
-async function renderComments(pid){const el=document.getElementById('comments-'+pid);if(!el)return;el.innerHTML='<div class="helper" style="padding:8px">Loading comments…</div>';try{const s=await db.collection('eryx0_comments').where('postId','==',pid).limit(50).get();const arr=s.docs.map(d=>({id:d.id,...d.data(),createdAt:d.data().createdAt?.toMillis?.()||Date.now()})).sort((a,b)=>a.createdAt-b.createdAt);if(!arr.length){el.innerHTML='';return}el.innerHTML=arr.map(c=>`<div style="display:flex;gap:8px;margin-top:8px"><div class="avatar" style="width:28px;height:28px;font-size:11px">${escapeHtml((c.author||'U')[0])}</div><div style="background:var(--s2);border-radius:12px;padding:8px 12px;flex:1"><b style="font-size:12px">${escapeHtml(c.author||'User')}</b><div style="font-size:12px">${escapeHtml(c.text||'')}</div><div style="font-size:10px;color:var(--m);display:flex;gap:8px"><span>${ago(c.createdAt)}</span><span style="cursor:pointer;font-weight:600" onclick="toggleReplyBox('${c.id}')">Reply</span></div><div id="reply-${c.id}" style="display:none;margin-top:6px"><input class="input" id="replyInput-${c.id}" placeholder="Write reply..." style="height:36px" onkeypress="if(event.key==='Enter')submitReply('${c.id}','${pid}')"></div><div id="replies-${c.id}"></div></div></div>`).join('');for(const c of arr){try{const rs=await db.collection('eryx0_replies').where('commentId','==',c.id).limit(20).get();const repEl=document.getElementById('replies-'+c.id);if(repEl)repEl.innerHTML=rs.docs.map(d=>{const r=d.data();return `<div class="commentReply" style="display:flex;gap:6px;margin-top:6px"><div class="avatar" style="width:24px;height:24px;font-size:10px">${escapeHtml((r.author||'U')[0])}</div><div style="background:var(--s);border:1px solid var(--bl);border-radius:10px;padding:6px 10px;flex:1;font-size:11px"><b>${escapeHtml(r.author||'User')}</b> ${escapeHtml(r.text||'')}</div></div>`}).join('')}catch(e){}}}catch(e){el.innerHTML='<div class="helper" style="padding:8px">Comments are unavailable right now.</div>'}}
+async function renderComments(pid,tab='comments'){
+ const el=document.getElementById('comments-'+pid);if(!el)return;
+ el.innerHTML='<div class="helper" style="padding:7px">Loading…</div>';
+ try{
+   const [cs,rs]=await Promise.all([
+     db.collection('eryx0_comments').where('postId','==',pid).limit(50).get(),
+     db.collection('eryx0_replies').where('postId','==',pid).limit(100).get()
+   ]);
+   const comments=cs.docs.map(d=>({id:d.id,...d.data(),createdAt:d.data().createdAt?.toMillis?.()||Date.now()})).sort((a,b)=>a.createdAt-b.createdAt);
+   const replies=rs.docs.map(d=>({id:d.id,...d.data(),createdAt:d.data().createdAt?.toMillis?.()||Date.now()})).sort((a,b)=>a.createdAt-b.createdAt);
+   const byComment={};replies.forEach(r=>(byComment[r.commentId]??=[]).push(r));
+   const replyCount=replies.length;
+   if(!comments.length&&!replies.length){el.innerHTML='';return}
+   const tabbar=`<div class="commentTabs">
+     <button class="commentTab ${tab==='comments'?'on':''}" onclick="renderComments('${pid}','comments')">Comments ${comments.length}</button>
+     <button class="commentTab ${tab==='replies'?'on':''}" onclick="renderComments('${pid}','replies')">Replies ${replyCount}</button>
+   </div>`;
+   if(tab==='replies'){
+     el.innerHTML=tabbar+(replies.length?replies.map(r=>`
+       <div style="display:flex;gap:7px;margin-top:7px">
+        <div class="avatar" style="width:25px;height:25px;font-size:10px">${escapeHtml((r.author||'U')[0])}</div>
+        <div style="background:var(--s2);border-radius:11px;padding:7px 9px;flex:1">
+         <b style="font-size:11px">${escapeHtml(r.author||'User')}</b>
+         <div style="font-size:11px">${escapeHtml(r.text||'')}</div>
+         <div class="commentActions"><span>${ago(r.createdAt)}</span><button class="replyLike ${((r.likes||[]).includes(currentUser?.id))?'on':''}" onclick="toggleReplyLike('${r.id}','${pid}')">♥ ${r.likesCount||0}</button></div>
+        </div>
+       </div>`).join(''):'<div class="helper" style="padding:8px">No replies yet.</div>');
+     return;
+   }
+   el.innerHTML=tabbar+comments.map(c=>{
+     const liked=(c.likes||[]).includes(currentUser?.id);
+     const reps=byComment[c.id]||[];
+     return `<div style="display:flex;gap:8px;margin-top:7px">
+       <div class="avatar" style="width:28px;height:28px;font-size:11px">${escapeHtml((c.author||'U')[0])}</div>
+       <div style="background:var(--s2);border-radius:12px;padding:8px 10px;flex:1">
+        <b style="font-size:12px">${escapeHtml(c.author||'User')}</b>
+        <div style="font-size:12px">${escapeHtml(c.text||'')}</div>
+        <div class="commentActions">
+         <span>${ago(c.createdAt)}</span>
+         <button class="commentLike ${liked?'on':''}" onclick="toggleCommentLike('${c.id}','${pid}')">♥ ${c.likesCount||0}</button>
+         <button onclick="toggleReplyBox('${c.id}')">Reply</button>
+        </div>
+        <div id="reply-${c.id}" style="display:none;margin-top:6px">
+         <input class="input" id="replyInput-${c.id}" placeholder="Write reply..." style="height:34px" onkeypress="if(event.key==='Enter')submitReply('${c.id}','${pid}')">
+        </div>
+        ${reps.length?`<button class="commentTab" style="height:24px;padding:0 5px;text-align:left;width:auto" onclick="renderComments('${pid}','replies')">View ${reps.length} repl${reps.length===1?'y':'ies'} →</button>`:''}
+       </div>
+     </div>`;
+   }).join('');
+ }catch(e){el.innerHTML='<div class="helper" style="padding:7px">Comments are unavailable right now.</div>'}
+}
+window.renderComments=renderComments;
+
+async function toggleCommentLike(cid,pid){
+ try{
+   const ref=db.collection('eryx0_comments').doc(cid);
+   let liked=false,authorId='';
+   await db.runTransaction(async tx=>{
+     const s=await tx.get(ref);if(!s.exists)throw new Error('Comment not found');
+     const d=s.data()||{};const likes=[...(d.likes||[])];liked=likes.includes(currentUser.id);authorId=d.authorId||'';
+     const next=liked?likes.filter(x=>x!==currentUser.id):[...likes,currentUser.id];
+     tx.update(ref,{likes:next,likesCount:next.length});
+   });
+   if(!liked&&authorId!==currentUser.id)await createNotification(authorId,`${currentUser.name||'Someone'} liked your comment`,'Your comment received a like.','comment_like',currentUser.id);
+   renderComments(pid,'comments');
+ }catch(e){showToast('Comment like was not saved.')}
+}
+window.toggleCommentLike=toggleCommentLike;
+
+async function toggleReplyLike(rid,pid){
+ try{
+   const ref=db.collection('eryx0_replies').doc(rid);
+   let liked=false,authorId='';
+   await db.runTransaction(async tx=>{
+     const s=await tx.get(ref);if(!s.exists)throw new Error('Reply not found');
+     const d=s.data()||{};const likes=[...(d.likes||[])];liked=likes.includes(currentUser.id);authorId=d.authorId||'';
+     const next=liked?likes.filter(x=>x!==currentUser.id):[...likes,currentUser.id];
+     tx.update(ref,{likes:next,likesCount:next.length});
+   });
+   if(!liked&&authorId!==currentUser.id)await createNotification(authorId,`${currentUser.name||'Someone'} liked your reply`,'Your reply received a like.','reply_like',currentUser.id);
+   renderComments(pid,'replies');
+ }catch(e){showToast('Reply like was not saved.')}
+}
+window.toggleReplyLike=toggleReplyLike;
+
 function toggleReplyBox(cid){const el=document.getElementById('reply-'+cid);el.style.display=el.style.display==='none'?'block':'none'}
 window.toggleReplyBox=toggleReplyBox;
-async function submitReply(cid,pid){const inp=document.getElementById('replyInput-'+cid),t=inp?.value.trim();if(!t)return;masterLoading(true);try{const c=await db.collection('eryx0_comments').doc(cid).get(),cd=c.data()||{};await db.collection('eryx0_replies').add({commentId:cid,postId:pid,text:t,author:currentUser.name,authorId:currentUser.id,createdAt:firebase.firestore.FieldValue.serverTimestamp()});if(cd.authorId&&cd.authorId!==currentUser.id)await createNotification(cd.authorId,`${currentUser.name||'Someone'} replied to your comment`,t.slice(0,80),'reply',currentUser.id);inp.value='';showToast('Reply added');renderComments(pid)}catch(e){showToast('Reply was not sent. Nothing was saved.')}finally{masterLoading(false)}}
+async function submitReply(cid,pid){const inp=document.getElementById('replyInput-'+cid),t=inp?.value.trim();if(!t)return;try{const c=await db.collection('eryx0_comments').doc(cid).get(),cd=c.data()||{};await db.collection('eryx0_replies').add({commentId:cid,postId:pid,text:t,author:currentUser.name,authorId:currentUser.id,likes:[],likesCount:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()});if(cd.authorId&&cd.authorId!==currentUser.id)createNotification(cd.authorId,`${currentUser.name||'Someone'} replied to your comment`,t.slice(0,80),'reply',currentUser.id);inp.value='';renderComments(pid,'comments')}catch(e){showToast('Reply was not sent. Nothing was saved.')}}
 window.submitReply=submitReply;
 function togglePostMenu(id){const p=postsData.find(x=>x.id===id);if(!p)return;const own=p.authorId===currentUser?.id;if(own)openConfirmModal('Delete post','This permanently deletes the post from your feed.',()=>deletePost(id));else openConfirmModal('Report post','Report this post for review? The app will only submit a report record; it does not guarantee removal.',()=>reportPost(id))}
 function reportPost(id){let reports=JSON.parse(localStorage.getItem('eryx0_reports')||'[]');if(!reports.some(r=>r.postId===id&&r.userId===currentUser.id)){reports.push({postId:id,userId:currentUser.id,createdAt:Date.now()});localStorage.setItem('eryx0_reports',JSON.stringify(reports));showToast('Report saved')}}
@@ -716,14 +852,22 @@ window.searchUsers=searchUsers;
 
 async function getRelationship(uid){
  try{
-  const [a,b]=await Promise.all([db.collection('eryx0_friend_requests').where('fromUserId','==',currentUser.id).limit(50).get(),db.collection('eryx0_friend_requests').where('toUserId','==',currentUser.id).limit(50).get()]);
-  const sent=a.docs.find(d=>{const x=d.data();return x.toUserId===uid&&x.status==='pending'});if(sent)return{status:'sent',id:sent.id};
-  const incoming=b.docs.find(d=>{const x=d.data();return x.fromUserId===uid&&x.status==='pending'});if(incoming)return{status:'incoming',id:incoming.id};
-  const q3=await db.collection('eryx0_friendships').where('users','array-contains',currentUser.id).limit(50).get();const f=q3.docs.find(d=>(d.data().users||[]).includes(uid));if(f)return{status:'friends',id:f.id};
- }catch(e){} return{status:'none',id:null}
+  const fid=[currentUser.id,uid].sort().join('_');
+  const f=await db.collection('eryx0_friendships').doc(fid).get();
+  if(f.exists)return{status:'friends',id:f.id};
+  const [a,b]=await Promise.all([
+   db.collection('eryx0_friend_requests').where('fromUserId','==',currentUser.id).limit(50).get(),
+   db.collection('eryx0_friend_requests').where('toUserId','==',currentUser.id).limit(50).get()
+  ]);
+  const sent=a.docs.find(d=>{const x=d.data();return x.toUserId===uid&&x.status==='pending'});
+  if(sent)return{status:'sent',id:sent.id};
+  const incoming=b.docs.find(d=>{const x=d.data();return x.fromUserId===uid&&x.status==='pending'});
+  if(incoming)return{status:'incoming',id:incoming.id};
+ }catch(e){}
+ return{status:'none',id:null}
 }
 function relationshipLabel(s){return s==='friends'?'Friends ✓':s==='sent'?'Request sent':s==='incoming'?'Accept request':'Add friend'}
-async function handleRelationship(uid,status){if(status==='friends'){showToast('Already connected');return}if(status==='sent'){showToast('Request already pending');return}try{if(status==='incoming'){const rel=await getRelationship(uid);if(rel.id){await db.collection('eryx0_friend_requests').doc(rel.id).update({status:'accepted',acceptedAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection('eryx0_friendships').doc([currentUser.id,uid].sort().join('_')).set({users:[currentUser.id,uid].sort(),createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await createNotification(uid,`${currentUser.name||'Someone'} accepted your request`,'You are now connected.','friend_accepted',currentUser.id);showToast('Request accepted');openUserProfile(uid)}return}await db.collection('eryx0_friend_requests').add({fromUserId:currentUser.id,fromUserName:currentUser.name,toUserId:uid,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});await createNotification(uid,`${currentUser.name||'Someone'} sent you a friend request`,'Open Network to accept or reject it.','friend_request',currentUser.id);showToast('Friend request sent');updateMessageBadge();openUserProfile(uid)}catch(e){showToast('Could not send request. Nothing was changed.')}}
+async function handleRelationship(uid,status){if(status==='friends'){showToast('Already connected');return}if(status==='sent'){showToast('Request already pending');return}try{if(status==='incoming'){const rel=await getRelationship(uid);if(rel.id){await Promise.all([db.collection('eryx0_friend_requests').doc(rel.id).update({status:'accepted',acceptedAt:firebase.firestore.FieldValue.serverTimestamp()}),db.collection('eryx0_friendships').doc([currentUser.id,uid].sort().join('_')).set({users:[currentUser.id,uid].sort(),createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})]);createNotification(uid,`${currentUser.name||'Someone'} accepted your request`,'You are now connected.','friend_accepted',currentUser.id);showToast('Request accepted');openUserProfile(uid)}return}const request=db.collection('eryx0_friend_requests').doc();await request.set({fromUserId:currentUser.id,fromUserName:currentUser.name,toUserId:uid,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});createNotification(uid,`${currentUser.name||'Someone'} sent you a friend request`,'Open Network to accept or reject it.','friend_request',currentUser.id);showToast('Friend request sent');updateMessageBadge();openUserProfile(uid)}catch(e){showToast('Could not send request. Nothing was changed.')}}
 window.handleRelationship=handleRelationship;
 function startMessageFromProfile(id,name){closeModalById('userProfileModal');navigateTo('messages');openChat(id,name)}
 window.startMessageFromProfile=startMessageFromProfile;
