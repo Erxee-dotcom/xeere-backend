@@ -318,6 +318,22 @@ body{overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 
 <div id="intro"><div class="logoW"><div class="logoA"><div class="eye l"></div><div class="eye r"></div><div class="smile"></div></div></div><div style="margin-top:16px;font-weight:800;font-size:22px;letter-spacing:-.02em">ERYX0</div><div style="font-size:12px;color:var(--m);margin-top:4px">By EryX Zee • Social & Intelligence</div><div id="masterLoading" style="margin-top:16px;width:24px;height:24px;border:2px solid var(--b);border-top-color:var(--p);border-radius:50%;animation:spin 1s linear infinite"></div></div>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="globalLoader" style="position:fixed;inset:0;z-index:9998;background:rgba(247,247,251,0.85);backdrop-filter:blur(10px);display:none;place-items:center;transition:.2s">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+    <div style="width:56px;height:56px;border-radius:50%;background:#efefff;display:grid;place-items:center;box-shadow:0 8px 24px rgba(99,102,255,.2)">
+      <div style="width:44px;height:44px;border-radius:50%;border:3px solid #e0e0ff;border-top-color:#6366ff;animation:spin 0.9s linear infinite"></div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-weight:800;font-size:14px;letter-spacing:-.02em">ERYX0</div>
+      <div id="globalLoaderText" style="font-size:12px;color:var(--m);margin-top:4px;font-weight:600">Loading...</div>
+    </div>
+  </div>
+</div>
+<div id="pullRefresh" style="position:fixed;top:0;left:0;right:0;height:3px;z-index:9997;background:transparent;overflow:hidden;display:none">
+  <div id="pullBar" style="height:100%;width:40%;background:linear-gradient(90deg,#6366ff,#ec4899);animation:loadBar 1.2s ease-in-out infinite"></div>
+</div>
+<style>@keyframes loadBar{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}</style>
+
 
 <div id="auth" style="display:none"><div class="card">
 <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:18px"><div class="logoW"><div class="logoA"><div class="eye l"></div><div class="eye r"></div><div class="smile"></div></div></div><div style="font-size:28px;font-weight:800;margin:14px 0 4px;letter-spacing:-.02em">ERYX0</div><div style="font-size:13px;color:var(--m)">By EryX Zee • Social & Intelligence</div></div>
@@ -497,10 +513,51 @@ let currentUser=null,postsData=[],storiesData=[],activeStoryIndex=0,composerThem
 let appSettings=JSON.parse(localStorage.getItem('eryx0_set')||'{"dark":false,"priv":false,"online":true,"notif":true,"dataSaver":false,"iconSize":36,"lang":"en","visibility":"public","whoCanMessage":"everyone","tfa":false,"rate":10}');
 let masterMode=localStorage.getItem('eryxo_master_mode')==='freelance'?'freelance':'social';window.eryxoMasterMode=masterMode;
 let masterLoadingCount=0;
-function masterLoading(on){const x=document.getElementById('masterLoading');if(!x)return;if(on)masterLoadingCount++;else masterLoadingCount=Math.max(0,masterLoadingCount-1);x.style.display=masterLoadingCount>0?'block':'none'}
+function masterLoading(on, msg){
+  const x=document.getElementById('masterLoading');
+  const g=document.getElementById('globalLoader');
+  const gt=document.getElementById('globalLoaderText');
+  const pb=document.getElementById('pullRefresh');
+  if(!x) return;
+  if(on){
+    masterLoadingCount++;
+    if(msg && gt) gt.textContent=msg;
+  } else {
+    masterLoadingCount=Math.max(0,masterLoadingCount-1);
+  }
+  const show = masterLoadingCount>0;
+  if(x) x.style.display=show?'block':'none';
+  if(g) {
+    g.style.display=show?'grid':'none';
+    if(!show && gt) gt.textContent='Loading...';
+  }
+  if(pb) pb.style.display=show?'block':'none';
+}
 window.masterLoading=masterLoading;
+function showPageLoader(text){
+  masterLoading(true, text||'Loading...');
+}
+function hidePageLoader(){
+  masterLoading(false);
+}
+window.showPageLoader=showPageLoader;
+window.hidePageLoader=hidePageLoader;
+
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000)}
 window.showToast=showToast;
+function skeletonPosts(count=3){
+  return Array(count).fill(0).map(()=>`<div class="pCard"><div class="pHead"><div class="skeleton" style="width:36px;height:36px;border-radius:50%"></div><div style="flex:1"><div class="skeleton sk1" style="width:35%"></div><div class="skeleton sk2" style="width:60%;margin-top:6px"></div></div></div><div style="padding:10px"><div class="skeleton sk3" style="height:60px"></div><div class="skeleton sk2" style="width:80%;margin-top:8px"></div></div></div>`).join('');
+}
+function skeletonList(count=4){
+  return `<div class="loadingBlock">${Array(count).fill(0).map(()=>`<div style="display:flex;gap:10px;padding:12px;background:var(--s);border-radius:14px;border:1px solid var(--bl);margin-bottom:8px"><div class="skeleton" style="width:40px;height:40px;border-radius:50%"></div><div style="flex:1"><div class="skeleton sk1" style="width:40%"></div><div class="skeleton sk2" style="width:70%;margin-top:6px"></div></div></div>`).join('')}</div>`;
+}
+function skeletonGrid(count=2){
+  return `<div class="loadingBlock" style="display:grid;gap:10px">${Array(count).fill(0).map(()=>`<div class="skeleton sk3" style="height:120px;border-radius:18px"></div>`).join('')}</div>`;
+}
+window.skeletonPosts=skeletonPosts;
+window.skeletonList=skeletonList;
+window.skeletonGrid=skeletonGrid;
+
 function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function ago(t){const d=Math.floor((Date.now()-(t?.toMillis?.()||t||Date.now()))/1000);if(d<60)return'Just now';if(d<3600)return Math.floor(d/60)+'m';if(d<86400)return Math.floor(d/3600)+'h';return Math.floor(d/86400)+'d'}
 // Auth
@@ -553,7 +610,18 @@ window.handleGlobalSearch=handleGlobalSearch;
 function hideGlobalSearch(){closeModalById('searchModal')}
 window.hideGlobalSearch=hideGlobalSearch;
 // Cloudinary
-async function uploadToCloudinary(file){const fd=new FormData();fd.append('file',file);fd.append('upload_preset',PRESET);const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/upload`,{method:'POST',body:fd});const j=await r.json();if(!j.secure_url)throw new Error('Upload failed');return j.secure_url}
+async function uploadToCloudinary(file){
+  const fd=new FormData();
+  fd.append('file',file);
+  fd.append('upload_preset',PRESET);
+  // auto detect resource type for voice/video
+  const isAudio = file.type && file.type.startsWith('audio');
+  const endpoint = isAudio ? `https://api.cloudinary.com/v1_1/${CLOUD}/video/upload` : `https://api.cloudinary.com/v1_1/${CLOUD}/upload`;
+  const r=await fetch(endpoint,{method:'POST',body:fd});
+  const j=await r.json();
+  if(!j.secure_url) throw new Error(j.error?.message || 'Upload failed');
+  return j.secure_url;
+}
 window.uploadToCloudinary=uploadToCloudinary;
 // Stories
 function renderStoriesTray(){let arr=JSON.parse(localStorage.getItem('eryx0_stories')||'[]').filter(s=>Date.now()-s.createdAt<86400000);const tray=document.getElementById('storiesTray');const base=tray.querySelector('.sItem');tray.innerHTML='';tray.appendChild(base);arr.forEach((s,i)=>{const div=document.createElement('div');div.className='sItem';div.onclick=()=>openStoryViewer(i);div.innerHTML=`<div class="sRing"><div class="sInner"><img src="${s.url}" loading="lazy"></div></div><div class="sLabel">${escapeHtml(s.author?.split(' ')[0]||'You')}</div>`;tray.appendChild(div)});storiesData=arr}
@@ -590,20 +658,40 @@ function selectFeeling(key,label){currentFeeling={key,label};document.getElement
 window.selectFeeling=selectFeeling;
 function cyclePrivacySetting(){const opts=['public','friends','private'];const icons={'public':'🌍 Public','friends':'👥 Friends','private':'🔒 Only Me'};let idx=opts.indexOf(currentPrivacy);idx=(idx+1)%opts.length;currentPrivacy=opts[idx];document.getElementById('privacyBtn').textContent=icons[currentPrivacy]}
 window.cyclePrivacySetting=cyclePrivacySetting;
-async function publishNewPost(){const text=document.getElementById('postText').value.trim();if(!text&&!window._postFile){showToast('Add text or media first');return}masterLoading(true);try{let mediaUrl='';if(window._postFile)mediaUrl=await uploadToCloudinary(window._postFile);const ref=db.collection('eryx0_posts').doc();const post={id:ref.id,authorId:currentUser.id,authorName:currentUser.name||'Profile',authorAvatar:currentUser.avatar||'',authorHandle:currentUser.handle||'',text,mediaUrl,theme:composerTheme,feeling:currentFeeling,privacy:currentPrivacy,createdAt:firebase.firestore.FieldValue.serverTimestamp(),likes:[],likesCount:0,commentsCount:0,mode:masterMode};await ref.set(post);closeCreatePostModal();clearPostPreview();showToast('Post published')}catch(e){showToast('Post was not published. Check your connection and try again.')}finally{masterLoading(false)}}
+async function publishNewPost(){const text=document.getElementById('postText').value.trim();if(!text&&!window._postFile){showToast('Add text or media first');return}masterLoading(true, 'Publishing post...');try{let mediaUrl='';if(window._postFile)mediaUrl=await uploadToCloudinary(window._postFile);const ref=db.collection('eryx0_posts').doc();const post={id:ref.id,authorId:currentUser.id,authorName:currentUser.name||'Profile',authorAvatar:currentUser.avatar||'',authorHandle:currentUser.handle||'',text,mediaUrl,theme:composerTheme,feeling:currentFeeling,privacy:currentPrivacy,createdAt:firebase.firestore.FieldValue.serverTimestamp(),likes:[],likesCount:0,commentsCount:0,mode:masterMode};await ref.set(post);closeCreatePostModal();clearPostPreview();showToast('Post published')}catch(e){showToast('Post was not published. Check your connection and try again.')}finally{masterLoading(false)}}
 window.publishNewPost=publishNewPost;
 let badgeTimer=0;
 function updateMessageBadge(){if(!currentUser)return;clearTimeout(badgeTimer);badgeTimer=setTimeout(()=>{Promise.all([db.collection('eryx0_messages').where('receiverId','==',currentUser.id).limit(100).get(),db.collection('eryx0_friend_requests').where('toUserId','==',currentUser.id).limit(100).get(),db.collection('eryx0_notifications').where('userId','==',currentUser.id).limit(100).get()]).then(([m,r,n])=>{const mc=m.docs.filter(d=>!d.data().read).length,rc=r.docs.filter(d=>d.data().status==='pending').length,nc=n.docs.filter(d=>!d.data().read).length;[['msgBdg',mc],['netBdg',rc],['bdg',nc]].forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.textContent=v;e.style.display=v?'grid':'none'}})}).catch(()=>{})},120)}
 window.updateMessageBadge=updateMessageBadge;
 function initRealListeners(){
- try{db.collection('eryx0_posts').orderBy('createdAt','desc').limit(50).onSnapshot(s=>{const remote=s.docs.map(d=>({id:d.id,...d.data(),createdAt:d.data().createdAt?.toMillis?.()||Date.now()}));let local=JSON.parse(localStorage.getItem('eryx0_posts')||'[]');const ids=new Set(remote.map(r=>r.id));postsData=[...remote,...local.filter(l=>!ids.has(l.id))].sort((a,b)=>b.createdAt-a.createdAt);renderPostsFeed();renderStoriesTray()},()=>{})}catch(e){}
+  window._postsLoading=true;
+  renderPostsFeed(true);
+  document.getElementById('postsFeed') && (document.getElementById('postsFeed').innerHTML=skeletonPosts(3));
+  document.getElementById('networkContent') && (document.getElementById('networkContent').innerHTML=skeletonList(3));
+  document.getElementById('notificationsList') && (document.getElementById('notificationsList').innerHTML=skeletonList(4));
+  document.getElementById('marketplaceGrid') && (document.getElementById('marketplaceGrid').innerHTML=skeletonGrid(2));
+  masterLoading(true, 'Syncing feed...');
+ try{db.collection('eryx0_posts').orderBy('createdAt','desc').limit(50).onSnapshot(s=>{const remote=s.docs.map(d=>({id:d.id,...d.data(),createdAt:d.data().createdAt?.toMillis?.()||Date.now()}));let local=JSON.parse(localStorage.getItem('eryx0_posts')||'[]');const ids=new Set(remote.map(r=>r.id));postsData=[...remote,...local.filter(l=>!ids.has(l.id))].sort((a,b)=>b.createdAt-a.createdAt);window._postsLoading=false;renderPostsFeed();renderStoriesTray();masterLoading(false);},(e)=>{window._postsLoading=false;masterLoading(false);})}catch(e){window._postsLoading=false;masterLoading(false);}
  try{db.collection('eryx0_friend_requests').where('toUserId','==',currentUser.id).onSnapshot(()=>{renderFriendRequests();updateMessageBadge()},()=>{})}catch(e){}
  try{db.collection('eryx0_notifications').where('userId','==',currentUser.id).onSnapshot(()=>{renderNotifications();updateMessageBadge()},()=>{})}catch(e){}
  try{db.collection('eryx0_messages').where('receiverId','==',currentUser.id).onSnapshot(()=>{updateMessageBadge();if(document.getElementById('page-messages')?.classList.contains('on'))renderActiveFriends()},()=>{})}catch(e){}
  renderMarketplaceGigs();renderFriendRequests();renderNotifications();renderActiveFriends();updateMessageBadge();loadEscrowTab('orders');loadPayoutsTab();loadReels()
 }
 window.initRealListeners=initRealListeners;
-function renderPostsFeed(){const feed=document.getElementById('postsFeed');if(!postsData.length){feed.innerHTML='<div style="padding:40px;text-align:center;background:var(--s);border-radius:16px;border:1px solid var(--bl)"><div style="font-size:32px">📝</div><b>No posts yet</b><div style="font-size:12px;color:var(--m)">Be first to post</div><button class="btnP" style="margin-top:12px;height:44px" onclick="openCreatePostModal()">Create Post</button></div>';return}feed.innerHTML=postsData.map(p=>{const liked=(p.reactionUsers?.[currentUser?.id]==='👍')||(p.likes||[]).includes(currentUser?.id);const themeBg=p.theme==='gradient'?'linear-gradient(135deg,#6366ff,#ec4899)':p.theme==='warm'?'#fef3c7':'';const feelingHtml=p.feeling?`<span style="color:var(--m)"> — ${escapeHtml(p.feeling.label||p.feeling)}</span>`:'';return `<div class="pCard"><div class="pHead"><div class="avatar ${p.authorId===currentUser?.id?'online':''}">${(p.authorName||'E')[0].toUpperCase()}${p.authorAvatar?`<img src="${p.authorAvatar}">`:''}</div><div class="pInfo"><div class="pName">${escapeHtml(p.authorName)}${feelingHtml}</div><div class="pMeta">@${escapeHtml(p.authorId===currentUser?.id?currentUser.handle:p.authorId)} • ${ago(p.createdAt)} • ${p.privacy==='public'?'🌍':p.privacy==='friends'?'👥':'🔒'}</div></div><button class="iBtn" onclick="togglePostMenu('${p.id}')">⋯</button></div>${p.theme&&p.theme!=='default'?`<div style="height:160px;background:${themeBg};display:grid;place-items:center;color:${p.theme==='warm'?'#111':'#fff'};font-weight:800;padding:16px;text-align:center">${escapeHtml(p.text)}</div>`:`<div class="pText">${escapeHtml(p.text)}</div>`}${p.mediaUrl?`${p.mediaUrl.includes('.mp4')||p.mediaUrl.includes('video')?`<video class="pMedia" src="${p.mediaUrl}" controls></video>`:`<img class="pMedia" src="${p.mediaUrl}" loading="lazy">`}`:''}<div class="pActs"><button class="pill ${liked?'on':''}" onclick="showReactionTray('${p.id}')"><span>👍</span> Like ${p.likesCount||0}</button><button class="pill" onclick="focusCommentInput('${p.id}')"><span>💬</span> Comment ${p.commentsCount||0}</button><button class="pill" onclick="sharePost('${p.id}')"><span>↗</span> Share</button><button class="pill" onclick="savePost('${p.id}')"><span>🔖</span> Save</button><button class="pill" onclick="showReactionTray('${p.id}')">😊 React</button></div><div style="padding:0 12px 12px;display:flex;gap:8px"><div class="avatar" style="width:32px;height:32px">${(currentUser?.name||'P')[0]}</div><input class="input" id="comment-${p.id}" style="height:40px;border-radius:999px" placeholder="Write a comment..." onkeypress="if(event.key==='Enter')submitComment('${p.id}')"><button class="actBtn p" style="width:60px;height:36px;flex:none" onclick="submitComment('${p.id}')">Post</button></div><div id="comments-${p.id}" style="padding:0 12px 12px"></div><div id="reactions-${p.id}" style="position:relative"></div></div>`}).join('');}
+function renderPostsFeed(isLoading){
+  const feed=document.getElementById('postsFeed');
+  if(isLoading){
+    feed.innerHTML=skeletonPosts(3);
+    return;
+  }
+  if(!postsData.length){
+    if(window._postsLoading){
+      feed.innerHTML=skeletonPosts(3);
+      return;
+    }
+    feed.innerHTML='<div style="padding:40px;text-align:center;background:var(--s);border-radius:16px;border:1px solid var(--bl)"><div style="font-size:32px">📝</div><b>No posts yet</b><div style="font-size:12px;color:var(--m)">Be first to post</div><button class="btnP" style="margin-top:12px;height:44px" onclick="openCreatePostModal()">Create Post</button></div>';
+    return;
+  }feed.innerHTML=postsData.map(p=>{const liked=(p.reactionUsers?.[currentUser?.id]==='👍')||(p.likes||[]).includes(currentUser?.id);const themeBg=p.theme==='gradient'?'linear-gradient(135deg,#6366ff,#ec4899)':p.theme==='warm'?'#fef3c7':'';const feelingHtml=p.feeling?`<span style="color:var(--m)"> — ${escapeHtml(p.feeling.label||p.feeling)}</span>`:'';return `<div class="pCard"><div class="pHead"><div class="avatar ${p.authorId===currentUser?.id?'online':''}">${(p.authorName||'E')[0].toUpperCase()}${p.authorAvatar?`<img src="${p.authorAvatar}">`:''}</div><div class="pInfo"><div class="pName">${escapeHtml(p.authorName)}${feelingHtml}</div><div class="pMeta">@${escapeHtml(p.authorId===currentUser?.id?currentUser.handle:p.authorId)} • ${ago(p.createdAt)} • ${p.privacy==='public'?'🌍':p.privacy==='friends'?'👥':'🔒'}</div></div><button class="iBtn" onclick="togglePostMenu('${p.id}')">⋯</button></div>${p.theme&&p.theme!=='default'?`<div style="height:160px;background:${themeBg};display:grid;place-items:center;color:${p.theme==='warm'?'#111':'#fff'};font-weight:800;padding:16px;text-align:center">${escapeHtml(p.text)}</div>`:`<div class="pText">${escapeHtml(p.text)}</div>`}${p.mediaUrl?`${p.mediaUrl.includes('.mp4')||p.mediaUrl.includes('video')?`<video class="pMedia" src="${p.mediaUrl}" controls></video>`:`<img class="pMedia" src="${p.mediaUrl}" loading="lazy">`}`:''}<div class="pActs"><button class="pill ${liked?'on':''}" onclick="showReactionTray('${p.id}')"><span>👍</span> Like ${p.likesCount||0}</button><button class="pill" onclick="focusCommentInput('${p.id}')"><span>💬</span> Comment ${p.commentsCount||0}</button><button class="pill" onclick="sharePost('${p.id}')"><span>↗</span> Share</button><button class="pill" onclick="savePost('${p.id}')"><span>🔖</span> Save</button><button class="pill" onclick="showReactionTray('${p.id}')">😊 React</button></div><div style="padding:0 12px 12px;display:flex;gap:8px"><div class="avatar" style="width:32px;height:32px">${(currentUser?.name||'P')[0]}</div><input class="input" id="comment-${p.id}" style="height:40px;border-radius:999px" placeholder="Write a comment..." onkeypress="if(event.key==='Enter')submitComment('${p.id}')"><button class="actBtn p" style="width:60px;height:36px;flex:none" onclick="submitComment('${p.id}')">Post</button></div><div id="comments-${p.id}" style="padding:0 12px 12px"></div><div id="reactions-${p.id}" style="position:relative"></div></div>`}).join('');}
 window.renderPostsFeed=renderPostsFeed;
 function showReactionTray(pid){const el=document.getElementById('reactions-'+pid);if(el.innerHTML){el.innerHTML='';return}el.innerHTML=`<div class="reactionTray"><button aria-label="Love" onclick="reactToPost('${pid}','❤️')">❤️</button><button aria-label="Haha" onclick="reactToPost('${pid}','😂')">😂</button><button aria-label="Wow" onclick="reactToPost('${pid}','😮')">😮</button><button aria-label="Sad" onclick="reactToPost('${pid}','😢')">😢</button><button aria-label="Angry" onclick="reactToPost('${pid}','😡')">😡</button></div><div class="reactionHint">Choose a reaction</div>`}
 window.showReactionTray=showReactionTray;
@@ -759,7 +847,13 @@ window.saveProfileEdit=saveProfileEdit;
 function switchProfileTab(tab,btn){btn.parentElement.querySelectorAll('.sub').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(tab==='posts')document.getElementById('profilePosts').innerHTML=document.getElementById('postsFeed').innerHTML;else if(tab==='about'){document.getElementById('profilePosts').innerHTML=`<div style="background:var(--s);border-radius:16px;padding:16px;border:1px solid var(--bl)"><b>About</b><div style="font-size:13px;margin-top:8px">${escapeHtml(currentUser.bio)}</div><div style="font-size:12px;color:var(--m);margin-top:8px">Email: ${escapeHtml(currentUser.email)}</div></div>`}else document.getElementById('profilePosts').innerHTML=`<div style="padding:20px;text-align:center;background:var(--s);border-radius:16px;border:1px solid var(--bl)">No ${tab} yet</div>`}
 window.switchProfileTab=switchProfileTab;
 // Friends
-async function renderFriendRequests(){const el=document.getElementById('networkContent');if(!el||!currentUser)return;try{const s=await db.collection('eryx0_friend_requests').where('toUserId','==',currentUser.id).limit(50).get();const rows=s.docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.status==='pending');if(!rows.length){el.innerHTML='<div class="emptyState"><div class="emptyIcon">👥</div><b>No requests</b><div class="helper">New friend requests will appear here instantly.</div></div>';return}el.innerHTML=rows.map(r=>`<div class="setCard requestRow"><div class="avatar">${escapeHtml((r.fromUserName||'U')[0])}</div><div style="flex:1"><b>${escapeHtml(r.fromUserName||'User')}</b><div class="helper">Friend request</div></div><button class="actBtn p" style="width:auto;padding:0 10px" onclick="acceptFriendRequest('${r.id}')">✓</button><button class="actBtn" style="width:34px;padding:0" onclick="rejectFriendRequest('${r.id}')">×</button></div>`).join('')}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Requests unavailable</b><div class="helper">Could not load requests from Firebase.</div></div>'}}
+async function renderFriendRequests(){
+  const el=document.getElementById('networkContent');
+  if(!el||!currentUser) return;
+  el.innerHTML=skeletonList(3);
+  masterLoading(true, 'Loading requests...');
+  try{
+    const s=await db.collection('eryx0_friend_requests').where('toUserId','==',currentUser.id).limit(50).get();const rows=s.docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.status==='pending');if(!rows.length){el.innerHTML='<div class="emptyState"><div class="emptyIcon">👥</div><b>No requests</b><div class="helper">New friend requests will appear here instantly.</div></div>';return}el.innerHTML=rows.map(r=>`<div class="setCard requestRow"><div class="avatar">${escapeHtml((r.fromUserName||'U')[0])}</div><div style="flex:1"><b>${escapeHtml(r.fromUserName||'User')}</b><div class="helper">Friend request</div></div><button class="actBtn p" style="width:auto;padding:0 10px" onclick="acceptFriendRequest('${r.id}')">✓</button><button class="actBtn" style="width:34px;padding:0" onclick="rejectFriendRequest('${r.id}')">×</button></div>`).join('')}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Requests unavailable</b><div class="helper">Could not load requests from Firebase.</div></div>';}finally{masterLoading(false);}}
 window.renderFriendRequests=renderFriendRequests;
 async function switchNetworkTab(tab,btn){if(btn){btn.parentElement.querySelectorAll('.sub').forEach(b=>b.classList.remove('on'));btn.classList.add('on')}const el=document.getElementById('networkContent');if(tab==='requests'){renderFriendRequests();return}if(tab==='friends'){const fr=JSON.parse(localStorage.getItem('eryx0_friends')||'[]');el.innerHTML=fr.length?fr.map(f=>`<div class="setCard" style="display:flex;gap:10px;align-items:center"><div class="avatar">${escapeHtml((f.name||'U')[0])}</div><div style="flex:1"><b>${escapeHtml(f.name||'User')}</b></div><button class="actBtn" onclick="openUserProfile('${escapeHtml(f.id)}')">View</button></div>`).join(''):'<div class="emptyState"><div class="emptyIcon">👥</div><b>No connections yet</b><div class="helper">Accepted connections will appear here.</div></div>';return}if(tab==='blocked'){const blocks=JSON.parse(localStorage.getItem('eryx0_blocks')||'[]');el.innerHTML=blocks.length?blocks.map(b=>`<div class="setCard" style="display:flex;align-items:center;gap:10px"><div class="avatar">${escapeHtml((b.name||'U')[0])}</div><div style="flex:1"><b>${escapeHtml(b.name||'User')}</b><div class="helper">Blocked on this device</div></div><button class="actBtn" onclick="unblockUser('${escapeHtml(b.id)}')">Unblock</button></div>`).join(''):'<div class="emptyState"><div class="emptyIcon">🚫</div><b>No blocked users</b><div class="helper">Blocked profiles will be listed here.</div></div>';return}if(tab==='suggestions'){el.innerHTML='<div class="loadingBlock"><div class="skeleton sk3"></div><div class="skeleton sk3"></div></div>';try{const s=await db.collection('eryx0_users').limit(20).get();const blocks=new Set(JSON.parse(localStorage.getItem('eryx0_blocks')||'[]').map(x=>x.id));const users=s.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.id!==currentUser.id&&!blocks.has(u.id));el.innerHTML=users.length?users.map(u=>`<div class="setCard" style="display:flex;gap:10px;align-items:center"><div class="avatar">${escapeHtml((u.name||'U')[0])}${u.avatar?`<img src="${escapeHtml(u.avatar)}">`:''}</div><div style="flex:1"><b>${escapeHtml(u.name||'User')}</b><div class="helper">@${escapeHtml(u.handle||u.id.slice(0,8))}</div></div><button class="actBtn p" style="width:auto;padding:0 12px" onclick="openUserProfile('${u.id}')">View</button></div>`).join(''):'<div class="emptyState"><div class="emptyIcon">✨</div><b>No suggestions</b><div class="helper">No additional profiles are available.</div></div>'}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Suggestions unavailable</b><div class="helper">Could not load user suggestions from Firebase.</div></div>'}}}
 window.switchNetworkTab=switchNetworkTab;
@@ -773,15 +867,25 @@ async function rejectFriendRequest(id){try{await db.collection('eryx0_friend_req
 window.rejectFriendRequest=rejectFriendRequest;
 function acceptLocalRequest(id){let arr=JSON.parse(localStorage.getItem('eryx0_requests')||'[]');let r=arr.find(x=>x.id===id);if(r){arr=arr.filter(x=>x.id!==id);localStorage.setItem('eryx0_requests',JSON.stringify(arr));let fr=JSON.parse(localStorage.getItem('eryx0_friends')||'[]');fr.push(r);localStorage.setItem('eryx0_friends',JSON.stringify(fr));renderFriendRequests();showToast('Accepted')}}
 window.acceptLocalRequest=acceptLocalRequest;
-async function renderActiveFriends(){const q=(document.getElementById('chatSearch')?.value||'').trim().toLowerCase();const el=document.getElementById('messagesList');if(!el)return;el.innerHTML='<div class="loadingBlock"><div class="skeleton sk1"></div><div class="skeleton sk2"></div><div class="skeleton sk2"></div></div>';try{const [a,b]=await Promise.all([db.collection('eryx0_messages').where('senderId','==',currentUser.id).limit(100).get(),db.collection('eryx0_messages').where('receiverId','==',currentUser.id).limit(100).get()]);const all=[...a.docs.map(d=>({id:d.id,...d.data()})),...b.docs.map(d=>({id:d.id,...d.data()}))];const by={};all.forEach(m=>{const uid=m.senderId===currentUser.id?m.receiverId:m.senderId;if(!uid||uid===currentUser.id)return;const prev=by[uid];const tm=m.createdAt?.toMillis?.()||m.createdAt||0;if(!prev||tm>(prev.time||0))by[uid]={uid,time:tm,msg:m}});let rows=Object.values(by);if(q)rows=rows.filter(r=>(r.msg.receiverName||r.msg.senderName||'').toLowerCase().includes(q)||(r.uid||'').toLowerCase().includes(q));if(!rows.length){el.innerHTML='<div class="emptyState"><div class="emptyIcon">💬</div><b>No conversations yet</b><div class="helper">Search a person to start a conversation.</div><button class="btnP" style="margin-top:12px;height:44px" onclick="handleGlobalSearch(&quot;&quot;)">Search people</button></div>';return}el.innerHTML='<div class="messageList">'+rows.sort((x,y)=>y.time-x.time).map(r=>{const m=r.msg;const name=m.senderId===currentUser.id?(m.receiverName||'User'):(m.senderName||'User');return `<div class="messageItem" onclick="openChat('${escapeHtml(r.uid)}','${escapeHtml(name)}')"><div class="avatar">${escapeHtml((name||'U')[0])}</div><div class="preview"><b>${escapeHtml(name)}</b><span>${escapeHtml(m.text||'Attachment')}</span></div>${m.receiverId===currentUser.id&&!m.read?'<span class="unreadDot"></span>':''}</div>`}).join('')+'</div>'}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Messages unavailable</b><div class="helper">Could not load conversations from Firebase.</div><button class="actBtn" style="margin-top:12px" onclick="renderActiveFriends()">Retry</button></div>'}}
+async function renderActiveFriends(){const q=(document.getElementById('chatSearch')?.value||'').trim().toLowerCase();const el=document.getElementById('messagesList');if(!el)return;el.innerHTML='<div class="loadingBlock"><div class="skeleton sk1"></div><div class="skeleton sk2"></div><div class="skeleton sk2"></div></div>';try{const [a,b]=await Promise.all([db.collection('eryx0_messages').where('senderId','==',currentUser.id).limit(100).get(),db.collection('eryx0_messages').where('receiverId','==',currentUser.id).limit(100).get()]);const all=[...a.docs.map(d=>({id:d.id,...d.data()})),...b.docs.map(d=>({id:d.id,...d.data()}))];const by={};all.forEach(m=>{const uid=m.senderId===currentUser.id?m.receiverId:m.senderId;if(!uid||uid===currentUser.id)return;const prev=by[uid];const tm=m.createdAt?.toMillis?.()||m.createdAt||0;if(!prev||tm>(prev.time||0))by[uid]={uid,time:tm,msg:m}});let rows=Object.values(by);if(q)rows=rows.filter(r=>(r.msg.receiverName||r.msg.senderName||'').toLowerCase().includes(q)||(r.uid||'').toLowerCase().includes(q));if(!rows.length){el.innerHTML='<div class="emptyState"><div class="emptyIcon">💬</div><b>No conversations yet</b><div class="helper">Search a person to start a conversation.</div><button class="btnP" style="margin-top:12px;height:44px" onclick="handleGlobalSearch(&quot;&quot;)">Search people</button></div>';return}el.innerHTML='<div class="messageList">'+rows.sort((x,y)=>y.time-x.time).map(r=>{const m=r.msg;const name=m.senderId===currentUser.id?(m.receiverName||'User'):(m.senderName||'User');return `<div class="messageItem" onclick="openChat('${escapeHtml(r.uid)}','${escapeHtml(name)}')"><div class="avatar">${escapeHtml((name||'U')[0])}</div><div class="preview"><b>${escapeHtml(name)}</b><span>${escapeHtml(m.mediaType==='voice'||m.type==='voice'?'🎤 Voice message':(m.text||'Attachment'))}</span></div>${m.receiverId===currentUser.id&&!m.read?'<span class="unreadDot"></span>':''}</div>`}).join('')+'</div>'}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Messages unavailable</b><div class="helper">Could not load conversations from Firebase.</div><button class="actBtn" style="margin-top:12px" onclick="renderActiveFriends()">Retry</button></div>'}}
 window.renderActiveFriends=renderActiveFriends;
 function openChat(id,name){if(!id||id==='undefined')return;selectedChatUser=id;document.getElementById('chatBox').classList.add('on');document.getElementById('chatTitle').textContent=name||'Chat';loadChatMessages(id)}
 window.openChat=openChat;
-async function sendChatMessage(){const input=document.getElementById('messengerInput')||document.getElementById('chatInput');const text=input?.value.trim();if(!text){showToast('Write a message');return}if(!selectedChatUser){showToast('Select a chat first');return}const ids=[currentUser.id,selectedChatUser].sort();masterLoading(true);try{await db.collection('eryx0_messages').add({conversationId:ids.join('_'),senderId:currentUser.id,receiverId:selectedChatUser,senderName:currentUser.name,receiverName:document.getElementById('chatTitle')?.textContent||'User',text,read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await createNotification(selectedChatUser,`${currentUser.name||'Someone'} sent you a message`,text.slice(0,80),'message',currentUser.id);input.value='';loadChatMessages(selectedChatUser);renderActiveFriends();updateMessageBadge()}catch(e){showToast('Message was not sent. Nothing was saved.')}finally{masterLoading(false)}}
+async function sendChatMessage(){const input=document.getElementById('messengerInput')||document.getElementById('chatInput');const txt=input?.value.trim();if(!txt){showToast('Write a message');return}if(!selectedChatUser){showToast('Select a chat first');return}const ids=[currentUser.id,selectedChatUser].sort();masterLoading(true, 'Sending...');const text=txt;try{await db.collection('eryx0_messages').add({conversationId:ids.join('_'),senderId:currentUser.id,receiverId:selectedChatUser,senderName:currentUser.name,receiverName:document.getElementById('chatTitle')?.textContent||'User',text,read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await createNotification(selectedChatUser,`${currentUser.name||'Someone'} sent you a message`,text.slice(0,80),'message',currentUser.id);input.value='';loadChatMessages(selectedChatUser);renderActiveFriends();updateMessageBadge()}catch(e){showToast('Message was not sent. Nothing was saved.')}finally{masterLoading(false)}}
 window.sendChatMessage=sendChatMessage;
-async function loadChatMessages(uid){const ids=[currentUser.id,uid].sort().join('_');const el=document.getElementById('chatMsgs');if(!el)return;el.innerHTML='<div class="helper">Loading messages…</div>';try{const s=await db.collection('eryx0_messages').where('conversationId','==',ids).limit(100).get();const msgs=s.docs.map(d=>({id:d.id,...d.data(),time:d.data().createdAt?.toMillis?.()||Date.now()})).sort((a,b)=>a.time-b.time);el.innerHTML=msgs.length?msgs.map(m=>`<div style="display:flex;justify-content:${m.senderId===currentUser.id?'flex-end':'flex-start'};margin-bottom:7px"><div style="max-width:76%;background:${m.senderId===currentUser.id?'var(--p)':'var(--s)'};color:${m.senderId===currentUser.id?'#fff':'var(--t)'};border:1px solid var(--bl);border-radius:16px;padding:8px 12px;font-size:13px"><div>${escapeHtml(m.text||'')}</div><div style="font-size:9px;opacity:.65;margin-top:3px">${m.senderId===currentUser.id?(m.read?'Read':'Sent'):''}</div></div></div>`).join(''):'<div class="emptyState"><div class="emptyIcon">👋</div><b>Start the conversation</b><div class="helper">Your messages will appear here after they are saved to Firebase.</div></div>';el.scrollTop=el.scrollHeight;const unread=s.docs.filter(d=>{const m=d.data();return m.receiverId===currentUser.id&&!m.read});if(unread.length){const batch=db.batch();unread.forEach(d=>batch.update(d.ref,{read:true,readAt:firebase.firestore.FieldValue.serverTimestamp()}));await batch.commit();updateMessageBadge()}}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Conversation unavailable</b><div class="helper">Could not load this conversation from Firebase.</div></div>'}}
+async function loadChatMessages(uid){const ids=[currentUser.id,uid].sort().join('_');const el=document.getElementById('chatMsgs');if(!el)return;el.innerHTML='<div class="helper">Loading messages…</div>';try{const s=await db.collection('eryx0_messages').where('conversationId','==',ids).limit(100).get();const msgs=s.docs.map(d=>({id:d.id,...d.data(),time:d.data().createdAt?.toMillis?.()||Date.now()})).sort((a,b)=>a.time-b.time);el.innerHTML=msgs.length?msgs.map(m=>{
+  const isMe=m.senderId===currentUser.id;
+  const isVoice=(m.type==='voice' || m.mediaType==='voice' || (m.mediaUrl && m.mediaUrl.includes('.webm')) || m.text==='🎤 Voice message');
+  const mediaHtml = m.mediaUrl ? (isVoice ? `<audio controls src="${escapeHtml(m.mediaUrl)}" style="max-width:180px;height:36px;display:block;margin-top:6px"></audio>` : `<img src="${escapeHtml(m.mediaUrl)}" style="max-width:180px;border-radius:10px;margin-top:6px" loading="lazy">`) : '';
+  return `<div style="display:flex;justify-content:${isMe?'flex-end':'flex-start'};margin-bottom:7px"><div style="max-width:76%;background:${isMe?'var(--p)':'var(--s)'};color:${isMe?'#fff':'var(--t)'};border:1px solid var(--bl);border-radius:16px;padding:8px 12px;font-size:13px"><div>${escapeHtml(m.text|| (isVoice?'🎤 Voice':'Attachment'))}</div>${mediaHtml}<div style="font-size:9px;opacity:.65;margin-top:3px">${isMe?(m.read?'Read':'Sent'):''} • ${ago(m.time)}</div></div></div>`
+}).join(''):'<div class="emptyState"><div class="emptyIcon">👋</div><b>Start the conversation</b><div class="helper">Your messages will appear here after they are saved to Firebase.</div></div>';el.scrollTop=el.scrollHeight;const unread=s.docs.filter(d=>{const m=d.data();return m.receiverId===currentUser.id&&!m.read});if(unread.length){const batch=db.batch();unread.forEach(d=>batch.update(d.ref,{read:true,readAt:firebase.firestore.FieldValue.serverTimestamp()}));await batch.commit();updateMessageBadge()}}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Conversation unavailable</b><div class="helper">Could not load this conversation from Firebase.</div></div>'}}
 // Notifications
-async function renderNotifications(){const el=document.getElementById('notificationsList');if(!el||!currentUser)return;try{const s=await db.collection('eryx0_notifications').where('userId','==',currentUser.id).limit(50).get();const docs=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));const unread=docs.filter(n=>!n.read).length;[['bdg',unread]].forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.textContent=v;e.style.display=v?'grid':'none'}});if(!docs.length){el.innerHTML='<div class="emptyState"><div class="emptyIcon">🔔</div><b>No notifications</b><div class="helper">Likes, comments, replies and requests will appear here.</div></div>';return}el.innerHTML=docs.map(n=>`<div class="notificationItem ${n.read?'':'unread'}"><div class="avatar" style="width:32px;height:32px;font-size:12px">${escapeHtml((n.type||'N')[0].toUpperCase())}</div><div style="flex:1"><b style="font-size:11px">${escapeHtml(n.title||'Notification')}</b><div style="font-size:10px;color:var(--m)">${escapeHtml(n.text||'')}</div><div style="font-size:8px;color:var(--m);margin-top:3px">${n.createdAt?.toDate?n.createdAt.toDate().toLocaleString():ago(n.createdAt)}</div></div></div>`).join('')}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Notifications unavailable</b><div class="helper">Could not load notifications from Firebase.</div></div>'}}
+async function renderNotifications(){
+  const el=document.getElementById('notificationsList');
+  if(!el||!currentUser) return;
+  el.innerHTML=skeletonList(4);
+  try{
+    const s=await db.collection('eryx0_notifications').where('userId','==',currentUser.id).limit(50).get();const docs=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));const unread=docs.filter(n=>!n.read).length;[['bdg',unread]].forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.textContent=v;e.style.display=v?'grid':'none'}});if(!docs.length){el.innerHTML='<div class="emptyState"><div class="emptyIcon">🔔</div><b>No notifications</b><div class="helper">Likes, comments, replies and requests will appear here.</div></div>';return}el.innerHTML=docs.map(n=>`<div class="notificationItem ${n.read?'':'unread'}"><div class="avatar" style="width:32px;height:32px;font-size:12px">${escapeHtml((n.type||'N')[0].toUpperCase())}</div><div style="flex:1"><b style="font-size:11px">${escapeHtml(n.title||'Notification')}</b><div style="font-size:10px;color:var(--m)">${escapeHtml(n.text||'')}</div><div style="font-size:8px;color:var(--m);margin-top:3px">${n.createdAt?.toDate?n.createdAt.toDate().toLocaleString():ago(n.createdAt)}</div></div></div>`).join('')}catch(e){el.innerHTML='<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Notifications unavailable</b><div class="helper">Could not load notifications from Firebase.</div></div>'}}
 window.renderNotifications=renderNotifications;
 async function markAllNotificationsRead(){masterLoading(true);try{const q=await db.collection('eryx0_notifications').where('userId','==',currentUser.id).limit(50).get();const batch=db.batch();q.docs.filter(d=>!d.data().read).forEach(d=>batch.update(d.ref,{read:true}));await batch.commit();renderNotifications();updateMessageBadge();showToast('Notifications marked read')}catch(e){showToast('Could not update notifications. Nothing was changed.')}finally{masterLoading(false)}}
 window.markAllNotificationsRead=markAllNotificationsRead;
@@ -833,12 +937,62 @@ function openConfirmModal(title,text,action){document.getElementById('confirmTit
 function resolveConfirm(ok){const action=confirmResolver;confirmResolver=null;closeModalById('confirmModal');if(ok&&action)Promise.resolve(action()).catch(e=>showToast(e.message||'Action failed'))}
 window.openConfirmModal=openConfirmModal;window.resolveConfirm=resolveConfirm;
 function applyTheme(){document.body.classList.toggle('theme-dark',!!appSettings.dark);const sz=Math.max(28,Math.min(36,Number(appSettings.iconSize||32)));document.documentElement.style.setProperty('--icon-size',sz+'px');document.querySelectorAll('.iBtn').forEach(b=>{b.style.width=sz+'px';b.style.height=sz+'px'})}
-function clearVoiceAttachment(){if(window._voiceAttachment?.url)URL.revokeObjectURL(window._voiceAttachment.url);window._voiceAttachment=null;showToast('Voice attachment removed')}
-function uploadVoiceAttachment(){showToast('Voice attachment is ready locally; a real media message requires the messaging backend.')}
+function clearVoiceAttachment(){
+  try{
+    const els = document.querySelectorAll('#chatMsgs .composerAttachment');
+    els.forEach(e=>e.remove());
+  }catch(e){}
+  if(window._voiceAttachment?.url) try{ URL.revokeObjectURL(window._voiceAttachment.url); }catch(e){}
+  window._voiceAttachment=null;
+  showToast('Voice attachment removed');
+}
+async function uploadVoiceAttachment(){
+  if(!window._voiceAttachment?.blob){
+    showToast('No voice clip to send');
+    return;
+  }
+  if(!selectedChatUser){
+    showToast('Select a chat first');
+    return;
+  }
+  masterLoading(true);
+  try{
+    const blob = window._voiceAttachment.blob;
+    const file = new File([blob], 'voice-'+Date.now()+'.webm', {type: blob.type || 'audio/webm'});
+    const url = await uploadToCloudinary(file);
+    const ids=[currentUser.id,selectedChatUser].sort();
+    await db.collection('eryx0_messages').add({
+      conversationId: ids.join('_'),
+      senderId: currentUser.id,
+      receiverId: selectedChatUser,
+      senderName: currentUser.name,
+      receiverName: document.getElementById('chatTitle')?.textContent||'User',
+      text: '🎤 Voice message',
+      mediaUrl: url,
+      mediaType: 'voice',
+      type: 'voice',
+      read: false,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await createNotification(selectedChatUser, `${currentUser.name||'Someone'} sent you a voice message`, '🎤 Voice message', 'message', currentUser.id);
+    clearVoiceAttachment();
+    showToast('Voice message sent');
+    loadChatMessages(selectedChatUser);
+    renderActiveFriends();
+    updateMessageBadge();
+  }catch(err){
+    console.error(err);
+    showToast('Voice upload failed: '+(err.message||''));
+  }finally{
+    masterLoading(false);
+  }
+}
 window.clearVoiceAttachment=clearVoiceAttachment;window.uploadVoiceAttachment=uploadVoiceAttachment;
 
 async function searchUsers(q){
- const box=document.getElementById('peopleSearchResults'); q=(q||'').trim().replace(/^@/,'');
+ const box=document.getElementById('peopleSearchResults');
+ if(box) box.innerHTML=skeletonList(3);
+ q=(q||'').trim().replace(/^@/,'');
  if(q.length<2){box.innerHTML='<div class="emptyState"><div class="emptyIcon">🔎</div><b>Find people</b><div class="helper">Enter at least 2 characters.</div></div>';return}
  box.innerHTML='<div class="loadingBlock"><div class="skeleton sk1"></div><div class="skeleton sk2"></div><div class="skeleton sk2"></div></div>';
  try{
@@ -904,7 +1058,7 @@ window.toggleDarkMode=toggleDarkMode;
 function openIconSizeSetting(){navigateTo('settings');switchSettingsTab('app');showToast('Use the icon-size slider in App settings')}
 window.openIconSizeSetting=openIconSizeSetting;
 let voiceRecorder=null,voiceChunks=[];
-async function toggleVoiceRecording(){if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){showToast('Voice recording is not supported in this browser');return}if(voiceRecorder&&voiceRecorder.state==='recording'){voiceRecorder.stop();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});voiceChunks=[];voiceRecorder=new MediaRecorder(stream);voiceRecorder.ondataavailable=e=>{if(e.data.size)voiceChunks.push(e.data)};voiceRecorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());const blob=new Blob(voiceChunks,{type:voiceRecorder.mimeType||'audio/webm'});const url=URL.createObjectURL(blob);window._voiceAttachment={blob,url};const box=document.getElementById('chatBox');box.classList.add('on');const msgs=document.getElementById('chatMsgs');msgs.insertAdjacentHTML('beforeend',`<div class="composerAttachment"><audio controls src="${url}" style="max-width:180px"></audio><button class="actBtn" onclick="clearVoiceAttachment()">Remove</button><button class="actBtn p" onclick="uploadVoiceAttachment()">Attach</button></div>`);showToast('Voice clip ready. Attach it only when the messaging backend supports media.');voiceRecorder=null};voiceRecorder.start();showToast('Recording… tap the mic again to stop')}catch(e){showToast('Microphone permission was not granted')}}
+async function toggleVoiceRecording(){if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){showToast('Voice recording is not supported in this browser');return}if(voiceRecorder&&voiceRecorder.state==='recording'){voiceRecorder.stop();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});voiceChunks=[];voiceRecorder=new MediaRecorder(stream);voiceRecorder.ondataavailable=e=>{if(e.data.size)voiceChunks.push(e.data)};voiceRecorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());const blob=new Blob(voiceChunks,{type:voiceRecorder.mimeType||'audio/webm'});const url=URL.createObjectURL(blob);window._voiceAttachment={blob,url};const box=document.getElementById('chatBox');box.classList.add('on');const msgs=document.getElementById('chatMsgs');msgs.insertAdjacentHTML('beforeend',`<div class="composerAttachment" style="background:var(--s2);border-radius:12px;padding:8px;margin:8px 0;display:flex;align-items:center;gap:8px"><audio controls src="${url}" style="max-width:160px;height:36px"></audio><button class="actBtn" style="flex:none" onclick="clearVoiceAttachment()">✕</button><button class="actBtn p" style="flex:none;padding:0 12px" onclick="uploadVoiceAttachment()">Send</button></div>`);msgs.scrollTop=msgs.scrollHeight;showToast('Voice ready - tap Send');voiceRecorder=null};voiceRecorder.start();showToast('Recording… tap mic again to stop')}catch(e){showToast('Microphone permission was not granted')}}
 window.toggleVoiceRecording=toggleVoiceRecording;
 async function startCall(){document.getElementById('callModal').classList.add('on');const status=document.getElementById('callStatus');if(!navigator.mediaDevices?.getUserMedia||!window.RTCPeerConnection){status.textContent='Live calling is not supported by this browser.';return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});stream.getTracks().forEach(t=>t.stop());status.textContent='Microphone permission is available. Live calls require a signaling/WebRTC backend; no call has been started.'}catch(e){status.textContent='Microphone permission was not granted.'}}
 window.startCall=startCall;
