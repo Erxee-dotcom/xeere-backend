@@ -1077,6 +1077,437 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 window.addEventListener('popstate',()=>document.querySelectorAll('.modal.on').forEach(m=>m.classList.remove('on')));
 
 document.addEventListener('DOMContentLoaded',()=>{applyTheme();setTimeout(()=>{if(currentUser)toggleFreelanceHub(masterMode)},500)});
+
+// ===== REAL PAYMENT / ESCROW BACKEND OVERRIDE =====
+async function getGigById(id){
+  if(window._gigs?.length){
+    const g=window._gigs.find(x=>x.id===id);
+    if(g) return g;
+  }
+  try{
+    const d=await db.collection('eryx0_gigs').doc(id).get();
+    return d.exists?{id:d.id,...d.data()}:null
+  }catch(e){ return null }
+}
+
+async function openGigDetails(id){
+  masterLoading(true, 'Loading gig...');
+  const g=await getGigById(id);
+  masterLoading(false);
+  if(!g){showToast('Gig unavailable');return}
+  const mine=g.authorId===currentUser?.id;
+  const body=document.getElementById('gigDetailBody');
+  body.innerHTML=`<div style="display:flex;justify-content:space-between"><div><b>${escapeHtml(g.title||'Gig')}</b><div class="helper">By ${escapeHtml(g.authorName||'Seller')}</div></div><button onclick="closeModalById('gigDetailModal')">✕</button></div><div style="margin-top:14px;font-size:14px;line-height:1.6">${escapeHtml(g.description||'No description')}</div><div class="tagWrap">${(g.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div><div style="margin-top:14px;display:flex;justify-content:space-between"><span class="statusChip">${escapeHtml(g.delivery||'Delivery not specified')}</span><b class="gigPrice">PKR ${Number(g.price||0).toLocaleString()}</b></div><div style="display:flex;gap:8px;margin-top:16px">${mine?`<button class="actBtn" style="flex:1" onclick="editGig('${g.id}')">Edit</button><button class="actBtn" style="flex:1;color:#ef4444" onclick="deleteGig('${g.id}')">Delete</button>`:`<button class="btnP" style="flex:1" onclick="orderGig('${g.id}')">Order Now • PKR ${Number(g.price||0).toLocaleString()}</button>`}</div>`;
+  document.getElementById('gigDetailModal').classList.add('on')
+}
+
+async function orderGig(id){
+  const gig=await getGigById(id);
+  if(!gig){showToast('Gig unavailable');return}
+  if(gig.authorId===currentUser.id){showToast('You cannot order your own gig');return}
+  if(!confirm(`Order "${gig.title}" for PKR ${Number(gig.price).toLocaleString()}?\nThis will create a real order in escrow.`)) return;
+  masterLoading(true, 'Creating order...');
+  try{
+    const orderData={
+      gigId: gig.id,
+      gigTitle: gig.title,
+      price: Number(gig.price)||0,
+      buyerId: currentUser.id,
+      buyerName: currentUser.name,
+      sellerId: gig.authorId,
+      sellerName: gig.authorName||'Seller',
+      status: 'in_progress',
+      escrowStatus: 'held',
+      delivery: gig.delivery||'3 days',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      history: [{status:'in_progress', at: Date.now(), by: currentUser.id}]
+    };
+    const ref=await db.collection('eryx0_orders').add(orderData);
+    await db.collection('eryx0_escrow').doc(ref.id).set({
+      orderId: ref.id,
+      amount: orderData.price,
+      buyerId: currentUser.id,
+      sellerId: gig.authorId,
+      status: 'held',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await createNotification(gig.authorId, `New order: ${gig.title}`, `${currentUser.name} ordered your gig for PKR ${orderData.price}`, 'order', ref.id);
+    closeModalById('gigDetailModal');
+    showToast('Order created! Check Escrow');
+    navigateTo('escrow');
+    setTimeout(()=>loadEscrowTab('orders'), 400);
+  }catch(e){
+    console.error(e);
+    showToast('Order failed: '+(e.message||''));
+  }finally{masterLoading(false);}
+}
+
+async function loadEscrowTab(type,btn){
+  if(btn){
+    btn.parentElement.querySelectorAll('.sub').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+  }
+  const el=document.getElementById('escrowGrid');
+  if(!el) return;
+  el.innerHTML=skeletonList(3);
+  masterLoading(true, 'Loading '+type+'...');
+  try{
+    let orders=[];
+    try{
+      const buyerSnap=await db.collection('eryx0_orders').where('buyerId','==',currentUser.id).orderBy('createdAt','desc').limit(50).get();
+      orders=buyerSnap.docs.map(d=>({id:d.id,...d.data()}));
+    }catch(e){
+      const buyerSnap=await db.collection('eryx0_orders').where('buyerId','==',currentUser.id).limit(50).get();
+      orders=buyerSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+    }
+    try{
+      const sellerSnap=await db.collection('eryx0_orders').where('sellerId','==',currentUser.id).orderBy('createdAt','desc').limit(50).get();
+      const sellerOrders=sellerSnap.docs.map(d=>({id:d.id,...d.data()}));
+      const map={}; orders.forEach(o=>map[o.id]=o); sellerOrders.forEach(o=>map[o.id]=o); orders=Object.values(map);
+    }catch(e){
+      const sellerSnap=await db.collection('eryx0_orders').where('sellerId','==',currentUser.id).limit(50).get();
+      const sellerOrders=sellerSnap.docs.map(d=>({id:d.id,...d.data()}));
+      const map={}; orders.forEach(o=>map[o.id]=o); sellerOrders.forEach(o=>map[o.id]=o); orders=Object.values(map);
+      orders.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+    }
+    if(type==='active') orders=orders.filter(o=>['in_progress','delivered'].includes(o.status));
+    if(type==='completed') orders=orders.filter(o=>o.status==='completed');
+    if(type==='disputes') orders=orders.filter(o=>o.status==='disputed');
+    if(!orders.length){
+      el.innerHTML=`<div class="emptyState"><div class="emptyIcon">🔒</div><b>No ${escapeHtml(type)} orders</b><div class="helper">Orders you buy or sell will appear here.</div></div>`;
+      return;
+    }
+    el.innerHTML=orders.map(o=>{
+      const isBuyer=o.buyerId===currentUser.id;
+      const otherName=isBuyer?o.sellerName:o.buyerName;
+      const statusColor=o.status==='completed'?'#10b981':o.status==='disputed'?'#ef4444':o.status==='delivered'?'#f59e0b':'#6366ff';
+      const actions=[];
+      if(o.status==='in_progress' && !isBuyer){
+        actions.push(`<button class="actBtn p" style="flex:1" onclick="deliverOrder('${o.id}')">Mark Delivered</button>`);
+      }
+      if(o.status==='delivered' && isBuyer){
+        actions.push(`<button class="actBtn p" style="flex:1" onclick="completeOrder('${o.id}')">Approve & Release</button>`);
+        actions.push(`<button class="actBtn" style="flex:1;color:#ef4444" onclick="disputeOrder('${o.id}')">Dispute</button>`);
+      }
+      if(o.status==='in_progress' && isBuyer){
+        actions.push(`<button class="actBtn" style="flex:1;color:#ef4444" onclick="disputeOrder('${o.id}')">Cancel / Dispute</button>`);
+      }
+      return `<div class="gigCard" style="margin-bottom:10px"><div class="gigBody">
+        <div class="gigTop"><div><b>${escapeHtml(o.gigTitle||'Order')}</b><div class="gigMeta">${isBuyer?'Seller':'Buyer'}: ${escapeHtml(otherName||'User')} • ${o.createdAt?.toDate?o.createdAt.toDate().toLocaleDateString():''}</div></div><span class="statusChip" style="background:${statusColor}15;color:${statusColor};border:1px solid ${statusColor}30">${escapeHtml(o.status)}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px"><span style="font-size:12px;color:var(--m)">Escrow: ${escapeHtml(o.escrowStatus||'held')}</span><b>PKR ${Number(o.price||0).toLocaleString()}</b></div>
+        ${actions.length?`<div style="display:flex;gap:8px;margin-top:12px">${actions.join('')}</div>`:''}
+      </div></div>`;
+    }).join('');
+  }catch(e){
+    console.error(e);
+    el.innerHTML=`<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Orders unavailable</b><div class="helper">${escapeHtml(e.message||'Could not load')}<br>Create indexes: eryx0_orders buyerId+createdAt and sellerId+createdAt</div><button class="btnP" style="margin-top:10px;height:40px" onclick="loadEscrowTab('${type}')">Retry</button></div>`;
+  }finally{masterLoading(false);}
+}
+
+async function deliverOrder(orderId){
+  if(!confirm('Mark this order as delivered? Buyer will be asked to approve.')) return;
+  masterLoading(true, 'Updating order...');
+  try{
+    await db.collection('eryx0_orders').doc(orderId).update({
+      status: 'delivered',
+      escrowStatus: 'pending_release',
+      deliveredAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    const orderDoc=await db.collection('eryx0_orders').doc(orderId).get();
+    const o=orderDoc.data();
+    await createNotification(o.buyerId, `Order delivered: ${o.gigTitle}`, `${o.sellerName} marked your order as delivered. Please review and approve.`, 'order', orderId);
+    showToast('Marked as delivered');
+    loadEscrowTab('active');
+  }catch(e){showToast('Failed: '+(e.message||''));}finally{masterLoading(false);}
+}
+
+async function completeOrder(orderId){
+  if(!orderId){showToast('No order selected'); return;}
+  if(!confirm('Approve this order? Funds will be released to seller.')) return;
+  masterLoading(true, 'Releasing escrow...');
+  try{
+    const ref=db.collection('eryx0_orders').doc(orderId);
+    const snap=await ref.get();
+    if(!snap.exists) throw new Error('Order not found');
+    const order=snap.data();
+    if(order.buyerId!==currentUser.id){showToast('Only buyer can approve'); masterLoading(false); return;}
+    await ref.update({
+      status: 'completed',
+      escrowStatus: 'released',
+      completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    try{await db.collection('eryx0_escrow').doc(orderId).update({status: 'released', releasedAt: firebase.firestore.FieldValue.serverTimestamp()});}catch(e){}
+    await db.collection('eryx0_payouts').add({
+      orderId: orderId,
+      userId: order.sellerId,
+      amount: Number(order.price)||0,
+      type: 'earning',
+      status: 'available',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await createNotification(order.sellerId, `Order completed: ${order.gigTitle}`, `Buyer approved. PKR ${order.price} added to your earnings.`, 'payout', orderId);
+    showToast('Order completed, escrow released');
+    loadEscrowTab('completed');
+    loadPayoutsTab();
+  }catch(e){console.error(e);showToast('Completion failed: '+(e.message||''));}finally{masterLoading(false);}
+}
+
+async function disputeOrder(orderId){
+  if(!orderId){showToast('No order selected'); return;}
+  const reason=prompt('Reason for dispute?');
+  if(!reason) return;
+  masterLoading(true, 'Opening dispute...');
+  try{
+    const ref=db.collection('eryx0_orders').doc(orderId);
+    const snap=await ref.get();
+    if(!snap.exists) throw new Error('Order not found');
+    const order=snap.data();
+    await ref.update({
+      status: 'disputed',
+      escrowStatus: 'disputed',
+      disputeReason: reason,
+      disputedBy: currentUser.id,
+      disputedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    try{await db.collection('eryx0_escrow').doc(orderId).update({status:'disputed'});}catch(e){}
+    const otherId = order.buyerId===currentUser.id?order.sellerId:order.buyerId;
+    await createNotification(otherId, `Dispute opened: ${order.gigTitle}`, reason.slice(0,80), 'dispute', orderId);
+    showToast('Dispute opened, admin will review');
+    loadEscrowTab('disputes');
+  }catch(e){showToast('Dispute failed: '+(e.message||''));}finally{masterLoading(false);}
+}
+
+async function loadPayoutsTab(){
+  const el=document.getElementById('payoutsGrid');
+  if(!el) return;
+  el.innerHTML=skeletonList(3);
+  masterLoading(true, 'Loading wallet...');
+  try{
+    let payouts=[];
+    try{
+      const snap=await db.collection('eryx0_payouts').where('userId','==',currentUser.id).orderBy('createdAt','desc').limit(50).get();
+      payouts=snap.docs.map(d=>({id:d.id,...d.data()}));
+    }catch(e){
+      const snap=await db.collection('eryx0_payouts').where('userId','==',currentUser.id).limit(50).get();
+      payouts=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+    }
+    const earnings=payouts.filter(p=>p.type==='earning').reduce((sum,p)=>sum+(Number(p.amount)||0),0);
+    const withdrawn=payouts.filter(p=>p.type==='withdrawal').reduce((sum,p)=>sum+(Number(p.amount)||0),0);
+    const available=earnings-withdrawn;
+    let html=`<div class="gigCard" style="background:linear-gradient(135deg,#6366ff,#8b5cf6);color:#fff;border:0"><div class="gigBody">
+      <div style="font-size:12px;opacity:.9">Available Balance</div><div style="font-size:28px;font-weight:800;margin-top:4px">PKR ${available.toLocaleString()}</div>
+      <div style="display:flex;gap:20px;margin-top:12px;font-size:11px;opacity:.9"><span>Earned: PKR ${earnings.toLocaleString()}</span><span>Withdrawn: PKR ${withdrawn.toLocaleString()}</span></div>
+      <button class="actBtn" style="margin-top:14px;background:#fff;color:#6366ff;font-weight:800;width:100%" onclick="openWithdrawalModal()">Withdraw Funds</button>
+    </div></div>`;
+    if(!payouts.length){
+      html+=`<div class="emptyState"><div class="emptyIcon">💳</div><b>No earnings yet</b><div class="helper">Complete orders as seller to earn. Your earnings ledger is real and stored in Firebase.</div></div>`;
+    } else {
+      html+=`<div style="margin-top:12px">`+payouts.map(p=>{
+        const isEarn=p.type==='earning';
+        const color=isEarn?'#10b981':'#ef4444';
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--s);border:1px solid var(--bl);border-radius:12px;margin-bottom:8px">
+          <div><div style="font-weight:700;font-size:13px;color:${color}">${isEarn?'+':'-'} PKR ${Number(p.amount||0).toLocaleString()}</div><div style="font-size:10px;color:var(--m)">${escapeHtml(p.type)} • ${p.createdAt?.toDate?p.createdAt.toDate().toLocaleDateString():''} • ${escapeHtml(p.status||'')}</div></div>
+          <div style="font-size:10px;color:var(--m)">${p.orderId?`Order ${p.orderId.slice(0,6)}`:''}</div>
+        </div>`;
+      }).join('')+`</div>`;
+    }
+    el.innerHTML=html;
+  }catch(e){
+    console.error(e);
+    el.innerHTML=`<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Wallet unavailable</b><div class="helper">${escapeHtml(e.message||'Could not load')}<br>Create index: eryx0_payouts userId+createdAt</div><button class="btnP" style="margin-top:10px;height:40px" onclick="loadPayoutsTab()">Retry</button></div>`;
+  }finally{masterLoading(false);}
+}
+
+async function openWithdrawalModal(){
+  try{
+    let payouts=[];
+    try{
+      const snap=await db.collection('eryx0_payouts').where('userId','==',currentUser.id).get();
+      payouts=snap.docs.map(d=>d.data());
+    }catch(e){
+      const snap=await db.collection('eryx0_payouts').where('userId','==',currentUser.id).limit(100).get();
+      payouts=snap.docs.map(d=>d.data());
+    }
+    const earnings=payouts.filter(p=>p.type==='earning').reduce((s,p)=>s+(Number(p.amount)||0),0);
+    const withdrawn=payouts.filter(p=>p.type==='withdrawal').reduce((s,p)=>s+(Number(p.amount)||0),0);
+    const available=earnings-withdrawn;
+    if(available<=0){showToast('No available balance to withdraw'); return;}
+    const amountStr=prompt(`Available: PKR ${available.toLocaleString()}\nEnter withdrawal amount:` , available.toString());
+    if(!amountStr) return;
+    const amount=Number(amountStr);
+    if(!amount || amount<=0 || amount>available){showToast('Invalid amount'); return;}
+    const method=prompt('Payout method (JazzCash, Easypaisa, Bank):','JazzCash');
+    if(!method) return;
+    masterLoading(true, 'Requesting withdrawal...');
+    await db.collection('eryx0_payouts').add({
+      userId: currentUser.id,
+      amount: amount,
+      type: 'withdrawal',
+      method: method,
+      status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await db.collection('eryx0_withdrawals').add({
+      userId: currentUser.id,
+      userName: currentUser.name,
+      amount: amount,
+      method: method,
+      status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    showToast('Withdrawal request sent - admin will process');
+    loadPayoutsTab();
+  }catch(e){showToast('Withdrawal failed: '+(e.message||''));}finally{masterLoading(false);}
+}
+
+// ===== REAL STORIES & REELS FOR USERS =====
+async function renderStoriesTrayReal(){
+  const tray=document.getElementById('storiesTray');
+  if(!tray) return;
+  const base=tray.querySelector('.sItem');
+  try{
+    const cutoff = Date.now() - 86400000;
+    let snap;
+    try{
+      snap=await db.collection('eryx0_stories').where('createdAt','>', new Date(cutoff)).orderBy('createdAt','desc').limit(30).get();
+    }catch(e){
+      snap=await db.collection('eryx0_stories').orderBy('createdAt','desc').limit(30).get();
+    }
+    let arr=snap.docs.map(d=>({id:d.id,...d.data(), createdAtMs: d.data().createdAt?.toMillis?.()||d.data().createdAt||0})).filter(s=>Date.now()-s.createdAtMs<86400000);
+    if(!arr.length){
+      arr=JSON.parse(localStorage.getItem('eryx0_stories')||'[]').filter(s=>Date.now()-s.createdAt<86400000);
+    }
+    tray.innerHTML='';
+    if(base) tray.appendChild(base);
+    arr.forEach((s,i)=>{
+      const div=document.createElement('div');
+      div.className='sItem';
+      div.onclick=()=>openStoryViewerReal(i);
+      div.innerHTML=`<div class="sRing"><div class="sInner"><img src="${escapeHtml(s.url||s.mediaUrl||'')}" loading="lazy"></div></div><div class="sLabel">${escapeHtml((s.author||s.authorName||'User').split(' ')[0]||'You')}</div>`;
+      tray.appendChild(div);
+    });
+    window.storiesData=arr;
+  }catch(e){
+    console.error('stories load failed', e);
+    if(base){tray.innerHTML=''; tray.appendChild(base);}
+  }
+}
+
+function openStoryViewerReal(idx){
+  if(!window.storiesData?.length) return;
+  const s=window.storiesData[idx||0];
+  window.activeStoryIndex=idx||0;
+  document.getElementById('storyAvLetter').textContent=(s.author||s.authorName||'Y')[0];
+  document.getElementById('storyName').textContent=s.author||s.authorName||'Story';
+  document.getElementById('storyTime').textContent=ago(s.createdAtMs||s.createdAt);
+  document.getElementById('storyImg').src=s.url||s.mediaUrl;
+  document.getElementById('storyViewer').classList.add('on');
+}
+
+async function triggerStoryUploadReal(){
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='image/*,video/*';
+  inp.onchange=async ev=>{
+    const f=ev.target.files[0];
+    if(!f) return;
+    masterLoading(true, 'Uploading story...');
+    try{
+      const url=await uploadToCloudinary(f);
+      await db.collection('eryx0_stories').add({
+        url: url,
+        mediaUrl: url,
+        author: currentUser.name,
+        authorName: currentUser.name,
+        authorId: currentUser.id,
+        authorAvatar: currentUser.avatar||'',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        expiresAt: firebase.firestore.Timestamp.fromDate(new Date(Date.now()+86400000))
+      });
+      showToast('Story added for all users');
+      renderStoriesTrayReal();
+    }catch(err){showToast(err.message||'Story upload failed')}finally{masterLoading(false)}
+  };
+  inp.click();
+}
+
+async function loadReelsReal(){
+  const el=document.getElementById('reelsFeed');
+  if(!el) return;
+  el.innerHTML=skeletonGrid(2);
+  try{
+    let snap;
+    try{
+      snap=await db.collection('eryx0_reels').orderBy('createdAt','desc').limit(30).get();
+    }catch(e){
+      snap=await db.collection('eryx0_reels').limit(30).get();
+    }
+    let arr=snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(!arr.length){
+      arr=JSON.parse(localStorage.getItem('eryx0_reels')||'[]');
+    }
+    if(!arr.length){
+      el.innerHTML='<div style="padding:40px;text-align:center;background:var(--s);border-radius:16px;border:1px solid var(--bl)"><div style="font-size:32px">🎬</div><b>No reels yet</b><div style="font-size:12px;color:var(--m)">Upload your first reel</div><button class="btnP" style="margin-top:12px;height:44px" onclick="triggerReelUploadReal()">Upload Reel</button></div>';
+      return;
+    }
+    el.innerHTML=arr.map(r=>`<div style="background:var(--s);border-radius:16px;overflow:hidden;border:1px solid var(--bl);margin-bottom:12px"><video src="${escapeHtml(r.url||r.mediaUrl||'')}" controls style="width:100%;max-height:400px"></video><div style="padding:8px 12px;display:flex;justify-content:space-between"><div><b>${escapeHtml(r.author||r.authorName||'User')}</b> • ${ago(r.createdAt?.toMillis?.()||r.createdAt||Date.now())}</div><button class="actBtn" onclick="likeReel('${r.id}')">❤️ ${r.likes||0}</button></div></div>`).join('');
+  }catch(e){
+    el.innerHTML=`<div class="emptyState"><div class="emptyIcon">⚠️</div><b>Reels unavailable</b><div class="helper">${escapeHtml(e.message||'Could not load')}<br>Create index: eryx0_reels createdAt desc</div></div>`;
+  }
+}
+
+async function triggerReelUploadReal(){
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='video/*';
+  inp.onchange=async ev=>{
+    const f=ev.target.files[0];
+    if(!f) return;
+    masterLoading(true, 'Uploading reel...');
+    try{
+      const url=await uploadToCloudinary(f);
+      await db.collection('eryx0_reels').add({
+        url: url,
+        mediaUrl: url,
+        author: currentUser.name,
+        authorName: currentUser.name,
+        authorId: currentUser.id,
+        likes: 0,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      showToast('Reel uploaded for all users');
+      loadReelsReal();
+    }catch(err){showToast(err.message||'Reel upload failed')}finally{masterLoading(false)}
+  };
+  inp.click();
+}
+
+async function likeReel(id){
+  try{
+    const ref=db.collection('eryx0_reels').doc(id);
+    await ref.update({likes: firebase.firestore.FieldValue.increment(1)});
+    loadReelsReal();
+  }catch(e){showToast('Like failed');}
+}
+
+window.getGigById=getGigById;
+window.openGigDetails=openGigDetails;
+window.orderGig=orderGig;
+window.loadEscrowTab=loadEscrowTab;
+window.deliverOrder=deliverOrder;
+window.completeOrder=completeOrder;
+window.disputeOrder=disputeOrder;
+window.loadPayoutsTab=loadPayoutsTab;
+window.openWithdrawalModal=openWithdrawalModal;
+window.renderStoriesTray=renderStoriesTrayReal;
+window.openStoryViewer=openStoryViewerReal;
+window.triggerStoryUpload=triggerStoryUploadReal;
+window.loadReels=loadReelsReal;
+window.triggerReelUpload=triggerReelUploadReal;
+window.likeReel=likeReel;
+
 </script>
 </body>
 </html>
